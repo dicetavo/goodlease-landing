@@ -1,0 +1,39 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { emails } from '../config';
+---
+
+<Legal
+  title="Supprimer mon compte"
+  description="Comment supprimer votre compte GoodLease et vos données personnelles. Procédure de demande de suppression et délais de traitement."
+  intro="Vous pouvez demander à tout moment la suppression de votre compte GoodLease et des données personnelles associées."
+>
+  <h2>Depuis l’application</h2>
+  <p>
+    Ouvrez l’application GoodLease, rendez-vous dans <strong>Compte</strong>, puis suivez l’option de
+    suppression de compte. Vous serez guidé pour confirmer votre demande.
+  </p>
+
+  <h2>Par e-mail</h2>
+  <p>
+    Vous pouvez également nous écrire à
+    <a href={`mailto:${emails.rgpd}`}>{emails.rgpd}</a> depuis l’adresse e-mail associée à votre compte,
+    en indiquant vos nom, prénom et, si possible, votre identifiant utilisateur. Après vérification de
+    votre identité, nous traitons votre demande dans un délai d’un mois.
+  </p>
+
+  <h2>Ce qui est supprimé</h2>
+  <p>
+    La suppression entraîne l’effacement de votre profil et des données personnelles associées à votre
+    compte. Certaines données peuvent toutefois être conservées de manière limitée lorsque la loi
+    l’impose (par exemple les données comptables et de facturation, conservées 10 ans, ou les données de
+    vérification d’identité et de lutte contre la fraude, conservées 5 ans). Pour le détail, consultez
+    notre <a href="/confidentialite">politique de confidentialité</a>.
+  </p>
+
+  <h2>Locations en cours</h2>
+  <p>
+    Si des locations sont en cours ou des paiements en attente, ceux-ci doivent être réglés avant la
+    suppression définitive du compte, afin de protéger les droits de l’autre partie.
+  </p>
+</Legal>

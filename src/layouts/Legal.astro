@@ -1,0 +1,40 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  intro?: string;
+  /** Bandeau "en attente de validation avocat" */
+  draftNote?: string;
+  updated?: string;
+}
+const { title, description, intro, draftNote, updated } = Astro.props;
+---
+
+<Base title={title} description={description}>
+  <section class="border-b border-line bg-surface">
+    <div class="container-gl py-12 sm:py-16">
+      <a href="/" class="text-sm font-medium text-primary hover:underline">← Retour à l’accueil</a>
+      <h1 class="mt-4 text-3xl font-semibold sm:text-4xl">{title}</h1>
+      {intro && <p class="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted">{intro}</p>}
+      {updated && <p class="mt-3 text-xs text-muted">Dernière mise à jour : {updated}</p>}
+    </div>
+  </section>
+
+  <section class="container-gl py-12">
+    <div class="mx-auto max-w-3xl">
+      {
+        draftNote && (
+          <div class="mb-8 rounded-card border border-warning/40 bg-warning/10 px-5 py-4 text-sm text-ink/80">
+            <strong class="font-semibold text-ink">À noter — </strong>
+            {draftNote}
+          </div>
+        )
+      }
+      <div class="prose-gl">
+        <slot />
+      </div>
+    </div>
+  </section>
+</Base>

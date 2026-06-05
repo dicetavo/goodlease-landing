@@ -1,0 +1,71 @@
+---
+import { stores } from '../config';
+
+interface Props {
+  /** Taille des badges */
+  size?: 'md' | 'lg';
+  /** Centrer horizontalement */
+  center?: boolean;
+  class?: string;
+}
+const { size = 'md', center = false, class: className = '' } = Astro.props;
+
+const h = size === 'lg' ? 'h-14' : 'h-12';
+const appLive = Boolean(stores.appStore);
+const playLive = Boolean(stores.playStore);
+const comingSoon = !appLive || !playLive;
+---
+
+<div class={`flex flex-col gap-3 ${center ? 'items-center' : 'items-start'} ${className}`}>
+  <div class={`flex flex-wrap gap-3 ${center ? 'justify-center' : ''}`}>
+    <!-- App Store -->
+    <a
+      href={appLive ? stores.appStore : undefined}
+      aria-label="Télécharger dans l’App Store"
+      class={`${appLive ? '' : 'pointer-events-none opacity-90'} transition hover:opacity-80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-[8px]`}
+    >
+      <svg class={h} viewBox="0 0 120 40" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="119" height="39" rx="7.5" fill="#000" stroke="#A6A6A6" />
+        <path
+          fill="#fff"
+          d="M24.77 20.3c-.02-2.05 1.68-3.04 1.76-3.09-.96-1.4-2.46-1.6-2.99-1.62-1.27-.13-2.49.75-3.13.75-.64 0-1.64-.73-2.7-.71-1.39.02-2.67.81-3.39 2.05-1.44 2.5-.37 6.2 1.03 8.23.69.99 1.51 2.11 2.59 2.07 1.04-.04 1.43-.67 2.69-.67 1.25 0 1.61.67 2.7.65 1.12-.02 1.82-1.01 2.5-2.01.79-1.15 1.12-2.27 1.13-2.32-.02-.01-2.17-.83-2.19-3.3z"
+        />
+        <path
+          fill="#fff"
+          d="M22.79 14.24c.57-.69.95-1.65.85-2.61-.82.03-1.82.55-2.4 1.23-.52.6-.98 1.58-.86 2.51.92.07 1.85-.46 2.41-1.13z"
+        />
+        <text x="33" y="16" fill="#fff" font-family="Inter, Helvetica, Arial, sans-serif" font-size="6.5">Télécharger dans l’</text>
+        <text x="33" y="31" fill="#fff" font-family="Inter, Helvetica, Arial, sans-serif" font-size="16.5" font-weight="600" letter-spacing="-0.3">App Store</text>
+      </svg>
+    </a>
+
+    <!-- Google Play -->
+    <a
+      href={playLive ? stores.playStore : undefined}
+      aria-label="Disponible sur Google Play"
+      class={`${playLive ? '' : 'pointer-events-none opacity-90'} transition hover:opacity-80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-[8px]`}
+    >
+      <svg class={h} viewBox="0 0 135 40" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="134" height="39" rx="7.5" fill="#000" stroke="#A6A6A6" />
+        <!-- Triangle Play (4 facettes) -->
+        <g transform="translate(11,8.5)">
+          <polygon points="0.5,0 0.5,11.5 7.5,11.5" fill="#00D2FF" />
+          <polygon points="0.5,11.5 0.5,23 7.5,11.5" fill="#00E676" />
+          <polygon points="0.5,0 7.5,11.5 13.5,11.5" fill="#FFCE00" />
+          <polygon points="0.5,23 7.5,11.5 13.5,11.5" fill="#FF3D44" />
+        </g>
+        <text x="34" y="16" fill="#fff" font-family="Inter, Helvetica, Arial, sans-serif" font-size="6.5" letter-spacing="0.6">DISPONIBLE SUR</text>
+        <text x="34" y="31" fill="#fff" font-family="Inter, Helvetica, Arial, sans-serif" font-size="16.5" font-weight="600" letter-spacing="-0.3">Google Play</text>
+      </svg>
+    </a>
+  </div>
+
+  {
+    comingSoon && (
+      <span class="inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-3 py-1 text-xs font-medium text-primary">
+        <span class="h-1.5 w-1.5 rounded-full bg-primary" />
+        Bientôt disponible
+      </span>
+    )
+  }
+</div>

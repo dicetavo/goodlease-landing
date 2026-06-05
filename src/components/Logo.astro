@@ -1,0 +1,16 @@
+---
+interface Props {
+  /** Couleur du wordmark : foncé (sur fond clair) ou blanc (sur fond bleu) */
+  variant?: 'dark' | 'light';
+  class?: string;
+}
+const { variant = 'dark', class: className = '' } = Astro.props;
+const isLight = variant === 'light';
+---
+
+<span class={`inline-flex items-center gap-2 ${className}`}>
+  <img src="/mark.svg" alt="" aria-hidden="true" class="h-7 w-7" width="28" height="28" />
+  <span class={`text-[20px] font-bold tracking-tight ${isLight ? 'text-white' : 'text-ink'}`}>
+    Good<span class={isLight ? 'text-white/90' : 'text-primary'}>Lease</span>
+  </span>
+</span>

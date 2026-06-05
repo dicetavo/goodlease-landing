@@ -1,0 +1,69 @@
+---
+import Logo from './Logo.astro';
+import { mainNav } from '../config';
+---
+
+<header class="sticky top-0 z-40 border-b border-line/70 bg-canvas/80 backdrop-blur-md">
+  <div class="container-gl flex h-16 items-center justify-between gap-4">
+    <a href="/" class="shrink-0" aria-label="GoodLease — accueil">
+      <Logo />
+    </a>
+
+    <nav class="hidden items-center gap-8 md:flex" aria-label="Navigation principale">
+      {
+        mainNav.map((item) => (
+          <a href={item.href} class="text-sm font-medium text-muted hover:text-ink transition">
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a href="/#telecharger" class="btn-primary hidden sm:inline-flex">Télécharger l’app</a>
+
+      <button
+        type="button"
+        id="burger"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-field border border-line bg-surface md:hidden"
+        aria-label="Ouvrir le menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="4" y1="7" x2="20" y2="7"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="17" x2="20" y2="17"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menu mobile -->
+  <div id="mobile-menu" class="hidden border-t border-line bg-surface md:hidden">
+    <nav class="container-gl flex flex-col gap-1 py-4" aria-label="Navigation mobile">
+      {
+        mainNav.map((item) => (
+          <a href={item.href} class="rounded-field px-3 py-3 text-[15px] font-medium text-ink hover:bg-canvas">
+            {item.label}
+          </a>
+        ))
+      }
+      <a href="/#telecharger" class="btn-primary mt-2">Télécharger l’app</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const burger = document.getElementById('burger');
+  const menu = document.getElementById('mobile-menu');
+  burger?.addEventListener('click', () => {
+    const open = menu?.classList.toggle('hidden') === false;
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+  });
+  // Referme le menu après un clic sur un lien
+  menu?.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => menu.classList.add('hidden')),
+  );
+</script>

@@ -1,0 +1,45 @@
+---
+import Legal from '../layouts/Legal.astro';
+---
+
+<Legal
+  title="Sécurité du bail"
+  description="Comment GoodLease sécurise vos locations : vérification d'identité, dépôt de garantie, paiement intermédié via Stripe et modération des annonces."
+  intro="GoodLease met en place plusieurs mécanismes pour que chaque location se déroule en confiance, côté loueur comme côté locataire."
+>
+  <h2>Vérification d’identité</h2>
+  <p>
+    Les loueurs professionnels font l’objet d’une procédure de vérification d’identité (KYC) opérée via
+    notre prestataire de paiement Stripe, conformément aux obligations de lutte contre la fraude et au
+    Digital Services Act (DSA, art. 30 — traçabilité des professionnels). Cette étape permet de fiabiliser
+    les comptes qui mettent du matériel en location à titre professionnel.
+  </p>
+
+  <h2>Dépôt de garantie</h2>
+  <p>
+    Lorsqu’une location le prévoit, une <strong>empreinte de dépôt de garantie</strong> est posée au
+    moment de la réservation via Stripe. Cette empreinte n’est pas un débit : elle est restituée
+    automatiquement si le matériel est rendu dans les conditions convenues. GOODLEASE n’est pas
+    dépositaire des fonds.
+  </p>
+
+  <h2>Paiement intermédié via Stripe Connect</h2>
+  <p>
+    Les paiements transitent par <strong>Stripe Connect</strong>. Les fonds sont versés au loueur par
+    l’intermédiaire de Stripe : GOODLEASE n’encaisse ni ne conserve l’argent des locataires. Le montant
+    de la commission GoodLease et le prix TTC sont affichés avant le paiement, en toute transparence.
+  </p>
+
+  <h2>Modération des annonces et des photos</h2>
+  <p>
+    Les annonces et leurs photos sont soumises à une modération afin d’écarter les contenus interdits ou
+    trompeurs et de maintenir une marketplace fiable. Les règles applicables sont détaillées dans nos
+    <a href="/regles-de-contenu">règles de contenu</a>.
+  </p>
+
+  <h2>Un problème pendant une location&nbsp;?</h2>
+  <p>
+    En cas de difficulté, contactez d’abord l’autre partie, puis notre support. Si nécessaire, une
+    médiation est prévue : consultez la page <a href="/resolution-des-litiges">Résolution des litiges</a>.
+  </p>
+</Legal>

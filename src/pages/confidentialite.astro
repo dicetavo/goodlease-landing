@@ -1,0 +1,147 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { company, emails } from '../config';
+---
+
+<Legal
+  title="Politique de confidentialité"
+  description="Politique de protection des données personnelles de GoodLease : responsable de traitement, finalités, durées de conservation, destinataires, cookies et droits des utilisateurs."
+  intro="« Confidentialité et gestion des données » — comment GoodLease collecte et traite vos données personnelles."
+  draftNote="Cette version est en attente de validation finale par notre conseil juridique. Elle pourra être ajustée avant la mise en service complète."
+>
+  <p>
+    Pour permettre l’utilisation de la plateforme, GOODLEASE collecte des données à caractère personnel
+    des Utilisateurs. GOODLEASE s’engage à respecter les dispositions du règlement (UE) n° 2016/679 du
+    27 avril 2016 relatif à la protection des données à caractère personnel (RGPD) et de la loi
+    n° 78-17 du 6 janvier 1978 modifiée.
+  </p>
+
+  <h2>1. Identité du responsable de traitement</h2>
+  <p>
+    La société qui collecte les données à caractère personnel et met en œuvre les traitements est :
+  </p>
+  <p>
+    <strong>{company.legalName}</strong><br />
+    {company.form}<br />
+    Siège social : {company.address}<br />
+    Immatriculée au RCS de Lille Métropole sous le numéro {company.siren}
+  </p>
+
+  <h2>2. Finalités de collecte des données et bases légales</h2>
+  <p>
+    GOODLEASE est amenée à collecter et à traiter les données à caractère personnel des Utilisateurs pour
+    les traitements suivants :
+  </p>
+  <ul>
+    <li><strong>Gestion des demandes de contact</strong> — Intérêt légitime de GOODLEASE de répondre aux sollicitations reçues via le formulaire de contact.</li>
+    <li><strong>Gestion des comptes Utilisateurs, mise en relation et support</strong> — Exécution du contrat entre l’Utilisateur et GOODLEASE.</li>
+    <li><strong>Sécurité des transactions, prévention de la fraude et vérification d’identité</strong> — Intérêt légitime de GOODLEASE.</li>
+    <li><strong>Mesure de fréquentation de l’application</strong> — Consentement de l’Utilisateur.</li>
+    <li><strong>Gestion de la comptabilité</strong> — Obligation légale de GOODLEASE.</li>
+  </ul>
+
+  <h2>3. Droits des personnes</h2>
+  <h3>Quels sont les droits pouvant être exercés ?</h3>
+  <p>
+    En application des articles 15 à 22 du règlement 2016/679 du 27 avril 2016, toute personne physique
+    dont les données ont été collectées a la faculté d’exercer les droits suivants :
+  </p>
+  <ul>
+    <li>un droit d’accès ;</li>
+    <li>un droit de rectification ;</li>
+    <li>un droit d’opposition au traitement de ses données et d’effacement de ses données ;</li>
+    <li>un droit d’opposition au profilage ;</li>
+    <li>un droit à la limitation du traitement ;</li>
+    <li>un droit à la portabilité de ses données.</li>
+  </ul>
+  <p>
+    L’Utilisateur peut également formuler des directives relatives à la conservation, à l’effacement et à
+    la communication de ses données à caractère personnel après son décès, conformément à l’article 40-1
+    de la loi 78-17 du 6 janvier 1978. Ces directives peuvent être générales ou particulières. Enfin,
+    l’Utilisateur a la faculté de retirer son consentement à tout moment.
+  </p>
+  <h3>Comment les exercer ?</h3>
+  <p>
+    Ces droits peuvent être exercés auprès de GOODLEASE par voie électronique, à l’adresse
+    <a href={`mailto:${emails.rgpd}`}>{emails.rgpd}</a>. La demande doit indiquer les nom, prénom, e-mail
+    et, si possible, l’identifiant utilisateur.
+  </p>
+  <p>
+    Après vérification de votre identité, GOODLEASE adresse une réponse dans un délai d’un mois après
+    l’exercice du droit. Dans certains cas, liés à la complexité ou au nombre de demandes, ce délai peut
+    être prolongé de deux mois. Ces droits peuvent, dans certains cas prévus par la réglementation, être
+    soumis à exceptions. En cas d’absence de réponse ou de réponse non satisfaisante, la personne
+    concernée a la faculté de saisir l’autorité de contrôle (la CNIL : <a href="https://www.cnil.fr" rel="nofollow">www.cnil.fr</a>).
+  </p>
+
+  <h2>4. Durée de conservation des données</h2>
+  <p>
+    GOODLEASE a déterminé des règles précises concernant la durée de conservation des données. Par
+    principe, sauf obligation légale contraire, les données sont conservées pendant la durée nécessaire à
+    l’accomplissement des finalités pour lesquelles elles ont été collectées. Les durées retenues sont
+    les suivantes :
+  </p>
+  <ul>
+    <li>les données des Utilisateurs sont conservées pendant 2 ans à compter de la dernière activité de l’Utilisateur sur l’application ;</li>
+    <li>les cookies de mesure d’audience se déposent sur le terminal de l’Utilisateur pendant une durée de 13 mois, et le choix exprimé par l’Utilisateur est conservé pendant une durée de 6 mois ;</li>
+    <li>les données comptables et de facturation sont conservées 10 ans, conformément aux obligations légales ;</li>
+    <li>les données collectées au titre de la vérification d’identité et de la lutte contre la fraude (KYC / LCB-FT) sont conservées 5 ans après la fin de la relation.</li>
+  </ul>
+
+  <h2>5. Destinataires des données</h2>
+  <p>
+    Vos données sont transmises à des tiers qui peuvent les traiter pour leur compte (destinataires) ou
+    uniquement pour le compte et selon les instructions de GOODLEASE (sous-traitants). Les destinataires
+    des données sont :
+  </p>
+  <ul>
+    <li>le personnel habilité de GOODLEASE ;</li>
+    <li>les Utilisateurs effectuant une transaction entre eux.</li>
+  </ul>
+  <p>GOODLEASE fait appel à des sous-traitants pour les opérations suivantes :</p>
+  <ul>
+    <li>le paiement sécurisé ;</li>
+    <li>la lutte contre la fraude ;</li>
+    <li>l’hébergement des données ;</li>
+    <li>la mesure d’audience.</li>
+  </ul>
+
+  <h2>6. Transferts de données hors de l’Union européenne</h2>
+  <p>
+    Certains de nos sous-traitants (notamment <strong>Stripe</strong> pour le paiement et la vérification
+    d’identité, et <strong>Google Cloud</strong> pour l’hébergement et la modération) peuvent être amenés
+    à traiter des données en dehors de l’Union européenne. Dans ce cas, GOODLEASE veille à ce que ces
+    transferts soient encadrés par des garanties appropriées, en particulier les clauses contractuelles
+    types adoptées par la Commission européenne, afin d’assurer un niveau de protection adéquat de vos
+    données.
+  </p>
+
+  <h2>7. Cookies, tags et traceurs</h2>
+  <h3>Qu’est-ce qu’un cookie ?</h3>
+  <p>
+    Les cookies sont de petits fichiers texte, souvent cryptés, stockés dans le navigateur de votre
+    ordinateur ou sur votre appareil mobile lorsque vous visitez certains sites web ou applications. Ils
+    sont destinés à collecter des informations anonymes sur la façon dont les Utilisateurs naviguent au
+    sein de l’application, et à connaître l’affluence et la fréquence des visites afin de s’assurer que
+    l’application fonctionne correctement.
+  </p>
+  <p>
+    Les données obtenues sont restreintes : nombre de pages visitées, ville où est localisée l’adresse IP
+    de connexion, fréquence et récurrence des visites, durée de la visite, navigateur, opérateur ou type
+    de terminal. Des données telles que le nom, le prénom ou l’adresse postale ne sont en aucun cas
+    obtenues. Les cookies n’endommagent pas votre appareil et ne peuvent être utilisés pour vous
+    identifier personnellement.
+  </p>
+  <h3>À quoi servent les cookies ?</h3>
+  <p>
+    Selon vos choix (modifiables à tout moment), les cookies que nous émettons nous permettent
+    principalement de réaliser des statistiques de visites sur l’application.
+  </p>
+  <h3>Vos choix</h3>
+  <p>
+    L’enregistrement d’un cookie dans un terminal est subordonné au consentement de l’Utilisateur. Vous
+    pouvez exprimer et modifier à tout moment, gratuitement, vos préférences en matière de cookies, à
+    travers les choix qui vous sont offerts au sein du gestionnaire de consentement mis en place par
+    GOODLEASE. Voir la page <a href="/cookies">Gestion des cookies</a>.
+  </p>
+</Legal>

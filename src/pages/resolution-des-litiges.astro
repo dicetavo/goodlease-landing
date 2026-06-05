@@ -1,0 +1,55 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { emails } from '../config';
+---
+
+<Legal
+  title="Résolution des litiges"
+  description="Que faire en cas de litige sur GoodLease : contact direct, support GoodLease, médiation de la consommation FEVAD et Centre Européen des Consommateurs."
+  intro="La plupart des différends se règlent à l'amiable. Voici les étapes à suivre et les recours à votre disposition."
+  draftNote="La clause de médiation FEVAD sera activée après confirmation de notre adhésion à la FEVAD."
+>
+  <h2>Étape 1 — Contact direct entre les parties</h2>
+  <p>
+    En cas de désaccord lors d’une location, échangez d’abord directement avec l’autre partie via la
+    messagerie de l’application. Une grande partie des situations se résolvent par le dialogue.
+  </p>
+
+  <h2>Étape 2 — Le support GoodLease</h2>
+  <p>
+    Si le dialogue n’aboutit pas, contactez notre service support à
+    <a href={`mailto:${emails.support}`}>{emails.support}</a>. Nous vous accompagnons pour trouver une
+    solution, du lundi au vendredi.
+  </p>
+
+  <h2>Étape 3 — La médiation de la consommation (FEVAD)</h2>
+  <p>
+    Conformément au Code de la consommation, après une réclamation écrite restée sans solution, le
+    consommateur peut recourir gratuitement à un médiateur de la consommation. La demande peut être
+    présentée au médiateur du e-commerce de la FEVAD :
+  </p>
+  <ul>
+    <li>par voie postale : Médiateur du e-commerce de la FEVAD, 60 rue La Boétie – 75008 Paris ;</li>
+    <li>via le formulaire en ligne disponible sur le site du médiateur FEVAD.</li>
+  </ul>
+  <p>
+    Les parties restent libres d’accepter ou de refuser le recours à la médiation, ainsi que la solution
+    proposée par le médiateur.
+  </p>
+
+  <h2>Litiges transfrontaliers — Centre Européen des Consommateurs</h2>
+  <p>
+    Pour un litige transfrontalier au sein de l’Union européenne, le Centre Européen des Consommateurs
+    France peut vous aider :
+  </p>
+  <ul>
+    <li>Bahnhofsplatz 3, 77694 Kehl, Allemagne ;</li>
+    <li>e-mail : info@cec-zev.eu ;</li>
+    <li>site : europe-consommateurs.eu.</li>
+  </ul>
+
+  <p class="mt-8 rounded-card border border-line bg-canvas p-4 text-sm text-muted">
+    À noter : la plateforme européenne de Règlement en Ligne des Litiges (RLL/ODR) a été
+    <strong>fermée le 20 juillet 2025</strong> et n’est donc plus un recours disponible.
+  </p>
+</Legal>

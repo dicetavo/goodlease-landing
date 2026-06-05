@@ -1,0 +1,14 @@
+---
+import { routes, emails } from '../config';
+interface Props { newsletter?: boolean }
+const { newsletter = false } = Astro.props;
+---
+
+<p class="text-xs leading-relaxed text-muted">
+  En soumettant ce formulaire, vous acceptez que vos données soient traitées par
+  GoodLease conformément à notre
+  <a href={routes.privacy} class="font-medium text-primary hover:underline">politique de confidentialité</a>.
+  Vous pouvez exercer vos droits à tout moment à
+  <a href={`mailto:${emails.rgpd}`} class="font-medium text-primary hover:underline">{emails.rgpd}</a>.
+  {newsletter && ' Pour la newsletter, vous pouvez vous désinscrire via le lien présent dans chaque e-mail.'}
+</p>

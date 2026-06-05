@@ -1,0 +1,83 @@
+@import '@fontsource-variable/inter';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-semibold tracking-tight text-ink;
+    text-wrap: balance;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-canvas;
+  }
+}
+
+@layer components {
+  .container-gl {
+    @apply mx-auto w-full max-w-content px-5 sm:px-6 lg:px-8;
+  }
+
+  /* Bouton principal — repris du CustomButton de l'app (rayon 13px, bleu, texte blanc) */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-btn px-6 py-3
+           text-[15px] font-medium leading-none transition
+           focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+  .btn-primary {
+    @apply btn bg-primary text-white shadow-soft
+           hover:bg-primary-dark active:bg-primary-border;
+  }
+  .btn-secondary {
+    @apply btn border border-line bg-surface text-ink hover:border-primary hover:text-primary;
+  }
+  .btn-ghost {
+    @apply btn text-ink hover:text-primary;
+  }
+
+  .field {
+    @apply w-full rounded-field border border-line bg-surface px-4 py-3 text-[15px]
+           text-ink placeholder:text-muted-light
+           focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full bg-primary-100 px-3 py-1
+           text-xs font-semibold uppercase tracking-wider text-primary;
+  }
+
+  .card {
+    @apply rounded-card border border-line bg-surface p-6 shadow-soft;
+  }
+
+  /* Contenu des pages légales / aide */
+  .prose-gl {
+    @apply text-[15px] leading-relaxed text-ink/85;
+  }
+  .prose-gl h2 {
+    @apply mt-10 mb-3 text-xl font-semibold text-ink;
+  }
+  .prose-gl h3 {
+    @apply mt-6 mb-2 text-base font-semibold text-ink;
+  }
+  .prose-gl p {
+    @apply my-3;
+  }
+  .prose-gl ul {
+    @apply my-3 list-disc space-y-1.5 pl-5 marker:text-primary;
+  }
+  .prose-gl a {
+    @apply font-medium text-primary underline-offset-2 hover:underline;
+  }
+  .prose-gl strong {
+    @apply font-semibold text-ink;
+  }
+}

@@ -1,0 +1,84 @@
+---
+import ConsentNote from './ConsentNote.astro';
+const subjects = [
+  'Question générale',
+  'Problème technique',
+  'RGPD',
+  'Signalement',
+  'Autre',
+];
+---
+
+<form class="contact-form space-y-4" data-endpoint="/api/contact" novalidate>
+  <div class="grid gap-4 sm:grid-cols-2">
+    <div>
+      <label for="ct-name" class="mb-1.5 block text-sm font-medium text-ink">Nom</label>
+      <input id="ct-name" name="name" type="text" required autocomplete="name" class="field" />
+    </div>
+    <div>
+      <label for="ct-email" class="mb-1.5 block text-sm font-medium text-ink">E-mail</label>
+      <input id="ct-email" name="email" type="email" required autocomplete="email" class="field" />
+    </div>
+  </div>
+
+  <div>
+    <label for="ct-subject" class="mb-1.5 block text-sm font-medium text-ink">Sujet</label>
+    <select id="ct-subject" name="subject" required class="field">
+      {subjects.map((s) => <option value={s}>{s}</option>)}
+    </select>
+  </div>
+
+  <div>
+    <label for="ct-message" class="mb-1.5 block text-sm font-medium text-ink">Message</label>
+    <textarea id="ct-message" name="message" rows="5" required class="field resize-y"></textarea>
+  </div>
+
+  <!-- Honeypot anti-spam -->
+  <input type="text" name="company" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+  <button type="submit" class="btn-primary w-full sm:w-auto">Envoyer le message</button>
+
+  <p class="form-msg hidden text-sm" role="status" aria-live="polite"></p>
+
+  <ConsentNote />
+</form>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('.contact-form').forEach((form) => {
+    const msg = form.querySelector<HTMLParagraphElement>('.form-msg')!;
+    const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if ((form.elements.namedItem('company') as HTMLInputElement)?.value) return; // honeypot
+      if (!form.checkValidity()) {
+        show('Merci de remplir tous les champs requis.', false);
+        return;
+      }
+      btn.disabled = true;
+      const original = btn.textContent;
+      btn.textContent = 'Envoi…';
+      try {
+        const data = Object.fromEntries(new FormData(form).entries());
+        const res = await fetch(form.dataset.endpoint!, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error('bad status');
+        form.reset();
+        show('Message envoyé. Nous revenons vers vous au plus vite.', true);
+      } catch {
+        show('Envoi impossible pour le moment. Écrivez-nous à support@goodlease.fr.', false);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = original;
+      }
+    });
+
+    function show(text: string, ok: boolean) {
+      msg.textContent = text;
+      msg.classList.remove('hidden', 'text-success', 'text-danger');
+      msg.classList.add(ok ? 'text-success' : 'text-danger');
+    }
+  });
+</script>

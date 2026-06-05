@@ -1,0 +1,8 @@
+name = "goodlease-landing"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "dist"
+
+# Déploiement manuel : `npx wrangler pages deploy dist`
+# Les variables d'environnement (BREVO_API_KEY, BREVO_WAITLIST_LIST_ID, …) se configurent
+# dans le dashboard Cloudflare Pages (Settings → Environment variables), pas ici,
+# pour ne pas committer de secret.

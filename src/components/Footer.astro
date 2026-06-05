@@ -1,0 +1,43 @@
+---
+import Logo from './Logo.astro';
+import { footerNav, site, emails } from '../config';
+const year = 2026;
+---
+
+<footer class="mt-24 border-t border-line bg-surface">
+  <div class="container-gl py-14">
+    <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div class="max-w-xs">
+        <Logo />
+        <p class="mt-4 text-sm leading-relaxed text-muted">
+          La marketplace de location de matériel entre particuliers et pros. {site.tagline}.
+        </p>
+        <a href={`mailto:${emails.contact}`} class="mt-4 inline-block text-sm font-medium text-primary hover:underline">
+          {emails.contact}
+        </a>
+      </div>
+
+      {
+        footerNav.map((col) => (
+          <div>
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-muted">{col.title}</h2>
+            <ul class="mt-4 space-y-3">
+              {col.links.map((link) => (
+                <li>
+                  <a href={link.href} class="text-sm text-ink/80 hover:text-primary transition">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-12 flex flex-col gap-3 border-t border-line pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {site.name} — Tous droits réservés</p>
+      <p>Société par actions simplifiée — Faches-Thumesnil, France</p>
+    </div>
+  </div>
+</footer>

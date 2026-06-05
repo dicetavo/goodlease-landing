@@ -1,0 +1,53 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { emails } from '../config';
+---
+
+<Legal
+  title="Règles de contenu"
+  description="Les règles de la communauté GoodLease : ce qui est autorisé et interdit dans les annonces, les photos et les échanges, et les conséquences en cas de manquement."
+  intro="Ces règles garantissent une marketplace sûre, fiable et agréable pour tous. En publiant une annonce ou en échangeant sur GoodLease, vous vous engagez à les respecter."
+>
+  <h2>Annonces</h2>
+  <ul>
+    <li><strong>Matériel autorisé</strong> : équipement événementiel et professionnel dont vous avez la disposition légale (sonorisation, éclairage, mobilier, tentes, décoration, outillage, etc.).</li>
+    <li><strong>Descriptions véridiques</strong> : indiquez l’état réel du matériel, ses caractéristiques essentielles et les conditions de location, sans information trompeuse.</li>
+    <li><strong>Photos réelles</strong> : utilisez des photos authentiques du Produit proposé, pas d’images génériques détournées.</li>
+    <li><strong>Objets interdits</strong> : sont notamment prohibés les armes, les contrefaçons, les produits illégaux ou dangereux, et tout bien dont la location enfreint la loi ou les droits de tiers.</li>
+  </ul>
+
+  <h2>Échanges entre utilisateurs</h2>
+  <ul>
+    <li>Restez courtois : aucune insulte, menace ou propos discriminatoire n’est toléré.</li>
+    <li>Pas de harcèlement ni de sollicitation abusive.</li>
+    <li>Pas de tentative de contournement de la plateforme (paiement hors GoodLease, partage de coordonnées pour échapper aux protections du Service, etc.).</li>
+  </ul>
+
+  <h2>Photos et modération</h2>
+  <p>
+    Les contenus offensants, violents, à caractère sexuel ou portant atteinte à la dignité des personnes
+    sont interdits. Pour assurer le respect de ces règles, les photos publiées peuvent faire l’objet
+    d’une <strong>modération automatisée</strong> (analyse d’images via Google Cloud Vision), complétée
+    si nécessaire d’une revue humaine. Conformément à l’article 22 du RGPD, aucune décision produisant des
+    effets juridiques significatifs n’est prise sur le seul fondement d’un traitement automatisé sans
+    possibilité d’intervention humaine.
+  </p>
+
+  <h2>Signalement</h2>
+  <p>
+    Un contenu ou un comportement vous semble contraire à ces règles&nbsp;? Vous pouvez le signaler
+    depuis l’application, ou nous écrire à
+    <a href={`mailto:${emails.signalement}`}>{emails.signalement}</a>. Conformément au Digital Services
+    Act (mécanisme de « notice &amp; action »), nous examinons les signalements et prenons les mesures
+    appropriées.
+  </p>
+
+  <h2>Conséquences en cas de manquement</h2>
+  <p>Selon la gravité et la répétition des faits, GoodLease peut&nbsp;:</p>
+  <ul>
+    <li>adresser un <strong>avertissement</strong> ;</li>
+    <li>retirer une annonce ou un contenu non conforme ;</li>
+    <li><strong>suspendre</strong> temporairement un compte ;</li>
+    <li><strong>supprimer</strong> définitivement un compte en cas de manquement grave ou répété.</li>
+  </ul>
+</Legal>

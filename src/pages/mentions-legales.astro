@@ -1,0 +1,44 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { company, emails } from '../config';
+---
+
+<Legal
+  title="Mentions légales"
+  description="Mentions légales de GoodLease — identité de l'éditeur, représentation légale, directeur de la publication et hébergeur du site goodlease.fr."
+>
+  <h2>Identité de l’éditeur</h2>
+  <p>
+    <strong>{company.legalName}</strong><br />
+    {company.form}<br />
+    Siège social : {company.address}<br />
+    {company.rcs} — SIREN : {company.siren}<br />
+    N° de TVA intracommunautaire : {company.tva}<br />
+    {company.registrationNote}
+  </p>
+
+  <h2>Représentation légale</h2>
+  <p>
+    Président : {company.president}<br />
+    Directeur Général : {company.dg}
+  </p>
+
+  <h2>Directeur de la publication</h2>
+  <p>{company.publicationDirector}</p>
+
+  <h2>Contact</h2>
+  <p>
+    E-mail : <a href={`mailto:${emails.contact}`}>{emails.contact}</a><br />
+    Téléphone : {company.phone}
+  </p>
+
+  <h2>Hébergeur du site</h2>
+  <p>
+    Le site goodlease.fr est hébergé sur <strong>Cloudflare</strong> (Cloudflare, Inc., 101 Townsend
+    Street, San Francisco, CA 94107, États-Unis — <a href="https://www.cloudflare.com" rel="nofollow">cloudflare.com</a>).<br />
+    La gestion du nom de domaine et des e-mails est assurée par :<br />
+    OVH SAS<br />
+    2 rue Kellermann, 59100 Roubaix, France<br />
+    RCS Lille Métropole 424 761 419 — Téléphone : 1007
+  </p>
+</Legal>

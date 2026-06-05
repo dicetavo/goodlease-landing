@@ -1,0 +1,245 @@
+---
+import Base from '../layouts/Base.astro';
+import PhoneMockup from '../components/PhoneMockup.astro';
+import WaitlistForm from '../components/WaitlistForm.astro';
+import StoreBadges from '../components/StoreBadges.astro';
+import { routes } from '../config';
+
+const steps = [
+  {
+    n: '1',
+    title: 'Recherchez',
+    text: 'Trouvez le matériel près de chez vous : sonorisation, mobilier, tentes, déco, outillage… Filtrez par dates et par lieu.',
+  },
+  {
+    n: '2',
+    title: 'Réservez',
+    text: 'Réservez en quelques minutes. Le paiement et le dépôt de garantie sont sécurisés via Stripe — vous êtes protégé.',
+  },
+  {
+    n: '3',
+    title: 'Restituez',
+    text: 'Récupérez le matériel, profitez-en, puis restituez-le à la date convenue. Le dépôt de garantie est libéré automatiquement.',
+  },
+];
+
+const owners = [
+  { title: 'Rentabilisez votre matériel', text: 'Mettez en location ce que vous n’utilisez pas tous les jours et générez un revenu complémentaire.' },
+  { title: 'Dépôt de garantie maîtrisé', text: 'Une empreinte de garantie est posée à chaque location et restituée si tout se passe bien.' },
+  { title: 'Annonces modérées', text: 'Les annonces et les photos sont vérifiées pour garder une marketplace fiable et de qualité.' },
+  { title: 'Paiement sécurisé via Stripe', text: 'Les fonds transitent par Stripe Connect. Vous recevez vos paiements directement sur votre compte.' },
+];
+
+const renters = [
+  { title: 'Une grande variété de matériel', text: 'Du matériel événementiel et professionnel disponible près de chez vous, sans l’acheter.' },
+  { title: 'Un prix juste', text: 'Louez au prix fixé par le loueur, en toute transparence. Tous les frais sont affichés avant de payer.' },
+  { title: 'Un bail sécurisé', text: 'Identité des loueurs pros vérifiée, dépôt de garantie encadré, paiement intermédié.' },
+  { title: 'Un support à l’écoute', text: 'Une question, un imprévu ? Notre service client vous accompagne du lundi au vendredi.' },
+];
+
+const trust = [
+  { title: 'Vérification d’identité', text: 'Les loueurs professionnels font l’objet d’une vérification KYC (Stripe) conforme au DSA.' },
+  { title: 'Dépôt de garantie', text: 'Empreinte bancaire posée puis restituée via Stripe — GoodLease n’est pas dépositaire des fonds.' },
+  { title: 'Médiation FEVAD', text: 'En cas de litige, une médiation de la consommation est prévue, en plus de notre support.' },
+  { title: 'Transparence des frais', text: 'Le montant de la commission et le prix TTC sont affichés au moment de la réservation.' },
+];
+
+const screenshots = [
+  { src: undefined, alt: 'Recherche de matériel' },
+  { src: undefined, alt: 'Fiche d’une annonce' },
+  { src: undefined, alt: 'Réservation & paiement' },
+  { src: undefined, alt: 'Mes annonces' },
+];
+---
+
+<Base title="GoodLease" homeSchema>
+  <!-- HERO -->
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 -z-10">
+      <div class="absolute -top-32 left-1/2 h-[480px] w-[820px] -translate-x-1/2 rounded-full bg-primary-100 blur-3xl opacity-60"></div>
+    </div>
+    <div class="container-gl grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
+      <div>
+        <span class="eyebrow">Bientôt disponible · iOS & Android</span>
+        <h1 class="mt-5 text-4xl font-bold leading-[1.1] sm:text-5xl">
+          Louez le matériel dont vous avez besoin.
+          <span class="text-primary">Rentabilisez celui que vous avez.</span>
+        </h1>
+        <p class="mt-5 max-w-xl text-lg leading-relaxed text-muted">
+          GoodLease est la marketplace de location de matériel entre particuliers et avec des pros.
+          Réservez en quelques clics, payez en sécurité, profitez d’un bail protégé.
+        </p>
+
+        <div id="telecharger" class="mt-8 max-w-lg scroll-mt-24 space-y-7">
+          <div>
+            <p class="mb-3 flex items-center gap-2 text-sm font-medium text-ink">
+              <img src="/icon-1024.png" alt="" aria-hidden="true" class="h-8 w-8 rounded-[8px] shadow-soft" />
+              Téléchargez l’app GoodLease
+            </p>
+            <StoreBadges />
+          </div>
+
+          <div class="border-t border-line pt-6">
+            <p class="mb-3 text-sm font-medium text-muted">
+              Pas encore lancée — rejoignez la liste d’attente, on vous prévient au lancement :
+            </p>
+            <WaitlistForm compact />
+          </div>
+        </div>
+      </div>
+
+      <div class="relative flex justify-center lg:justify-end">
+        <PhoneMockup alt="L’application GoodLease" eager class="rotate-[2deg]" />
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMENT ÇA MARCHE -->
+  <section id="comment-ca-marche" class="scroll-mt-20 border-y border-line bg-surface">
+    <div class="container-gl py-20">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">Comment ça marche</span>
+        <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Louer du matériel, simplement</h2>
+        <p class="mt-4 text-muted">Trois étapes, de la recherche à la restitution.</p>
+      </div>
+      <div class="mt-14 grid gap-6 md:grid-cols-3">
+        {
+          steps.map((s) => (
+            <div class="card">
+              <div class="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-lg font-bold text-white">
+                {s.n}
+              </div>
+              <h3 class="mt-5 text-lg font-semibold">{s.title}</h3>
+              <p class="mt-2 text-[15px] leading-relaxed text-muted">{s.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- POUR LES LOUEURS -->
+  <section id="loueurs" class="scroll-mt-20">
+    <div class="container-gl py-20">
+      <div class="grid items-center gap-14 lg:grid-cols-2">
+        <div class="order-2 flex justify-center lg:order-1">
+          <PhoneMockup alt="Mettre du matériel en location" class="-rotate-[2deg]" />
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="eyebrow">Pour les loueurs</span>
+          <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Votre matériel travaille pour vous</h2>
+          <p class="mt-4 text-muted">
+            Particulier ou professionnel, mettez vos équipements en location et gardez le contrôle.
+          </p>
+          <div class="mt-8 grid gap-5 sm:grid-cols-2">
+            {
+              owners.map((f) => (
+                <div>
+                  <h3 class="flex items-center gap-2 text-[15px] font-semibold">
+                    <span class="text-primary">●</span>
+                    {f.title}
+                  </h3>
+                  <p class="mt-1.5 text-sm leading-relaxed text-muted">{f.text}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POUR LES LOCATAIRES -->
+  <section class="border-y border-line bg-surface">
+    <div class="container-gl py-20">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">Pour les locataires</span>
+        <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Tout le matériel, sans l’acheter</h2>
+      </div>
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          renters.map((f) => (
+            <div class="card">
+              <h3 class="text-base font-semibold">{f.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">{f.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- SÉCURITÉ & CONFIANCE -->
+  <section>
+    <div class="container-gl py-20">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">Sécurité &amp; confiance</span>
+        <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Louez l’esprit tranquille</h2>
+        <p class="mt-4 text-muted">
+          La sécurité du bail est au cœur de GoodLease.
+          <a href={routes.safety} class="font-medium text-primary hover:underline">En savoir plus</a>.
+        </p>
+      </div>
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          trust.map((f) => (
+            <div class="rounded-card border border-line bg-surface p-6">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1675F3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="M9 12l2 2 4-4" />
+                </svg>
+              </div>
+              <h3 class="mt-4 text-base font-semibold">{f.title}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-muted">{f.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CAPTURES D'ÉCRAN -->
+  <section class="border-y border-line bg-surface">
+    <div class="container-gl py-20">
+      <div class="mx-auto max-w-2xl text-center">
+        <span class="eyebrow">L’app en images</span>
+        <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Pensée pour aller vite</h2>
+      </div>
+      <div class="mt-14 flex flex-wrap items-end justify-center gap-6 sm:gap-8">
+        {
+          screenshots.map((s) => (
+            <PhoneMockup src={s.src} alt={s.alt} class="max-w-[220px]" />
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA WAITLIST -->
+  <section>
+    <div class="container-gl py-20">
+      <div class="mx-auto max-w-3xl rounded-card bg-primary px-8 py-12 text-center shadow-card sm:px-12">
+        <img
+          src="/icon-1024.png"
+          alt="Icône de l’application GoodLease"
+          class="mx-auto h-20 w-20 rounded-[20px] shadow-lg"
+          width="80"
+          height="80"
+        />
+        <h2 class="mt-6 text-3xl font-semibold text-white sm:text-4xl">Soyez les premiers informés du lancement</h2>
+        <p class="mx-auto mt-3 max-w-xl text-primary-100">
+          Bientôt disponible sur l’App Store et Google Play. Laissez votre e-mail : on vous prévient dès la sortie.
+        </p>
+
+        <div class="mt-8 rounded-card bg-white/10 px-6 py-6">
+          <StoreBadges center />
+        </div>
+
+        <div class="mx-auto mt-6 max-w-lg rounded-card bg-surface p-5 text-left">
+          <WaitlistForm compact />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

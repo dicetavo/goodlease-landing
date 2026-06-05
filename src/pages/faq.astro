@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import { routes } from '../config';
+
+const faq = [
+  {
+    cat: 'Inscription',
+    items: [
+      { q: 'Comment créer un compte GoodLease ?', a: 'Téléchargez l’application, puis inscrivez-vous par e-mail ou via Google (ainsi qu’Apple et Facebook sur iOS). Vous choisissez ensuite un nom d’utilisateur et, si vous le souhaitez, une photo de profil.' },
+      { q: 'GoodLease est-il gratuit ?', a: 'La création de compte et la recherche de matériel sont gratuites. Une commission s’applique sur les locations ; son montant vous est indiqué avant tout paiement.' },
+    ],
+  },
+  {
+    cat: 'Location',
+    items: [
+      { q: 'Comment réserver du matériel ?', a: 'Recherchez le matériel, choisissez vos dates, puis validez la réservation et le paiement directement dans l’application.' },
+      { q: 'Que se passe-t-il à la fin de la location ?', a: 'Vous restituez le matériel à la date convenue. Si un dépôt de garantie a été demandé, il est libéré automatiquement lorsque tout s’est bien passé.' },
+    ],
+  },
+  {
+    cat: 'Paiement & dépôt de garantie',
+    items: [
+      { q: 'Mes paiements sont-ils sécurisés ?', a: 'Oui. Les paiements transitent par Stripe. GoodLease n’est pas dépositaire des fonds et ne conserve pas vos données bancaires.' },
+      { q: 'Comment fonctionne le dépôt de garantie ?', a: 'Une empreinte bancaire peut être posée au moment de la réservation via Stripe. Ce n’est pas un débit : la somme est restituée si le matériel est rendu dans les conditions prévues.' },
+    ],
+  },
+  {
+    cat: 'Mettre du matériel en location',
+    items: [
+      { q: 'Comment publier une annonce ?', a: 'Depuis l’application, créez une annonce avec des photos réelles, une description fidèle, un prix et vos disponibilités au calendrier.' },
+      { q: 'Comment suis-je payé ?', a: 'Les loueurs reçoivent leurs paiements via Stripe Connect. Vous devez finaliser votre intégration Stripe (onboarding) pour pouvoir recevoir des réservations.' },
+    ],
+  },
+  {
+    cat: 'Problèmes & litiges',
+    items: [
+      { q: 'Que faire en cas de litige ?', a: 'Contactez d’abord l’autre partie, puis notre support. Une médiation de la consommation est prévue si nécessaire — voir la page Résolution des litiges.' },
+      { q: 'Comment signaler un contenu ou un utilisateur ?', a: 'Utilisez la fonction de signalement dans l’application, ou écrivez-nous. Voir nos règles de contenu.' },
+    ],
+  },
+  {
+    cat: 'Compte & données',
+    items: [
+      { q: 'Comment supprimer mon compte ?', a: 'Vous pouvez demander la suppression de votre compte et de vos données. Voir la page « Supprimer mon compte ».' },
+      { q: 'Comment exercer mes droits RGPD ?', a: 'Écrivez à rgpd@goodlease.fr. Vos droits (accès, rectification, suppression, portabilité, opposition) sont détaillés dans notre politique de confidentialité.' },
+    ],
+  },
+];
+---
+
+<Base
+  title="FAQ"
+  description="Questions fréquentes sur GoodLease : inscription, location, paiement et dépôt de garantie, mise en location, litiges, compte et données personnelles."
+>
+  <section class="border-b border-line bg-surface">
+    <div class="container-gl py-12 sm:py-16">
+      <a href="/" class="text-sm font-medium text-primary hover:underline">← Retour à l’accueil</a>
+      <h1 class="mt-4 text-3xl font-semibold sm:text-4xl">Questions fréquentes</h1>
+      <p class="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted">
+        Vous ne trouvez pas votre réponse&nbsp;?
+        <a href={routes.contact} class="font-medium text-primary hover:underline">Contactez notre service client</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="container-gl py-12">
+    <div class="mx-auto max-w-3xl space-y-10">
+      {
+        faq.map((group) => (
+          <div>
+            <h2 class="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">{group.cat}</h2>
+            <div class="space-y-3">
+              {group.items.map((item) => (
+                <details class="group rounded-card border border-line bg-surface p-5">
+                  <summary class="flex cursor-pointer items-center justify-between gap-4 text-[15px] font-medium text-ink marker:content-none">
+                    {item.q}
+                    <svg class="h-5 w-5 shrink-0 text-muted transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </summary>
+                  <p class="mt-3 text-sm leading-relaxed text-muted">{item.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Base>
