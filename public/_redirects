@@ -1,0 +1,2 @@
+# Redirige www → domaine racine (canonique = https://goodlease.fr)
+https://www.goodlease.fr/* https://goodlease.fr/:splat 301

@@ -45,10 +45,10 @@ const trust = [
 ];
 
 const screenshots = [
-  { src: undefined, alt: 'Recherche de matériel' },
-  { src: undefined, alt: 'Fiche d’une annonce' },
-  { src: undefined, alt: 'Réservation & paiement' },
-  { src: undefined, alt: 'Mes annonces' },
+  { src: '/screenshots/01-explorer.png', alt: 'Rechercher du matériel près de chez vous' },
+  { src: '/screenshots/02-fiche-produit.png', alt: 'Fiche d’une annonce avec localisation sur carte' },
+  { src: '/screenshots/04-calendrier.png', alt: 'Choisir ses dates de location au calendrier' },
+  { src: '/screenshots/03-micros.png', alt: 'Matériel audio professionnel à louer' },
 ];
 ---
 
@@ -89,7 +89,12 @@ const screenshots = [
       </div>
 
       <div class="relative flex justify-center lg:justify-end">
-        <PhoneMockup alt="L’application GoodLease" eager class="rotate-[2deg]" />
+        <PhoneMockup
+          src="/screenshots/02-fiche-produit.png"
+          alt="Fiche produit dans l’application GoodLease"
+          eager
+          class="rotate-[2deg]"
+        />
       </div>
     </div>
   </section>
@@ -123,7 +128,11 @@ const screenshots = [
     <div class="container-gl py-20">
       <div class="grid items-center gap-14 lg:grid-cols-2">
         <div class="order-2 flex justify-center lg:order-1">
-          <PhoneMockup alt="Mettre du matériel en location" class="-rotate-[2deg]" />
+          <PhoneMockup
+            src="/screenshots/03-micros.png"
+            alt="Mettre du matériel en location sur GoodLease"
+            class="-rotate-[2deg]"
+          />
         </div>
         <div class="order-1 lg:order-2">
           <span class="eyebrow">Pour les loueurs</span>
