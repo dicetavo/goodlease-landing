@@ -73,7 +73,10 @@ const screenshots = [
         <div id="telecharger" class="mt-8 max-w-lg scroll-mt-24 space-y-7">
           <div>
             <p class="mb-3 flex items-center gap-2 text-sm font-medium text-ink">
-              <img src="/icon-1024.png" alt="" aria-hidden="true" class="h-8 w-8 rounded-[8px] shadow-soft" />
+              <picture>
+                <source srcset="/icon-192.webp" type="image/webp" />
+                <img src="/icon-192.png" alt="" aria-hidden="true" class="h-8 w-8 rounded-[8px] shadow-soft" />
+              </picture>
               Téléchargez l’app GoodLease
             </p>
             <StoreBadges />
@@ -229,13 +232,16 @@ const screenshots = [
   <section>
     <div class="container-gl py-20">
       <div class="mx-auto max-w-3xl rounded-card bg-primary px-8 py-12 text-center shadow-card sm:px-12">
-        <img
-          src="/icon-1024.png"
-          alt="Icône de l’application GoodLease"
-          class="mx-auto h-20 w-20 rounded-[20px] shadow-lg"
-          width="80"
-          height="80"
-        />
+        <picture>
+          <source srcset="/icon-192.webp" type="image/webp" />
+          <img
+            src="/icon-192.png"
+            alt="Icône de l’application GoodLease"
+            class="mx-auto h-20 w-20 rounded-[20px] shadow-lg"
+            width="80"
+            height="80"
+          />
+        </picture>
         <h2 class="mt-6 text-3xl font-semibold text-white sm:text-4xl">Soyez les premiers informés du lancement</h2>
         <p class="mx-auto mt-3 max-w-xl text-primary-100">
           Bientôt disponible sur l’App Store et Google Play. Laissez votre e-mail : on vous prévient dès la sortie.
