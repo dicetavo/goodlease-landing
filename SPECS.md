@@ -27,8 +27,10 @@
       `src/pages/cgs.astro` et `src/pages/confidentialite.astro` une fois validées.
 - [ ] **FEVAD** : confirmer l'adhésion avant d'activer la clause de médiation (retirer le `draftNote` de
       `src/pages/resolution-des-litiges.astro`).
-- [ ] **Contenu à étoffer** (placeholders de départ) : `faq.astro` (vraies questions remontées),
-      `regles-de-contenu.astro`, `securite.astro`. Aligner `cookies.astro` avec l'analytics réellement posé.
+- [x] **Contenu étoffé** : `faq.astro` (22 Q + données structurées FAQPage), `securite.astro` (conseils,
+      responsabilité/assurance, vie privée), `regles-de-contenu.astro` (comptes & identité, propriété
+      intellectuelle), `cookies.astro` aligné sur **Plausible**. Reste à intégrer les **vraies questions
+      remontées** par les premiers utilisateurs une fois l'app en service.
 
 ## 🟡 P3 — Analytics & conformité cookies
 
