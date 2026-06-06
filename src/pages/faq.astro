@@ -8,12 +8,16 @@ const faq = [
     items: [
       { q: 'Comment créer un compte GoodLease ?', a: 'Téléchargez l’application, puis inscrivez-vous par e-mail ou via Google (ainsi qu’Apple et Facebook sur iOS). Vous choisissez ensuite un nom d’utilisateur et, si vous le souhaitez, une photo de profil.' },
       { q: 'GoodLease est-il gratuit ?', a: 'La création de compte et la recherche de matériel sont gratuites. Une commission s’applique sur les locations ; son montant vous est indiqué avant tout paiement.' },
+      { q: 'Faut-il être majeur pour utiliser GoodLease ?', a: 'Oui. GoodLease est réservé aux personnes majeures et capables juridiquement. En vous inscrivant, vous confirmez avoir au moins 18 ans.' },
+      { q: 'Puis-je utiliser GoodLease en tant que professionnel ?', a: 'Oui. GoodLease s’adresse aux particuliers comme aux professionnels. Les loueurs professionnels font l’objet d’une vérification d’identité (KYC) via Stripe et doivent indiquer leur statut, conformément à la réglementation.' },
     ],
   },
   {
     cat: 'Location',
     items: [
       { q: 'Comment réserver du matériel ?', a: 'Recherchez le matériel, choisissez vos dates, puis validez la réservation et le paiement directement dans l’application.' },
+      { q: 'Comment contacter le loueur avant de réserver ?', a: 'Une messagerie intégrée vous permet d’échanger avec le loueur depuis l’application pour poser vos questions avant de réserver. Gardez vos échanges sur GoodLease : c’est la condition pour bénéficier des protections du Service.' },
+      { q: 'Puis-je annuler une réservation ?', a: 'Les conditions d’annulation sont affichées avant le paiement et dépendent de la situation. En cas de besoin, contactez le loueur puis notre support si nécessaire.' },
       { q: 'Que se passe-t-il à la fin de la location ?', a: 'Vous restituez le matériel à la date convenue. Si un dépôt de garantie a été demandé, il est libéré automatiquement lorsque tout s’est bien passé.' },
     ],
   },
@@ -21,21 +25,26 @@ const faq = [
     cat: 'Paiement & dépôt de garantie',
     items: [
       { q: 'Mes paiements sont-ils sécurisés ?', a: 'Oui. Les paiements transitent par Stripe. GoodLease n’est pas dépositaire des fonds et ne conserve pas vos données bancaires.' },
+      { q: 'Quels moyens de paiement sont acceptés ?', a: 'Le paiement s’effectue par carte bancaire via Stripe, notre prestataire de paiement. Les coordonnées bancaires sont saisies directement dans l’environnement sécurisé de Stripe.' },
       { q: 'Comment fonctionne le dépôt de garantie ?', a: 'Une empreinte bancaire peut être posée au moment de la réservation via Stripe. Ce n’est pas un débit : la somme est restituée si le matériel est rendu dans les conditions prévues.' },
+      { q: 'Quand le dépôt de garantie peut-il être débité ?', a: 'L’empreinte n’est débitée qu’en cas de problème constaté à la restitution (matériel endommagé, perte, retard…), dans la limite du montant prévu et après échange entre les parties. Si tout se passe bien, rien n’est prélevé et l’empreinte est libérée.' },
     ],
   },
   {
     cat: 'Mettre du matériel en location',
     items: [
       { q: 'Comment publier une annonce ?', a: 'Depuis l’application, créez une annonce avec des photos réelles, une description fidèle, un prix et vos disponibilités au calendrier.' },
+      { q: 'Combien coûte la publication d’une annonce ?', a: 'Publier une annonce est gratuit. GoodLease se rémunère via une commission prélevée uniquement lorsqu’une location est conclue ; son montant est transparent et affiché.' },
+      { q: 'Qui fixe le prix de location ?', a: 'C’est vous, le loueur, qui fixez librement votre prix et vos disponibilités. Le locataire voit le prix TTC et l’ensemble des frais avant de payer.' },
       { q: 'Comment suis-je payé ?', a: 'Les loueurs reçoivent leurs paiements via Stripe Connect. Vous devez finaliser votre intégration Stripe (onboarding) pour pouvoir recevoir des réservations.' },
     ],
   },
   {
     cat: 'Problèmes & litiges',
     items: [
+      { q: 'Que faire si le matériel est endommagé ou non restitué ?', a: 'Signalez-le rapidement à l’autre partie via la messagerie, en conservant des preuves (photos, échanges). Le dépôt de garantie est prévu pour ce type de situation. Si aucun accord n’est trouvé, contactez notre support qui vous accompagnera.' },
       { q: 'Que faire en cas de litige ?', a: 'Contactez d’abord l’autre partie, puis notre support. Une médiation de la consommation est prévue si nécessaire — voir la page Résolution des litiges.' },
-      { q: 'Comment signaler un contenu ou un utilisateur ?', a: 'Utilisez la fonction de signalement dans l’application, ou écrivez-nous. Voir nos règles de contenu.' },
+      { q: 'Comment signaler un contenu ou un utilisateur ?', a: 'Utilisez la fonction de signalement dans l’application, ou écrivez-nous à signalement@goodlease.fr. Voir nos règles de contenu.' },
     ],
   },
   {
@@ -43,9 +52,23 @@ const faq = [
     items: [
       { q: 'Comment supprimer mon compte ?', a: 'Vous pouvez demander la suppression de votre compte et de vos données. Voir la page « Supprimer mon compte ».' },
       { q: 'Comment exercer mes droits RGPD ?', a: 'Écrivez à rgpd@goodlease.fr. Vos droits (accès, rectification, suppression, portabilité, opposition) sont détaillés dans notre politique de confidentialité.' },
+      { q: 'Mes données personnelles sont-elles revendues ?', a: 'Non. Vos données ne sont jamais vendues. Elles sont partagées uniquement avec les prestataires nécessaires au fonctionnement du Service (par exemple Stripe pour le paiement), dans le respect du RGPD. Le détail figure dans notre politique de confidentialité.' },
     ],
   },
 ];
+
+// Données structurées FAQPage (SEO) — construites depuis la même source.
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.flatMap((group) =>
+    group.items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  ),
+};
 ---
 
 <Base
@@ -87,4 +110,6 @@ const faq = [
       }
     </div>
   </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 </Base>
