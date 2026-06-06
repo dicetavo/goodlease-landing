@@ -7,6 +7,8 @@ interface Props {
   class?: string;
 }
 const { src, alt, eager = false, class: className = '' } = Astro.props;
+// Variante WebP servie en priorité (les captures ont un .webp à côté du .png), fallback PNG.
+const webpSrc = src?.replace(/\.png$/, '.webp');
 ---
 
 <div class={`phone ${className}`}>
@@ -14,13 +16,16 @@ const { src, alt, eager = false, class: className = '' } = Astro.props;
     <div class="phone-notch" aria-hidden="true"></div>
     {
       src ? (
-        <img
-          src={src}
-          alt={alt}
-          class="phone-screen object-cover"
-          loading={eager ? 'eager' : 'lazy'}
-          decoding="async"
-        />
+        <picture>
+          <source srcset={webpSrc} type="image/webp" />
+          <img
+            src={src}
+            alt={alt}
+            class="phone-screen object-cover"
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </picture>
       ) : (
         <div class="phone-screen flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-primary-50 to-primary-100 text-center">
           <img src="/mark.svg" alt="" aria-hidden="true" class="h-12 w-12 opacity-80" />

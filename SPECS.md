@@ -27,8 +27,10 @@
       `src/pages/cgs.astro` et `src/pages/confidentialite.astro` une fois validées.
 - [ ] **FEVAD** : confirmer l'adhésion avant d'activer la clause de médiation (retirer le `draftNote` de
       `src/pages/resolution-des-litiges.astro`).
-- [ ] **Contenu à étoffer** (placeholders de départ) : `faq.astro` (vraies questions remontées),
-      `regles-de-contenu.astro`, `securite.astro`. Aligner `cookies.astro` avec l'analytics réellement posé.
+- [x] **Contenu étoffé** : `faq.astro` (22 Q + données structurées FAQPage), `securite.astro` (conseils,
+      responsabilité/assurance, vie privée), `regles-de-contenu.astro` (comptes & identité, propriété
+      intellectuelle), `cookies.astro` aligné sur **Plausible**. Reste à intégrer les **vraies questions
+      remontées** par les premiers utilisateurs une fois l'app en service.
 
 ## 🟡 P3 — Analytics & conformité cookies
 
@@ -51,13 +53,14 @@
 - [ ] **Captures** : la galerie a 4 vraies captures (`public/screenshots/`). Optionnel : recapturer une
       **home propre** (sans l'annonce "laptop" de test) + ajouter 1-2 écrans (sans PII : pas d'écran
       profil/portefeuille/transactions/bailleur qui exposent des e-mails). Masters : `src/assets/screenshots/`.
-- [ ] **Perf** : convertir les captures PNG (~500 Ko) en **WebP** pour Lighthouse ; viser **≥ 95**
-      (perf/SEO/a11y) sur home + une page légale.
-- [ ] **Favicon set** : aujourd'hui on sert `icon-1024.png`. Générer `favicon.ico` + 16/32/180/512 +
-      `apple-touch-icon` propre (référencés dans `Base.astro`).
+- [x] **Perf** : captures converties en **WebP** (servies via `<picture>` dans `PhoneMockup.astro`,
+      fallback PNG conservé) — ~440 Ko → ~57 Ko etc. L'icône en page passe de `icon-1024.png` (838 Ko)
+      à `icon-192` (5 Ko). Reste : mesurer Lighthouse réel, viser **≥ 95** (perf/SEO/a11y).
+- [x] **Favicon set** : `favicon.ico` (16+32) + `favicon-16/32/512.png` + `apple-touch-icon` (180)
+      régénérés depuis `icon-1024.png`, référencés dans `Base.astro`.
 - [ ] **OG images** : une seule `og-default.png` (1200×630). Optionnel : OG dédiées par page clé.
-- [ ] **SEO** : vérifier que le `sitemap` couvre les 11 pages, `robots.txt` OK, données structurées
-      `Organization` + `MobileApplication` à jour (`Base.astro`, `homeSchema`).
+- [x] **SEO** : `sitemap-0.xml` couvre bien les **11 pages**, `robots.txt` OK (pointe le sitemap-index),
+      données structurées `Organization` + `MobileApplication` présentes (`Base.astro`, `homeSchema`).
 
 ## ⚙️ P6 — Ops (optionnel)
 
