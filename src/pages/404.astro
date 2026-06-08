@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import { routes } from '../config';
+
+const links = [
+  { label: 'Accueil', href: routes.home },
+  { label: 'FAQ', href: routes.faq },
+  { label: 'Contacter le support', href: routes.contact },
+  { label: 'Sécurité du bail', href: routes.safety },
+];
+---
+
+<Base
+  title="Page introuvable"
+  description="Cette page n’existe pas ou a été déplacée. Retrouvez l’essentiel de GoodLease depuis l’accueil ou notre aide."
+>
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 -z-10">
+      <div class="absolute -top-32 left-1/2 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-primary-100 blur-3xl opacity-60"></div>
+    </div>
+    <div class="container-gl flex flex-col items-center py-24 text-center sm:py-32">
+      <span class="eyebrow">Erreur 404</span>
+      <p class="mt-6 text-7xl font-bold tracking-tight text-primary sm:text-8xl">404</p>
+      <h1 class="mt-4 text-3xl font-semibold sm:text-4xl">Cette page est introuvable</h1>
+      <p class="mt-4 max-w-xl text-[15px] leading-relaxed text-muted">
+        Le lien est peut-être erroné ou la page a été déplacée. Pas d’inquiétude&nbsp;: voici par où
+        continuer.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href={routes.home} class="btn-primary">Retour à l’accueil</a>
+        <a href={routes.faq} class="btn-secondary">Consulter la FAQ</a>
+      </div>
+
+      <ul class="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} class="font-medium text-primary hover:underline">
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
