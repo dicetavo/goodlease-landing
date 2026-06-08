@@ -60,10 +60,12 @@ browsers and the app's `launchUrl` follow it.
 - **Store badges** (`StoreBadges.astro`): hand-built inline-SVG App Store / Play Store badges. They show
   a **"Bientôt disponible"** state and are non-clickable until `stores.appStore`/`stores.playStore` are
   set in `config.ts`. Before launch, swap in the official Apple/Google assets (brand-guideline reasons).
-- **Screenshots**: `public/screenshots/*.png` are **real app captures** (downscaled to 640px). Source
-  masters live in `src/assets/screenshots/`. **These are public** — never include user PII (the app's
-  product-detail screen shows the lender's email and the wallet/transactions screens show balances/emails;
-  use only browse, product-top, map, and calendar screens).
+- **Screenshots**: **real app captures**, masters in `src/assets/screenshots/*.png` (1206×2622).
+  `PhoneMockup.astro` takes an `image` prop and runs them through **`astro:assets` `<Image format="webp">`**
+  (640px-wide WebP generated at build into `_astro/` — no hand-downscaling, no `public/screenshots/`
+  copies). Imported & passed in `src/pages/index.astro`. **These ship publicly** — never include user PII
+  (the app's product-detail screen shows the lender's email and the wallet/transactions screens show
+  balances/emails; use only browse, product-top, map, and calendar screens).
 
 ## Legal content status (don't present as final)
 

@@ -42,6 +42,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ error: 'invalid_fields' }, 422);
   }
 
+  // Bornes de longueur (anti-abus / payload) avant relais.
+  if (name.length > 120 || subject.length > 150 || message.length > 5000) {
+    return json({ error: 'too_long' }, 422);
+  }
+
   if (!env.BREVO_API_KEY) return json({ ok: true, sent: false });
 
   const to = env.CONTACT_TO || 'support@goodlease.fr';

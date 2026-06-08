@@ -1,0 +1,14 @@
+{
+  "name": "GoodLease",
+  "short_name": "GoodLease",
+  "description": "La marketplace de location de matériel entre particuliers et avec des pros.",
+  "lang": "fr",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#1675F3",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

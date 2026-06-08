@@ -1,19 +1,36 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 interface Props {
+  /** Capture importée depuis src/assets → optimisée en WebP au build */
+  image?: ImageMetadata;
+  /** Chemin public brut (rétro-compat, non optimisé) */
   src?: string;
   alt: string;
   /** Image prioritaire (hero) → chargement eager */
   eager?: boolean;
   class?: string;
 }
-const { src, alt, eager = false, class: className = '' } = Astro.props;
+const { image, src, alt, eager = false, class: className = '' } = Astro.props;
 ---
 
 <div class={`phone ${className}`}>
   <div class="phone-frame">
     <div class="phone-notch" aria-hidden="true"></div>
     {
-      src ? (
+      image ? (
+        <Image
+          src={image}
+          alt={alt}
+          width={640}
+          format="webp"
+          quality={70}
+          class="phone-screen object-cover"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+      ) : src ? (
         <img
           src={src}
           alt={alt}

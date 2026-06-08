@@ -8,12 +8,17 @@
 
 - [ ] **Supprimer l'ancien token Cloudflare exposé** (`cfut_7vAx…`) → Cloudflare → My Profile → API Tokens
       → Delete. (Le token actif est dans `.cloudflare.env`, gitignored.)
-- [ ] **Brancher Brevo** (formulaires waitlist + contact, aujourd'hui en *mode démo*) :
+- [ ] **Brancher Brevo** (formulaires waitlist + contact, aujourd'hui en *mode démo*) — _code prêt
+      (double opt-in câblé), reste la config dashboard_ :
   - Créer le compte Brevo + une **liste waitlist** (+ liste newsletter optionnelle).
+  - Pour le **double opt-in** : créer un **template d'e-mail de confirmation** dans Brevo et noter son id.
   - Cloudflare Pages → projet `goodlease-landing` → Settings → Environment variables :
     `BREVO_API_KEY`, `BREVO_WAITLIST_LIST_ID`, `BREVO_NEWSLETTER_LIST_ID`, `CONTACT_TO` (défaut
     `support@goodlease.fr`), `CONTACT_FROM` (défaut `contact@goodlease.fr`).
-  - Tester end-to-end : `functions/api/waitlist.ts`, `functions/api/contact.ts`. Viser le **double opt-in**.
+    - **Double opt-in** (recommandé) : ajouter `BREVO_DOI_TEMPLATE_ID` (id du template de confirmation)
+      et `BREVO_DOI_REDIRECT_URL` (ex. `https://goodlease.fr/?confirm=1`). Sans ces 2 vars → repli
+      single opt-in (ajout direct à la liste). Cf. en-tête de `functions/api/waitlist.ts`.
+  - Tester end-to-end : `functions/api/waitlist.ts`, `functions/api/contact.ts`.
   - ⚠ Les Pages Functions ne tournent **pas** en `npm run dev` → tester sur la prod (ou `wrangler pages dev dist`).
 - [ ] **Créer les 6 adresses e-mail OVH** : `contact@`, `support@`, `rgpd@`, `retractation@`,
       `signalement@`, `hello@` (`src/config.ts` → `emails`). Ajouter **DMARC** (et DKIM si dispo OVH) —
@@ -32,8 +37,9 @@
 
 ## 🟡 P3 — Analytics & conformité cookies
 
-- [ ] **Plausible** : créer le site, décommenter le `<script>` dans `src/layouts/Base.astro`
-      (`data-domain="goodlease.fr"`). Cookieless → **pas de bandeau** requis.
+- [ ] **Plausible** : créer le site sur plausible.io, puis renseigner `analytics.plausibleDomain`
+      (`'goodlease.fr'`) dans `src/config.ts` → le `<script>` cookieless s'active tout seul (toggle déjà
+      câblé dans `src/layouts/Base.astro`). Cookieless → **pas de bandeau** requis.
 - [ ] **CMP** : seulement **si** on ajoute du tracking non-cookieless (Meta Pixel, etc.) → implémenter un
       bandeau Accepter / Refuser / Personnaliser (CNIL : refus aussi simple qu'accepter) + brancher
       `cookies.astro` dessus. Sinon, rien à faire.
@@ -51,13 +57,15 @@
 - [ ] **Captures** : la galerie a 4 vraies captures (`public/screenshots/`). Optionnel : recapturer une
       **home propre** (sans l'annonce "laptop" de test) + ajouter 1-2 écrans (sans PII : pas d'écran
       profil/portefeuille/transactions/bailleur qui exposent des e-mails). Masters : `src/assets/screenshots/`.
-- [ ] **Perf** : convertir les captures PNG (~500 Ko) en **WebP** pour Lighthouse ; viser **≥ 95**
-      (perf/SEO/a11y) sur home + une page légale.
-- [ ] **Favicon set** : aujourd'hui on sert `icon-1024.png`. Générer `favicon.ico` + 16/32/180/512 +
-      `apple-touch-icon` propre (référencés dans `Base.astro`).
+- [x] **Perf** : captures servies en **WebP** via `astro:assets` (1,4 Mo → ~55 Ko, `width/height`
+      posés contre le CLS). `PhoneMockup` prend une prop `image`, masters importés dans `index.astro`.
+      _(Reste à mesurer Lighthouse ≥ 95 en prod.)_
+- [x] **Favicon set** : `favicon.ico` (16/32/48 PNG-embedded, 6 Ko) + `favicon.svg` + `favicon-16/32.png`
+      + `apple-touch-icon` (180) + `icon-192/512.png` + `site.webmanifest`, tous référencés dans `Base.astro`.
 - [ ] **OG images** : une seule `og-default.png` (1200×630). Optionnel : OG dédiées par page clé.
-- [ ] **SEO** : vérifier que le `sitemap` couvre les 11 pages, `robots.txt` OK, données structurées
-      `Organization` + `MobileApplication` à jour (`Base.astro`, `homeSchema`).
+- [x] **SEO** : `sitemap-index.xml` couvre les **11 pages** (vérifié au build), `robots.txt` OK,
+      schema `Organization` + `MobileApplication` (`Base.astro`). **Ajouté** : JSON-LD `FAQPage` sur
+      `/faq` (12 Q/R) pour les rich results Google.
 
 ## ⚙️ P6 — Ops (optionnel)
 

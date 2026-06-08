@@ -5,6 +5,11 @@ import WaitlistForm from '../components/WaitlistForm.astro';
 import StoreBadges from '../components/StoreBadges.astro';
 import { routes } from '../config';
 
+import shotExplorer from '../assets/screenshots/01-explorer.png';
+import shotFiche from '../assets/screenshots/02-fiche-produit.png';
+import shotMicros from '../assets/screenshots/03-micros.png';
+import shotCalendrier from '../assets/screenshots/04-calendrier.png';
+
 const steps = [
   {
     n: '1',
@@ -45,10 +50,10 @@ const trust = [
 ];
 
 const screenshots = [
-  { src: '/screenshots/01-explorer.png', alt: 'Rechercher du matériel près de chez vous' },
-  { src: '/screenshots/02-fiche-produit.png', alt: 'Fiche d’une annonce avec localisation sur carte' },
-  { src: '/screenshots/04-calendrier.png', alt: 'Choisir ses dates de location au calendrier' },
-  { src: '/screenshots/03-micros.png', alt: 'Matériel audio professionnel à louer' },
+  { img: shotExplorer, alt: 'Rechercher du matériel près de chez vous' },
+  { img: shotFiche, alt: 'Fiche d’une annonce avec localisation sur carte' },
+  { img: shotCalendrier, alt: 'Choisir ses dates de location au calendrier' },
+  { img: shotMicros, alt: 'Matériel audio professionnel à louer' },
 ];
 ---
 
@@ -90,7 +95,7 @@ const screenshots = [
 
       <div class="relative flex justify-center lg:justify-end">
         <PhoneMockup
-          src="/screenshots/02-fiche-produit.png"
+          image={shotFiche}
           alt="Fiche produit dans l’application GoodLease"
           eager
           class="rotate-[2deg]"
@@ -129,7 +134,7 @@ const screenshots = [
       <div class="grid items-center gap-14 lg:grid-cols-2">
         <div class="order-2 flex justify-center lg:order-1">
           <PhoneMockup
-            src="/screenshots/03-micros.png"
+            image={shotMicros}
             alt="Mettre du matériel en location sur GoodLease"
             class="-rotate-[2deg]"
           />
@@ -218,7 +223,7 @@ const screenshots = [
       <div class="mt-14 flex flex-wrap items-end justify-center gap-6 sm:gap-8">
         {
           screenshots.map((s) => (
-            <PhoneMockup src={s.src} alt={s.alt} class="max-w-[220px]" />
+            <PhoneMockup image={s.img} alt={s.alt} class="max-w-[220px]" />
           ))
         }
       </div>

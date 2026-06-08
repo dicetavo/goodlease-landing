@@ -46,12 +46,27 @@ const faq = [
     ],
   },
 ];
+
+// Données structurées FAQPage (rich results Google) — construites depuis le même tableau.
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.flatMap((group) =>
+    group.items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    }))
+  ),
+};
 ---
 
 <Base
   title="FAQ"
   description="Questions fréquentes sur GoodLease : inscription, location, paiement et dépôt de garantie, mise en location, litiges, compte et données personnelles."
 >
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+
   <section class="border-b border-line bg-surface">
     <div class="container-gl py-12 sm:py-16">
       <a href="/" class="text-sm font-medium text-primary hover:underline">← Retour à l’accueil</a>

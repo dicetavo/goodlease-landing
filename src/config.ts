@@ -9,6 +9,12 @@ export const site = {
     "GoodLease, la marketplace de location de matériel entre particuliers et avec des pros. Louez ce dont vous avez besoin, rentabilisez ce que vous possédez. Paiement sécurisé, dépôt de garantie et bail protégé.",
 };
 
+// Mesure d'audience. Vide = désactivée (aucun script chargé). Renseigner le domaine
+// déclaré sur plausible.io pour activer le tracking cookieless (pas de bandeau requis).
+export const analytics = {
+  plausibleDomain: '',
+};
+
 // Liens vers les fiches stores. Vides tant que l'app n'est pas publiée
 // → les badges s'affichent en mode « Bientôt disponible » (non cliquables).
 // Renseigner dès la mise en ligne sur l'App Store / Google Play.
