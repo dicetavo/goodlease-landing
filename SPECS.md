@@ -29,12 +29,12 @@
 - [ ] **Mentions légales** : renseigner **SIREN + N° TVA** dès réception du **Kbis** → `company.siren` /
       `company.tva` dans `src/config.ts` (actuellement `[À COMPLÉTER]`). Idem `company.phone`.
 - [x] **CGS + Confidentialité** : validées (avocat) → `draftNote` retirés + date « 18 juin 2026 »
-      (`cgs.astro`, `confidentialite.astro`). ⚠ À refaire relire à l'avocat à l'occasion : le §18 CGS
-      (médiation) a été dé-FEVAD-isé, et la confidentialité garde 2 ajouts hors `.docx` (section
-      « Transferts hors UE » Stripe/Google + durées 10 ans compta / 5 ans KYC).
-- [ ] **Médiateur de la consommation** : FEVAD **abandonné** → désigner un médiateur agréé (CM2C, MEDICYS,
-      CMAP…) et y souscrire **avant lancement** (obligation art. L612-1 C. conso). Câbler nom + coordonnées
-      sur `cgs.astro` §18 et `resolution-des-litiges.astro` (le wording générique est déjà en place).
+      (`cgs.astro`, `confidentialite.astro`). ⚠ À refaire relire à l'avocat à l'occasion : la confidentialité
+      garde 2 ajouts hors `.docx` (section « Transferts hors UE » Stripe/Google + durées 10 ans compta /
+      5 ans KYC).
+- [ ] **Médiation FEVAD** : conservée (nommée dans CGS §18, `resolution-des-litiges.astro`, carte home),
+      `draftNote` retiré. Reste à **finaliser l'adhésion au médiateur du e-commerce de la FEVAD** avant
+      lancement (obligation art. L612-1 C. conso : nommer un médiateur auquel on a réellement souscrit).
 - [ ] **Contenu à étoffer** (placeholders de départ) : `faq.astro` (vraies questions remontées),
       `regles-de-contenu.astro`, `securite.astro`. Aligner `cookies.astro` avec l'analytics réellement posé.
 
