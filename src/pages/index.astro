@@ -45,7 +45,7 @@ const renters = [
 const trust = [
   { title: 'Vérification d’identité', text: 'Les loueurs professionnels font l’objet d’une vérification KYC (Stripe) conforme au DSA.' },
   { title: 'Dépôt de garantie', text: 'Empreinte bancaire posée puis restituée via Stripe — GoodLease n’est pas dépositaire des fonds.' },
-  { title: 'Médiation FEVAD', text: 'En cas de litige, une médiation de la consommation est prévue, en plus de notre support.' },
+  { title: 'Médiation de la consommation', text: 'En cas de litige, une médiation de la consommation est prévue, en plus de notre support.' },
   { title: 'Transparence des frais', text: 'Le montant de la commission et le prix TTC sont affichés au moment de la réservation.' },
 ];
 
@@ -58,6 +58,16 @@ const screenshots = [
 ---
 
 <Base title="GoodLease" homeSchema>
+  <!-- Bandeau de confirmation double opt-in : Brevo redirige ici (/?confirm=1) après clic dans l'e-mail. -->
+  <div id="confirm-banner" class="hidden border-b border-success/30 bg-success/10">
+    <div class="container-gl flex items-center justify-center gap-2 py-3 text-center text-sm font-medium text-success">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 6 9 17l-5-5" />
+      </svg>
+      Votre inscription est confirmée — merci ! On vous prévient dès le lancement.
+    </div>
+  </div>
+
   <!-- HERO -->
   <section class="relative overflow-hidden">
     <div class="pointer-events-none absolute inset-0 -z-10">
@@ -256,4 +266,13 @@ const screenshots = [
       </div>
     </div>
   </section>
+
+  <script>
+    // Retour depuis l'e-mail de confirmation Brevo : on révèle le bandeau puis on nettoie l'URL
+    // (replaceState) pour qu'un rafraîchissement ne le ré-affiche pas.
+    if (new URLSearchParams(location.search).get('confirm') === '1') {
+      document.getElementById('confirm-banner')?.classList.remove('hidden');
+      history.replaceState(null, '', location.pathname);
+    }
+  </script>
 </Base>

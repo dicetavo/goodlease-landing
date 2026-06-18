@@ -28,10 +28,13 @@
 
 - [ ] **Mentions légales** : renseigner **SIREN + N° TVA** dès réception du **Kbis** → `company.siren` /
       `company.tva` dans `src/config.ts` (actuellement `[À COMPLÉTER]`). Idem `company.phone`.
-- [ ] **CGS + Confidentialité** : **validation finale avocat** → retirer le `draftNote` dans
-      `src/pages/cgs.astro` et `src/pages/confidentialite.astro` une fois validées.
-- [ ] **FEVAD** : confirmer l'adhésion avant d'activer la clause de médiation (retirer le `draftNote` de
-      `src/pages/resolution-des-litiges.astro`).
+- [x] **CGS + Confidentialité** : validées (avocat) → `draftNote` retirés + date « 18 juin 2026 »
+      (`cgs.astro`, `confidentialite.astro`). ⚠ À refaire relire à l'avocat à l'occasion : le §18 CGS
+      (médiation) a été dé-FEVAD-isé, et la confidentialité garde 2 ajouts hors `.docx` (section
+      « Transferts hors UE » Stripe/Google + durées 10 ans compta / 5 ans KYC).
+- [ ] **Médiateur de la consommation** : FEVAD **abandonné** → désigner un médiateur agréé (CM2C, MEDICYS,
+      CMAP…) et y souscrire **avant lancement** (obligation art. L612-1 C. conso). Câbler nom + coordonnées
+      sur `cgs.astro` §18 et `resolution-des-litiges.astro` (le wording générique est déjà en place).
 - [ ] **Contenu à étoffer** (placeholders de départ) : `faq.astro` (vraies questions remontées),
       `regles-de-contenu.astro`, `securite.astro`. Aligner `cookies.astro` avec l'analytics réellement posé.
 
