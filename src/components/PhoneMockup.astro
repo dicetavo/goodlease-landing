@@ -17,7 +17,6 @@ const { image, src, alt, eager = false, class: className = '' } = Astro.props;
 
 <div class={`phone ${className}`}>
   <div class="phone-frame">
-    <div class="phone-notch" aria-hidden="true"></div>
     {
       image ? (
         <Image
@@ -39,10 +38,15 @@ const { image, src, alt, eager = false, class: className = '' } = Astro.props;
           decoding="async"
         />
       ) : (
-        <div class="phone-screen flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-primary-50 to-primary-100 text-center">
-          <img src="/mark.svg" alt="" aria-hidden="true" class="h-12 w-12 opacity-80" />
-          <span class="px-6 text-xs font-medium text-primary/70">{alt}</span>
-        </div>
+        <Fragment>
+          {/* Encoche dessinée uniquement pour l'état placeholder ;
+              les vraies captures contiennent déjà la Dynamic Island. */}
+          <div class="phone-notch" aria-hidden="true" />
+          <div class="phone-screen flex flex-col items-center justify-center gap-2 bg-gradient-to-b from-primary-50 to-primary-100 text-center">
+            <img src="/mark.svg" alt="" aria-hidden="true" class="h-12 w-12 opacity-80" />
+            <span class="px-6 text-xs font-medium text-primary/70">{alt}</span>
+          </div>
+        </Fragment>
       )
     }
   </div>
