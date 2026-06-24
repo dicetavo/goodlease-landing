@@ -32,9 +32,10 @@
       (`cgs.astro`, `confidentialite.astro`). ⚠ À refaire relire à l'avocat à l'occasion : la confidentialité
       garde 2 ajouts hors `.docx` (section « Transferts hors UE » Stripe/Google + durées 10 ans compta /
       5 ans KYC).
-- [ ] **Médiation FEVAD** : conservée (nommée dans CGS §18, `resolution-des-litiges.astro`, carte home),
-      `draftNote` retiré. Reste à **finaliser l'adhésion au médiateur du e-commerce de la FEVAD** avant
-      lancement (obligation art. L612-1 C. conso : nommer un médiateur auquel on a réellement souscrit).
+- [ ] **Médiateur — CM2C** : FEVAD (trop cher) remplacé par **CM2C** — 48 €/3 ans (≤10 salariés) + 36 €/dossier.
+      Nommé dans CGS §18, `resolution-des-litiges.astro`, carte home (coordonnées : CM2C, 49 rue de Ponthieu,
+      75008 Paris, cm2c.net). Reste à **s'inscrire chez CM2C avant lancement** (obligation art. L612-1 :
+      médiateur auquel on a réellement souscrit) + **informer l'avocat** (le doc validé citait FEVAD).
 - [ ] **Contenu à étoffer** (placeholders de départ) : `faq.astro` (vraies questions remontées),
       `regles-de-contenu.astro`, `securite.astro`. Aligner `cookies.astro` avec l'analytics réellement posé.
 
