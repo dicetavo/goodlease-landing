@@ -65,7 +65,7 @@ export const routes = {
 
 export const mainNav = [
   { label: 'Pour vos événements', href: '/#evenements' },
-  { label: 'Comment ça marche', href: '/#comment-ca-marche' },
+  { label: 'Le parcours', href: '/#parcours' },
   { label: 'Pour les loueurs', href: '/#loueurs' },
   { label: 'Aide', href: routes.faq },
 ];

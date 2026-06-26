@@ -1,0 +1,174 @@
+---
+// Scrollytelling : un téléphone collant dont l'écran suit l'étape au centre du viewport.
+// Réutilise les vraies captures (src/assets/screenshots) optimisées en WebP par astro:assets.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Step {
+  image: ImageMetadata;
+  alt: string;
+  eyebrow: string;
+  title: string;
+  text: string;
+}
+interface Props {
+  steps: Step[];
+}
+const { steps } = Astro.props;
+---
+
+<section id="apercu" class="scroll-mt-20 border-y border-line bg-surface">
+  <div class="container-gl py-20 lg:py-24">
+    <div class="mx-auto max-w-2xl text-center" data-reveal>
+      <span class="eyebrow">L’app en images</span>
+      <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">De la recherche à la restitution</h2>
+      <p class="mt-4 text-muted">Faites défiler : l’écran suit chaque étape du parcours.</p>
+    </div>
+
+    <div class="phonescroll mt-12 grid gap-8 lg:mt-16 lg:grid-cols-2 lg:gap-16" data-phonescroll>
+      <!-- Téléphone collant (cross-fade entre les écrans) -->
+      <div class="phonescroll-sticky">
+        <div class="phone mx-auto rotate-[1.5deg]">
+          <div class="phone-frame">
+            {
+              steps.map((s, i) => (
+                <Image
+                  src={s.image}
+                  alt={s.alt}
+                  width={640}
+                  format="webp"
+                  quality={70}
+                  data-idx={i}
+                  class={`phonescroll-img${i === 0 ? ' is-active' : ''}`}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Légendes des étapes -->
+      <ol class="phonescroll-steps">
+        {
+          steps.map((s, i) => (
+            <li class={`phonescroll-step${i === 0 ? ' is-active' : ''}`} data-idx={i}>
+              <div class="phonescroll-step-inner">
+                <span class="eyebrow">{s.eyebrow}</span>
+                <h3 class="mt-4 text-2xl font-semibold sm:text-[28px]">{s.title}</h3>
+                <p class="mt-3 leading-relaxed text-muted">{s.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector('[data-phonescroll]');
+  if (root) {
+    const imgs = Array.from(root.querySelectorAll<HTMLElement>('.phonescroll-img'));
+    const steps = Array.from(root.querySelectorAll<HTMLElement>('.phonescroll-step'));
+    const setActive = (idx: number) => {
+      imgs.forEach((im) => im.classList.toggle('is-active', Number(im.dataset.idx) === idx));
+      steps.forEach((st) => st.classList.toggle('is-active', Number(st.dataset.idx) === idx));
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.idx));
+          });
+        },
+        { rootMargin: '-45% 0px -45% 0px', threshold: 0 },
+      );
+      steps.forEach((s) => io.observe(s));
+    }
+  }
+</script>
+
+<style>
+  .phone {
+    width: 100%;
+    max-width: 160px;
+  }
+  .phone-frame {
+    position: relative;
+    aspect-ratio: 9 / 19.5;
+    border-radius: 38px;
+    background: #1a1c1e;
+    padding: 9px;
+    box-shadow:
+      0 30px 60px -20px rgba(26, 28, 30, 0.35),
+      inset 0 0 0 2px rgba(255, 255, 255, 0.06);
+  }
+  .phonescroll-img {
+    position: absolute;
+    top: 9px;
+    left: 9px;
+    right: 9px;
+    bottom: 9px;
+    width: calc(100% - 18px);
+    height: calc(100% - 18px);
+    object-fit: cover;
+    border-radius: 30px;
+    opacity: 0;
+    transform: scale(1.02);
+    transition:
+      opacity 0.5s ease,
+      transform 0.6s ease;
+  }
+  .phonescroll-img.is-active {
+    opacity: 1;
+    transform: none;
+  }
+
+  .phonescroll-sticky {
+    position: sticky;
+    top: 80px;
+    z-index: 1;
+    align-self: start;
+  }
+
+  .phonescroll-step-inner {
+    transition:
+      opacity 0.4s ease,
+      transform 0.4s ease;
+  }
+  .phonescroll-step {
+    display: flex;
+    align-items: center;
+    min-height: 56vh;
+  }
+  .phonescroll-step:not(.is-active) .phonescroll-step-inner {
+    opacity: 0.4;
+    transform: translateY(6px);
+  }
+
+  @media (min-width: 1024px) {
+    .phone {
+      max-width: 270px;
+    }
+    .phonescroll-sticky {
+      top: 18vh;
+      height: fit-content;
+    }
+    .phonescroll-step {
+      min-height: 70vh;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .phonescroll-img {
+      transition: none;
+      transform: none;
+    }
+    .phonescroll-step:not(.is-active) .phonescroll-step-inner {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

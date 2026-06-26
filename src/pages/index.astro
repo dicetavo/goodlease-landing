@@ -1,6 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
 import PhoneMockup from '../components/PhoneMockup.astro';
+import PhoneScroller from '../components/PhoneScroller.astro';
+import ThreeScene from '../components/ThreeScene.astro';
+import AppJourney from '../components/AppJourney.astro';
 import WaitlistForm from '../components/WaitlistForm.astro';
 import StoreBadges from '../components/StoreBadges.astro';
 import { routes } from '../config';
@@ -84,12 +87,38 @@ const trust = [
   { title: 'Transparence des frais', text: 'Le montant de la commission et le prix TTC sont affichés au moment de la réservation.' },
 ];
 
-const screenshots = [
-  { img: shotExplorer, alt: 'Rechercher du matériel près de chez vous' },
-  { img: shotFiche, alt: 'Fiche d’une annonce avec localisation sur carte' },
-  { img: shotCalendrier, alt: 'Choisir ses dates de location au calendrier' },
-  { img: shotMicros, alt: 'Matériel audio professionnel à louer' },
+// Étapes du scrollytelling (téléphone collant) — vraies captures de l'app.
+const apercuSteps = [
+  {
+    image: shotExplorer,
+    alt: 'Écran Explorer de l’app GoodLease',
+    eyebrow: 'Étape 1 · Explorer',
+    title: 'Trouvez le matériel près de chez vous',
+    text: 'Parcourez par catégorie — son, lumières, structures, réception — et filtrez par lieu et par dates.',
+  },
+  {
+    image: shotFiche,
+    alt: 'Fiche produit dans l’app GoodLease',
+    eyebrow: 'Étape 2 · Choisir',
+    title: 'Tout est sur la fiche produit',
+    text: 'Photos, prix par jour, dépôt de garantie, avis et profil du loueur : vous décidez en confiance.',
+  },
+  {
+    image: shotCalendrier,
+    alt: 'Calendrier de réservation dans l’app GoodLease',
+    eyebrow: 'Étape 3 · Réserver',
+    title: 'Choisissez vos dates au calendrier',
+    text: 'Sélectionnez la période exacte de votre événement ; le total et la caution s’affichent avant de payer.',
+  },
+  {
+    image: shotMicros,
+    alt: 'Matériel audio professionnel à louer sur GoodLease',
+    eyebrow: 'Étape 4 · Profiter',
+    title: 'Du matériel pro, prêt pour le jour J',
+    text: 'Paiement sécurisé via Stripe, remise par code, état des lieux : tout est cadré jusqu’à la restitution.',
+  },
 ];
+
 ---
 
 <Base title="GoodLease" homeSchema>
@@ -153,7 +182,7 @@ const screenshots = [
   <!-- POUR VOS ÉVÉNEMENTS -->
   <section id="evenements" class="scroll-mt-20">
     <div class="container-gl py-20">
-      <div class="mx-auto max-w-2xl text-center">
+      <div class="mx-auto max-w-2xl text-center" data-reveal>
         <span class="eyebrow">Pour vos événements</span>
         <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Tout votre événement, équipé au même endroit</h2>
         <p class="mt-4 text-muted">
@@ -194,7 +223,7 @@ const screenshots = [
   <!-- COMMENT ÇA MARCHE -->
   <section id="comment-ca-marche" class="scroll-mt-20 border-y border-line bg-surface">
     <div class="container-gl py-20">
-      <div class="mx-auto max-w-2xl text-center">
+      <div class="mx-auto max-w-2xl text-center" data-reveal>
         <span class="eyebrow">Comment ça marche</span>
         <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Louer du matériel, simplement</h2>
         <p class="mt-4 text-muted">Trois étapes, de la recherche à la restitution.</p>
@@ -215,6 +244,15 @@ const screenshots = [
     </div>
   </section>
 
+  <!-- L'APP EN IMAGES (scrollytelling) -->
+  <PhoneScroller steps={apercuSteps} />
+
+  <!-- SECTION 3D IMMERSIVE -->
+  <ThreeScene />
+
+  <!-- TOUTES LES ÉTAPES DE L'APP -->
+  <AppJourney />
+
   <!-- POUR LES LOUEURS -->
   <section id="loueurs" class="scroll-mt-20">
     <div class="container-gl py-20">
@@ -226,7 +264,7 @@ const screenshots = [
             class="-rotate-[2deg]"
           />
         </div>
-        <div class="order-1 lg:order-2">
+        <div class="order-1 lg:order-2" data-reveal>
           <span class="eyebrow">Pour les loueurs</span>
           <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Votre matériel travaille pour vous</h2>
           <p class="mt-4 text-muted">
@@ -253,7 +291,7 @@ const screenshots = [
   <!-- POUR LES LOCATAIRES -->
   <section class="border-y border-line bg-surface">
     <div class="container-gl py-20">
-      <div class="mx-auto max-w-2xl text-center">
+      <div class="mx-auto max-w-2xl text-center" data-reveal>
         <span class="eyebrow">Pour les locataires</span>
         <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Tout le matériel, sans l’acheter</h2>
       </div>
@@ -273,7 +311,7 @@ const screenshots = [
   <!-- SÉCURITÉ & CONFIANCE -->
   <section>
     <div class="container-gl py-20">
-      <div class="mx-auto max-w-2xl text-center">
+      <div class="mx-auto max-w-2xl text-center" data-reveal>
         <span class="eyebrow">Sécurité &amp; confiance</span>
         <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Louez l’esprit tranquille</h2>
         <p class="mt-4 text-muted">
@@ -294,23 +332,6 @@ const screenshots = [
               <h3 class="mt-4 text-base font-semibold">{f.title}</h3>
               <p class="mt-2 text-sm leading-relaxed text-muted">{f.text}</p>
             </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- CAPTURES D'ÉCRAN -->
-  <section class="border-y border-line bg-surface">
-    <div class="container-gl py-20">
-      <div class="mx-auto max-w-2xl text-center">
-        <span class="eyebrow">L’app en images</span>
-        <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Pensée pour aller vite</h2>
-      </div>
-      <div class="mt-14 flex flex-wrap items-end justify-center gap-6 sm:gap-8">
-        {
-          screenshots.map((s) => (
-            <PhoneMockup image={s.img} alt={s.alt} class="max-w-[220px]" />
           ))
         }
       </div>

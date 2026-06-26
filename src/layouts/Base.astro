@@ -29,6 +29,8 @@ const ogUrl = new URL(ogImage, site.url).href;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Pose la classe .js avant peinture : les éléments [data-reveal] ne sont masqués que si JS est actif. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -109,5 +111,29 @@ const ogUrl = new URL(ogImage, site.url).href;
       <slot />
     </main>
     <Footer />
+
+    <script>
+      // Reveal au scroll : ajoute .is-visible quand l'élément entre dans le viewport.
+      const els = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (els.length) {
+        if (reduce || !('IntersectionObserver' in window)) {
+          els.forEach((el) => el.classList.add('is-visible'));
+        } else {
+          const io = new IntersectionObserver(
+            (entries) => {
+              for (const e of entries) {
+                if (e.isIntersecting) {
+                  e.target.classList.add('is-visible');
+                  io.unobserve(e.target);
+                }
+              }
+            },
+            { rootMargin: '0px 0px -10% 0px', threshold: 0.1 },
+          );
+          els.forEach((el) => io.observe(el));
+        }
+      }
+    </script>
   </body>
 </html>

@@ -1,0 +1,200 @@
+---
+// Parcours complet de l'app GoodLease, écran par écran (libellés repris de l'app Flutter).
+// Deux pistes (locataire / loueur) en timeline + écrans transversaux.
+
+const icons: Record<string, string> = {
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  calendar: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/>',
+  box: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+  arrow: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/>',
+  plus: '<path d="M5 12h14M12 5v14"/>',
+  list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  wallet: '<path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"/><path d="M16 12h.01"/>',
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+};
+
+const tracks = [
+  {
+    label: 'Côté locataire',
+    tagline: 'Louer le matériel de votre événement',
+    color: 'primary',
+    phases: [
+      {
+        icon: 'user',
+        title: 'Créer son compte',
+        steps: [
+          { name: 'Inscription', desc: 'E-mail, téléphone, mot de passe (réservé aux 18 ans et +).' },
+          { name: 'Vérification e-mail', desc: 'Code à 4 chiffres pour valider l’adresse.' },
+          { name: 'Compléter le profil', desc: 'Nom public, photo, et vérification d’identité (KYC).' },
+        ],
+      },
+      {
+        icon: 'search',
+        title: 'Trouver le matériel',
+        steps: [
+          { name: 'Explorer', desc: 'Par catégorie : son, lumières, structures, réception, transport…' },
+          { name: 'Rechercher & filtrer', desc: 'Par lieu, dates et fourchette de prix.' },
+          { name: 'Favoris', desc: 'Mettez de côté les annonces qui vous intéressent.' },
+          { name: 'Fiche produit', desc: 'Photos, prix/jour, caution, avis et profil du loueur.' },
+        ],
+      },
+      {
+        icon: 'calendar',
+        title: 'Réserver & payer',
+        steps: [
+          { name: 'Sélectionner la période', desc: 'Choisissez vos dates au calendrier de disponibilité.' },
+          { name: 'Confirmer la réservation', desc: 'Récap : durée, total, frais de service, dépôt de garantie.' },
+          { name: 'Paiement sécurisé', desc: 'Carte via Stripe + empreinte de caution (non débitée).' },
+          { name: 'Paiement réussi', desc: 'Numéro de transaction et prochaines étapes par e-mail.' },
+        ],
+      },
+      {
+        icon: 'box',
+        title: 'Réception',
+        steps: [
+          { name: 'Code de réception', desc: 'Saisissez le code à 4 chiffres à la remise du matériel.' },
+          { name: 'État des lieux d’entrée', desc: 'Photos + état (neuf → endommagé) au moment de la prise.' },
+        ],
+      },
+      {
+        icon: 'chat',
+        title: 'Pendant la location',
+        steps: [
+          { name: 'Messagerie', desc: 'Échangez avec le loueur en temps réel.' },
+          { name: 'Mes réservations', desc: 'Suivi du statut : en attente, en cours, terminée.' },
+        ],
+      },
+      {
+        icon: 'arrow',
+        title: 'Restitution & caution',
+        steps: [
+          { name: 'Confirmer le retour', desc: 'Rendez le matériel à la date convenue.' },
+          { name: 'État des lieux de sortie', desc: 'Photos de sortie, comparées à l’entrée.' },
+          { name: 'Caution libérée', desc: 'L’empreinte de garantie est levée si tout est conforme.' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Côté loueur',
+    tagline: 'Rentabiliser votre matériel',
+    color: 'ink',
+    phases: [
+      {
+        icon: 'plus',
+        title: 'Publier une annonce — 6 étapes',
+        steps: [
+          { name: '1 · Titre & catégorie', desc: 'Son, Lumières, Structures, Vidéo, Réception, Textile, Transport…' },
+          { name: '2 · Détails & état', desc: 'Description et état (Neuf, Bon, Correct, Mauvais, Endommagé).' },
+          { name: '3 · Photos', desc: 'Ajoutez depuis la galerie/l’appareil, puis réorganisez.' },
+          { name: '4 · Prix, caution & quantité', desc: 'Prix par jour, dépôt de garantie, stock disponible.' },
+          { name: '5 · Livraison', desc: 'Point de retrait ou livraison/installation chez le locataire.' },
+          { name: '6 · Aperçu & publication', desc: 'Vérifiez l’ensemble puis publiez.' },
+        ],
+      },
+      {
+        icon: 'list',
+        title: 'Gérer ses locations',
+        steps: [
+          { name: 'Mes annonces', desc: 'Modifiez, activez/désactivez ou supprimez vos annonces.' },
+          { name: 'Mes locations', desc: 'Demandes entrantes, locations en cours et terminées.' },
+          { name: 'Confirmer l’envoi', desc: 'Remettez le matériel avec un code de validation.' },
+          { name: 'Confirmer la récupération', desc: 'Validez le retour : la caution du locataire est libérée.' },
+        ],
+      },
+      {
+        icon: 'wallet',
+        title: 'Encaisser',
+        steps: [
+          { name: 'Récompenses & portefeuille', desc: 'Suivez vos gains et vos récompenses.' },
+          { name: 'Détail des transactions', desc: 'Montant reçu et commission GoodLease, en transparence.' },
+          { name: 'Virer les fonds', desc: 'Cashout vers votre compte bancaire (via Stripe).' },
+        ],
+      },
+    ],
+  },
+];
+
+const transversal = [
+  { icon: 'chat', name: 'Messagerie & chat', desc: 'Conversations en temps réel locataire ↔ loueur.' },
+  { icon: 'shield', name: 'Litiges & médiation', desc: 'Ouvrez un litige, suivez sa résolution.' },
+  { icon: 'bell', name: 'Notifications', desc: 'Alertes sur chaque étape clé de vos locations.' },
+  { icon: 'user', name: 'Compte & infos perso', desc: 'Identité, coordonnées, sécurité, suppression du compte.' },
+];
+---
+
+<section id="parcours" class="scroll-mt-20">
+  <div class="container-gl py-20 lg:py-24">
+    <div class="mx-auto max-w-2xl text-center" data-reveal>
+      <span class="eyebrow">Toutes les étapes de l’app</span>
+      <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Le parcours complet, écran par écran</h2>
+      <p class="mt-4 text-muted">
+        Du compte à la caution libérée — voici tout ce que fait GoodLease, côté locataire comme côté loueur.
+      </p>
+    </div>
+
+    <div class="mt-14 grid gap-8 lg:grid-cols-2 lg:gap-10">
+      {
+        tracks.map((track) => (
+          <div data-reveal>
+            <div class="mb-6 flex items-baseline justify-between gap-3 border-b border-line pb-4">
+              <h3 class="text-xl font-semibold">{track.label}</h3>
+              <span class="text-sm text-muted">{track.tagline}</span>
+            </div>
+
+            <div class="space-y-5">
+              {track.phases.map((phase, pi) => (
+                <div
+                  class="rounded-card border border-line bg-surface p-6 shadow-soft"
+                  data-reveal
+                  style={`--reveal-delay:${pi * 60}ms`}
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons[phase.icon]} />
+                    </span>
+                    <h4 class="text-[15px] font-semibold">{phase.title}</h4>
+                  </div>
+                  <ul class="mt-4 space-y-3 border-l border-line pl-5">
+                    {phase.steps.map((s) => (
+                      <li class="relative">
+                        <span class="absolute -left-[23px] top-[5px] h-2.5 w-2.5 rounded-full bg-primary ring-4 ring-primary-100" />
+                        <p class="text-sm font-medium text-ink">{s.name}</p>
+                        <p class="mt-0.5 text-sm leading-relaxed text-muted">{s.desc}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Écrans transversaux -->
+    <div class="mt-12" data-reveal>
+      <h3 class="text-center text-sm font-semibold uppercase tracking-wider text-muted">
+        Et tout au long du parcours
+      </h3>
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          transversal.map((t) => (
+            <div class="flex items-start gap-3 rounded-card border border-line bg-surface p-5">
+              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons[t.icon]} />
+              </span>
+              <div>
+                <p class="text-sm font-semibold">{t.name}</p>
+                <p class="mt-0.5 text-sm leading-relaxed text-muted">{t.desc}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
