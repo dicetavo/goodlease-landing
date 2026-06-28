@@ -70,6 +70,17 @@ browsers and the app's `launchUrl` follow it.
   swallowed, and on the single-opt-in path only. ⚠ Pages Functions only run on **Cloudflare Pages** —
   they do NOT work under `npm run dev`/`preview` (forms fail locally) and would NOT work if the project
   were a Worker. Config them in the Pages dashboard → Settings → Environment variables.
+  - **⚠ wrangler clobbers `plain_text` env vars.** `wrangler pages deploy` (Direct Upload) **wipes the
+    project's `plain_text` env vars on every deploy** but preserves `secret_text` ones (it can't read
+    those). So **ALL of these vars are stored as `secret_text`** — even the non-secret list IDs and
+    e-mails — otherwise the next `npm run build && deploy` silently drops them and the forms fall back to
+    demo mode (waitlist `queued:false`, contact rejected). Env-var changes also need a **fresh deploy** to
+    bind (they don't apply to an existing deployment at runtime; Direct-Upload deployments can't be
+    "retried", so re-deploy via wrangler). Set them via the Pages dashboard or the project PATCH API
+    (`PATCH …/pages/projects/goodlease-landing`, `deployment_configs.production.env_vars`).
+  - **Live as of 2026-06-29** (Brevo free plan, sender `gregorypounah@gmail.com`): waitlist list **ID 3**,
+    newsletter list **ID 4**, sender **`contact@goodlease.fr`** (validated via domain auth). Currently
+    **single opt-in** — the two `BREVO_DOI_*` vars are unset (no DOI template created yet).
 - **Store badges** (`StoreBadges.astro`): hand-built inline-SVG App Store / Play Store badges. They show
   a **"Bientôt disponible"** state and are non-clickable until `stores.appStore`/`stores.playStore` are
   set in `config.ts`. Before launch, swap in the official Apple/Google assets (brand-guideline reasons).
@@ -97,6 +108,15 @@ browsers and the app's `launchUrl` follow it.
 - **DNS for `goodlease.fr` is on Cloudflare** (nameservers moved from OVH), but **email stays at OVH**.
   The MX records (`mx1/mx2/mx3.mail.ovh.net`) and the SPF TXT (`v=spf1 include:mx.ovh.com -all`) must
   remain **DNS-only** and untouched — deleting/proxying them breaks mail.
+- **OVH email = free MX Plan → redirections only, no mailboxes** ("You cannot create an email account").
+  `support@goodlease.fr` and `contact@goodlease.fr` are **redirections → `gregorypounah@gmail.com`** (OVH
+  Manager → Emails → Manage redirections). An empty **Email Pro** service also exists but is unused (it
+  would require associating the domain + swapping the MX in Cloudflare). To send *as* a branded address
+  you'd need a real mailbox (Email Pro); redirections only *receive*.
+- **Brevo sending is domain-authenticated** (added in Cloudflare DNS, all **DNS-only**): two DKIM CNAMEs
+  `brevo1/brevo2._domainkey` → `b1/b2.goodlease-fr.dkim.brevo.com`, a `brevo-code:…` TXT at apex (`@`),
+  and a `_dmarc` TXT (`v=DMARC1; p=none; rua=mailto:rua@dmarc.brevo.com`). These authenticate Brevo's
+  outbound mail (DKIM+DMARC) and auto-validate the sender — they do **not** touch the OVH MX/SPF above.
 - `goodlease.fr` + `www` are Pages **Custom domains** → CNAME (proxied) to `goodlease-landing.pages.dev`.
   `www → apex` is a **Cloudflare Redirect Rule** (301), not an Astro `_redirects` file (Pages `_redirects`
   is path-only and ignores hostnames). `api.goodlease.fr` is an unrelated record kept **DNS-only**.
