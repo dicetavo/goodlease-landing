@@ -55,6 +55,19 @@ browsers and the app's `launchUrl` follow it.
   schema.org, set `site:` in `astro.config.mjs`; also wires the full favicon set + conditional Plausible
   script) and `src/layouts/Legal.astro` (legal/help page shell, `prose-gl` styling, optional `draftNote`
   banner).
+- **Landing page (`src/pages/index.astro`)** is one long page composed of inline `<section>`s plus a few
+  section components, with a deliberate **light/dark rhythm** (light `canvas`/`surface` sections alternating
+  with `bg-ink` dark ones — e.g. `ThreeScene` and the "Sécurité" section). Two cross-cutting systems:
+  - **Scroll-reveal**: add `data-reveal` (and optional `style="--reveal-delay:Nms"`) to any element — an
+    IntersectionObserver in `Base.astro` toggles `.is-visible`; the hidden/visible/`prefers-reduced-motion`
+    styles live in `global.css` (`@layer base`, gated on `html.js`). Match this on new sections.
+  - **`ThreeScene.astro`** (dark WebGL section): **dynamically `import('three')`** so three is code-split
+    out of the main bundle, and only starts rendering when scrolled into view; it **no-ops** under
+    `prefers-reduced-motion` or Save-Data. Keep three lazy — never static-import it.
+  - **`AppJourney.astro`**: data-driven "full app journey" section (tracks → phases → steps + transversal
+    items); edit the arrays at the top, icons inlined via `set:html`.
+  - **UI primitives**: reusable classes (`.btn`/`.btn-primary`, `.eyebrow`, `.container-gl`) are defined in
+    `global.css` `@layer components` — use them for new sections instead of re-styling from scratch.
 - **Favicons** live in `public/` (`favicon.ico`, `favicon.svg`, `favicon-16/32.png`, `apple-touch-icon.png`,
   `icon-192/512.png`, `site.webmanifest`), referenced in `Base.astro`'s `<head>`. Regenerate the PNG sizes
   from `public/icon-1024.png` with `sips -z <px> <px>`; **hand-pack** `favicon.ico` from the 16/32/48 PNGs
@@ -84,17 +97,27 @@ browsers and the app's `launchUrl` follow it.
 - **Store badges** (`StoreBadges.astro`): hand-built inline-SVG App Store / Play Store badges. They show
   a **"Bientôt disponible"** state and are non-clickable until `stores.appStore`/`stores.playStore` are
   set in `config.ts`. Before launch, swap in the official Apple/Google assets (brand-guideline reasons).
-- **Screenshots**: **real app captures**, masters in `src/assets/screenshots/*.png` (1206×2622).
-  `PhoneMockup.astro` takes an `image` prop and runs them through **`astro:assets` `<Image format="webp">`**
-  (640px-wide WebP generated at build into `_astro/` — no hand-downscaling, no `public/screenshots/`
-  copies). Imported & passed in `src/pages/index.astro`. **These ship publicly** — never include user PII
-  (the app's product-detail screen shows the lender's email and the wallet/transactions screens show
-  balances/emails; use only browse, product-top, map, and calendar screens).
+- **Product visuals — code-built illustrations preferred over screenshots.** `PhoneMockup.astro` renders a
+  phone frame around **either** an optimized image (`image` prop → `astro:assets` `<Image format="webp">`,
+  640px WebP into `_astro/`; or raw `src`) **or slotted content** (`Astro.slots.has('default')`) — an
+  on-brand fake app screen built in code. The illustrated system: `ListingCard.astro` (annonce card =
+  brand-gradient tile + equipment icon, **no real photo**, crisp FR text, Pro badge, price/jour) and
+  `ExplorerScreen.astro` (a full "Explorer" feed screen slotted into the hero phone). The hero and the
+  "Annonces" section use these — **prefer them for new product UI** (no PII, fully on-brand, no image gen,
+  localizable). Card visuals use a gradient + line icon, not photos, on purpose.
+- **Real captures** still exist (masters in `src/assets/screenshots/*.png`, 1206×2622) and are still used in
+  a couple of sections (e.g. "Pour les loueurs"), also via `astro:assets` WebP — no `public/screenshots/`
+  copies. **These ship publicly** — never include user PII (the app's product-detail screen shows the
+  lender's email and the wallet/transactions screens show balances/emails; use only browse, product-top,
+  map, and calendar screens).
 
 ## Legal content status (don't present as final)
 
-- `/mentions-legales`: content from the project brief. **SIREN + N° TVA are `[À COMPLÉTER]` placeholders**
-  pending the Kbis — fill `company.siren`/`company.tva` in `config.ts` when received.
+- `/mentions-legales`: content from the project brief. **SIREN + N° TVA are filled** from the Kbis
+  (received 2026-07-03; immatriculation RCS Lille Métropole 02/07/2026): SIREN `106 617 467`, TVA
+  `FR54 106 617 467` (key derived from SIREN — cross-check against the SIE mémento fiscal when it
+  arrives). `company.phone` is empty → the « Téléphone » line is conditionally hidden on
+  `/mentions-legales`, `/contact` and `/cgs`; fill it in `config.ts` to show it again.
 - `/cgs` and `/confidentialite`: transcribed from the lawyer's `.docx`, **pending final lawyer
   validation** (both carry a `draftNote`). Corrections already applied to CGS: removed the (closed) EU
   ODR platform reference, fixed "le Prêteur → le Locataire" for rétractation, harmonised CGS/CGU.
@@ -105,6 +128,10 @@ browsers and the app's `launchUrl` follow it.
 - Live on **Cloudflare Pages** project `goodlease-landing` (also reachable at `goodlease-landing.pages.dev`).
   The GitHub repo `dicetavo/goodlease-landing` is the source of truth; current deploys are **CLI Direct
   Upload** (the dashboard can also be connected for Git auto-deploy).
+- **Preview deploys**: for WIP (e.g. a redesign under review), deploy to a **non-production branch** —
+  `wrangler pages deploy dist … --branch=preview-redesign` → served at
+  `preview-redesign.goodlease-landing.pages.dev`, leaving prod (`goodlease.fr`, `--branch=main`) untouched.
+  Only `--branch=main` updates production.
 - **DNS for `goodlease.fr` is on Cloudflare** (nameservers moved from OVH), but **email stays at OVH**.
   The MX records (`mx1/mx2/mx3.mail.ovh.net`) and the SPF TXT (`v=spf1 include:mx.ovh.com -all`) must
   remain **DNS-only** and untouched — deleting/proxying them breaks mail.
