@@ -37,6 +37,10 @@ const { image, src, alt, eager = false, class: className = '' } = Astro.props;
           loading={eager ? 'eager' : 'lazy'}
           decoding="async"
         />
+      ) : Astro.slots.has('default') ? (
+        <div class="phone-screen bg-white" role="img" aria-label={alt}>
+          <slot />
+        </div>
       ) : (
         <Fragment>
           {/* Encoche dessinée uniquement pour l'état placeholder ;

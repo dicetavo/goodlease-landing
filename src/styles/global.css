@@ -29,7 +29,7 @@
   /* Bouton principal — repris du CustomButton de l'app (rayon 13px, bleu, texte blanc) */
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-btn px-6 py-3
-           text-[15px] font-medium leading-none transition
+           text-[15px] font-semibold leading-none transition
            focus-visible:ring-2 focus-visible:ring-offset-2;
   }
   .btn-primary {
@@ -82,8 +82,6 @@
   }
 }
 
-/* Reveal au scroll — actif seulement si JS dispo (classe .js posée par Base.astro)
-   et désactivé en prefers-reduced-motion. Sans JS, le contenu reste visible. */
 @layer base {
   html.js [data-reveal] {
     opacity: 0;
@@ -94,16 +92,19 @@
     transition-delay: var(--reveal-delay, 0ms);
     will-change: opacity, transform;
   }
+
   html.js [data-reveal].is-visible {
     opacity: 1;
     transform: none;
   }
+
   @media (prefers-reduced-motion: reduce) {
     html.js [data-reveal] {
       opacity: 1 !important;
       transform: none !important;
       transition: none !important;
     }
+
     html {
       scroll-behavior: auto;
     }

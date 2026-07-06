@@ -1,15 +1,17 @@
 ---
-// Parcours complet de l'app GoodLease, écran par écran (libellés repris de l'app Flutter).
-// Deux pistes (locataire / loueur) en timeline + écrans transversaux.
-
 const icons: Record<string, string> = {
   user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
   search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  heart: '<path d="M19.5 12.6 12 20l-7.5-7.4A5 5 0 0 1 12 6a5 5 0 0 1 7.5 6.6Z"/>',
   calendar: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/>',
+  card: '<rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/>',
   box: '<path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  camera: '<path d="M14.5 4h-5L8 7H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-1.5-3Z"/><circle cx="12" cy="13" r="3"/>',
   chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
-  arrow: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/>',
+  arrow: '<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5 5.5 5.5 0 0 1-5.5 5.5H11"/>',
   plus: '<path d="M5 12h14M12 5v14"/>',
+  image: '<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+  truck: '<path d="M10 17h4V5H2v12h3"/><path d="M14 8h4l4 4v5h-3"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="16.5" cy="17.5" r="2.5"/>',
   list: '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
   wallet: '<path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5"/><path d="M16 12h.01"/>',
   shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>',
@@ -18,100 +20,105 @@ const icons: Record<string, string> = {
 
 const tracks = [
   {
-    label: 'Côté locataire',
-    tagline: 'Louer le matériel de votre événement',
-    color: 'primary',
+    label: 'Compte & accès',
+    tagline: 'Entrer dans l’app en sécurité',
     phases: [
       {
         icon: 'user',
-        title: 'Créer son compte',
+        title: 'Créer et sécuriser son compte',
         steps: [
-          { name: 'Inscription', desc: 'E-mail, téléphone, mot de passe (réservé aux 18 ans et +).' },
-          { name: 'Vérification e-mail', desc: 'Code à 4 chiffres pour valider l’adresse.' },
-          { name: 'Compléter le profil', desc: 'Nom public, photo, et vérification d’identité (KYC).' },
+          { name: 'Splash & connexion', desc: 'Accès à l’app, connexion e-mail ou parcours d’inscription.' },
+          { name: 'Inscription', desc: 'E-mail, téléphone, mot de passe et consentement aux conditions GoodLease.' },
+          { name: 'Vérification', desc: 'Code de validation pour confirmer l’adresse e-mail ou finaliser l’inscription.' },
+          { name: 'Profil complet', desc: 'Nom public, photo, adresse, date de naissance et vérification d’identité.' },
+          { name: 'Mot de passe', desc: 'Réinitialisation et changement de mot de passe depuis le parcours dédié.' },
         ],
       },
       {
-        icon: 'search',
-        title: 'Trouver le matériel',
+        icon: 'shield',
+        title: 'Gérer ses informations',
         steps: [
-          { name: 'Explorer', desc: 'Par catégorie : son, lumières, structures, réception, transport…' },
-          { name: 'Rechercher & filtrer', desc: 'Par lieu, dates et fourchette de prix.' },
-          { name: 'Favoris', desc: 'Mettez de côté les annonces qui vous intéressent.' },
-          { name: 'Fiche produit', desc: 'Photos, prix/jour, caution, avis et profil du loueur.' },
+          { name: 'Compte', desc: 'Vue compte avec raccourcis vers les réservations, annonces, portefeuille et réglages.' },
+          { name: 'Informations personnelles', desc: 'Modification du nom, nom affiché, date de naissance, nationalité, e-mail, téléphone et adresse.' },
+          { name: 'Notifications', desc: 'Alertes sur demandes, messages, réservations, paiements et litiges.' },
+        ],
+      },
+    ],
+  },
+  {
+    label: 'Côté locataire',
+    tagline: 'Trouver, réserver, rendre',
+    phases: [
+      {
+        icon: 'search',
+        title: 'Trouver le bon matériel',
+        steps: [
+          { name: 'Explorer', desc: 'Parcourir les annonces par catégorie : son, lumières, structures, réception, transport et plus.' },
+          { name: 'Recherche', desc: 'Chercher par mot-clé, lieu, dates, disponibilité et fourchette de prix.' },
+          { name: 'Favoris', desc: 'Mettre de côté les annonces utiles pour comparer plus tard.' },
+          { name: 'Fiche produit', desc: 'Photos, prix par jour, caution, localisation, avis, description et profil du loueur.' },
+          { name: 'Listings du loueur', desc: 'Voir les autres annonces disponibles chez le même loueur.' },
         ],
       },
       {
         icon: 'calendar',
-        title: 'Réserver & payer',
+        title: 'Réserver et payer',
         steps: [
-          { name: 'Sélectionner la période', desc: 'Choisissez vos dates au calendrier de disponibilité.' },
-          { name: 'Confirmer la réservation', desc: 'Récap : durée, total, frais de service, dépôt de garantie.' },
-          { name: 'Paiement sécurisé', desc: 'Carte via Stripe + empreinte de caution (non débitée).' },
-          { name: 'Paiement réussi', desc: 'Numéro de transaction et prochaines étapes par e-mail.' },
+          { name: 'Période de location', desc: 'Sélectionner les dates au calendrier selon les disponibilités.' },
+          { name: 'Confirmation', desc: 'Relire durée, prix, frais, dépôt de garantie et conditions avant paiement.' },
+          { name: 'Paiement sécurisé', desc: 'Paiement carte et empreinte de garantie via Stripe.' },
+          { name: 'Succès paiement', desc: 'Recevoir la confirmation, la référence de transaction et les prochaines étapes.' },
+          { name: 'Mes réservations', desc: 'Suivre chaque location : à venir, en cours, terminée ou à traiter.' },
         ],
       },
       {
         icon: 'box',
-        title: 'Réception',
+        title: 'Retrait, état des lieux, restitution',
         steps: [
-          { name: 'Code de réception', desc: 'Saisissez le code à 4 chiffres à la remise du matériel.' },
-          { name: 'État des lieux d’entrée', desc: 'Photos + état (neuf → endommagé) au moment de la prise.' },
-        ],
-      },
-      {
-        icon: 'chat',
-        title: 'Pendant la location',
-        steps: [
-          { name: 'Messagerie', desc: 'Échangez avec le loueur en temps réel.' },
-          { name: 'Mes réservations', desc: 'Suivi du statut : en attente, en cours, terminée.' },
-        ],
-      },
-      {
-        icon: 'arrow',
-        title: 'Restitution & caution',
-        steps: [
-          { name: 'Confirmer le retour', desc: 'Rendez le matériel à la date convenue.' },
-          { name: 'État des lieux de sortie', desc: 'Photos de sortie, comparées à l’entrée.' },
-          { name: 'Caution libérée', desc: 'L’empreinte de garantie est levée si tout est conforme.' },
+          { name: 'Code de réception', desc: 'Valider la remise du matériel avec un code de sécurité.' },
+          { name: 'État des lieux d’entrée', desc: 'Ajouter photos et état du matériel au moment de la récupération.' },
+          { name: 'Pendant la location', desc: 'Retrouver le détail, contacter le loueur et consulter les statuts.' },
+          { name: 'Confirmer le retour', desc: 'Restituer le matériel et déclencher le parcours de retour.' },
+          { name: 'État des lieux de sortie', desc: 'Comparer les photos d’entrée et de sortie avant libération de la caution.' },
         ],
       },
     ],
   },
   {
     label: 'Côté loueur',
-    tagline: 'Rentabiliser votre matériel',
-    color: 'ink',
+    tagline: 'Publier, gérer, encaisser',
     phases: [
       {
         icon: 'plus',
-        title: 'Publier une annonce — 6 étapes',
+        title: 'Créer une annonce',
         steps: [
-          { name: '1 · Titre & catégorie', desc: 'Son, Lumières, Structures, Vidéo, Réception, Textile, Transport…' },
-          { name: '2 · Détails & état', desc: 'Description et état (Neuf, Bon, Correct, Mauvais, Endommagé).' },
-          { name: '3 · Photos', desc: 'Ajoutez depuis la galerie/l’appareil, puis réorganisez.' },
-          { name: '4 · Prix, caution & quantité', desc: 'Prix par jour, dépôt de garantie, stock disponible.' },
-          { name: '5 · Livraison', desc: 'Point de retrait ou livraison/installation chez le locataire.' },
-          { name: '6 · Aperçu & publication', desc: 'Vérifiez l’ensemble puis publiez.' },
+          { name: 'Nouvelle annonce', desc: 'Démarrer le parcours depuis l’onglet Mes annonces.' },
+          { name: 'Détails de l’objet', desc: 'Titre, catégorie, description, état et caractéristiques du matériel.' },
+          { name: 'Photos', desc: 'Ajouter, sélectionner, ordonner ou supprimer les images de l’annonce.' },
+          { name: 'Prix & caution', desc: 'Définir prix journalier, dépôt de garantie et quantité disponible.' },
+          { name: 'Périodes disponibles', desc: 'Renseigner les dates ouvertes à la location.' },
+          { name: 'Retrait ou livraison', desc: 'Définir point de retrait, livraison, installation ou conditions pratiques.' },
+          { name: 'Aperçu & publication', desc: 'Relire l’annonce telle qu’elle apparaîtra, puis publier.' },
         ],
       },
       {
         icon: 'list',
-        title: 'Gérer ses locations',
+        title: 'Piloter ses locations',
         steps: [
-          { name: 'Mes annonces', desc: 'Modifiez, activez/désactivez ou supprimez vos annonces.' },
-          { name: 'Mes locations', desc: 'Demandes entrantes, locations en cours et terminées.' },
-          { name: 'Confirmer l’envoi', desc: 'Remettez le matériel avec un code de validation.' },
-          { name: 'Confirmer la récupération', desc: 'Validez le retour : la caution du locataire est libérée.' },
+          { name: 'Mes annonces', desc: 'Modifier, activer, désactiver, voir ou supprimer une annonce.' },
+          { name: 'Mes locations', desc: 'Suivre demandes, locations en cours, locations terminées et actions attendues.' },
+          { name: 'Confirmer l’envoi', desc: 'Remettre le matériel avec validation par code côté locataire.' },
+          { name: 'Confirmer la récupération', desc: 'Valider le retour et l’état du matériel.' },
+          { name: 'Transactions', desc: 'Consulter le détail financier d’une location, commission et statut inclus.' },
         ],
       },
       {
         icon: 'wallet',
-        title: 'Encaisser',
+        title: 'Récompenses & portefeuille',
         steps: [
-          { name: 'Récompenses & portefeuille', desc: 'Suivez vos gains et vos récompenses.' },
-          { name: 'Détail des transactions', desc: 'Montant reçu et commission GoodLease, en transparence.' },
-          { name: 'Virer les fonds', desc: 'Cashout vers votre compte bancaire (via Stripe).' },
+          { name: 'Portefeuille', desc: 'Voir le solde disponible, les récompenses et les mouvements.' },
+          { name: 'Cashout', desc: 'Demander le virement des fonds vers le compte bancaire connecté.' },
+          { name: 'Stripe Connect', desc: 'Finaliser les informations nécessaires au versement.' },
         ],
       },
     ],
@@ -119,10 +126,10 @@ const tracks = [
 ];
 
 const transversal = [
-  { icon: 'chat', name: 'Messagerie & chat', desc: 'Conversations en temps réel locataire ↔ loueur.' },
-  { icon: 'shield', name: 'Litiges & médiation', desc: 'Ouvrez un litige, suivez sa résolution.' },
-  { icon: 'bell', name: 'Notifications', desc: 'Alertes sur chaque étape clé de vos locations.' },
-  { icon: 'user', name: 'Compte & infos perso', desc: 'Identité, coordonnées, sécurité, suppression du compte.' },
+  { icon: 'chat', name: 'Messagerie', desc: 'Échanges en temps réel entre locataire et loueur.' },
+  { icon: 'shield', name: 'Litiges', desc: 'Ouverture, suivi et résolution en cas de problème.' },
+  { icon: 'camera', name: 'Inspections', desc: 'Photos d’entrée, photos de sortie et comparaison.' },
+  { icon: 'bell', name: 'Notifications', desc: 'Rappels et alertes à chaque moment clé.' },
 ];
 ---
 
@@ -130,66 +137,63 @@ const transversal = [
   <div class="container-gl py-20 lg:py-24">
     <div class="mx-auto max-w-2xl text-center" data-reveal>
       <span class="eyebrow">Toutes les étapes de l’app</span>
-      <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Le parcours complet, écran par écran</h2>
+      <h2 class="mt-4 text-3xl font-semibold sm:text-4xl">Le parcours complet, côté locataire et loueur</h2>
       <p class="mt-4 text-muted">
-        Du compte à la caution libérée — voici tout ce que fait GoodLease, côté locataire comme côté loueur.
+        Une vue claire de tout ce que GoodLease prend en charge : compte, recherche, réservation,
+        remise du matériel, état des lieux, retour, annonces, paiements et support.
       </p>
     </div>
 
-    <div class="mt-14 grid gap-8 lg:grid-cols-2 lg:gap-10">
+    <div class="mt-14 grid gap-8 lg:grid-cols-3">
       {
-        tracks.map((track) => (
-          <div data-reveal>
-            <div class="mb-6 flex items-baseline justify-between gap-3 border-b border-line pb-4">
-              <h3 class="text-xl font-semibold">{track.label}</h3>
-              <span class="text-sm text-muted">{track.tagline}</span>
+        tracks.map((track, ti) => (
+          <article class="journey-track" data-reveal style={`--reveal-delay:${ti * 80}ms`}>
+            <div class="border-b border-line pb-5">
+              <p class="text-xs font-semibold uppercase tracking-wider text-primary">{track.label}</p>
+              <h3 class="mt-2 text-xl font-semibold">{track.tagline}</h3>
             </div>
 
-            <div class="space-y-5">
+            <div class="mt-6 space-y-5">
               {track.phases.map((phase, pi) => (
-                <div
-                  class="rounded-card border border-line bg-surface p-6 shadow-soft"
-                  data-reveal
-                  style={`--reveal-delay:${pi * 60}ms`}
-                >
+                <section class="journey-phase" data-reveal style={`--reveal-delay:${(pi + 1) * 70}ms`}>
                   <div class="flex items-center gap-3">
-                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary">
+                    <span class="journey-icon">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons[phase.icon]} />
                     </span>
                     <h4 class="text-[15px] font-semibold">{phase.title}</h4>
                   </div>
-                  <ul class="mt-4 space-y-3 border-l border-line pl-5">
-                    {phase.steps.map((s) => (
+
+                  <ol class="mt-4 space-y-3 border-l border-line pl-5">
+                    {phase.steps.map((step) => (
                       <li class="relative">
-                        <span class="absolute -left-[23px] top-[5px] h-2.5 w-2.5 rounded-full bg-primary ring-4 ring-primary-100" />
-                        <p class="text-sm font-medium text-ink">{s.name}</p>
-                        <p class="mt-0.5 text-sm leading-relaxed text-muted">{s.desc}</p>
+                        <span class="journey-dot" aria-hidden="true" />
+                        <p class="text-sm font-medium text-ink">{step.name}</p>
+                        <p class="mt-0.5 text-sm leading-relaxed text-muted">{step.desc}</p>
                       </li>
                     ))}
-                  </ul>
-                </div>
+                  </ol>
+                </section>
               ))}
             </div>
-          </div>
+          </article>
         ))
       }
     </div>
 
-    <!-- Écrans transversaux -->
     <div class="mt-12" data-reveal>
       <h3 class="text-center text-sm font-semibold uppercase tracking-wider text-muted">
         Et tout au long du parcours
       </h3>
       <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {
-          transversal.map((t) => (
-            <div class="flex items-start gap-3 rounded-card border border-line bg-surface p-5">
-              <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons[t.icon]} />
+          transversal.map((item, i) => (
+            <div class="journey-cross" data-reveal style={`--reveal-delay:${i * 60}ms`}>
+              <span class="journey-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons[item.icon]} />
               </span>
               <div>
-                <p class="text-sm font-semibold">{t.name}</p>
-                <p class="mt-0.5 text-sm leading-relaxed text-muted">{t.desc}</p>
+                <p class="text-sm font-semibold">{item.name}</p>
+                <p class="mt-0.5 text-sm leading-relaxed text-muted">{item.desc}</p>
               </div>
             </div>
           ))
@@ -198,3 +202,52 @@ const transversal = [
     </div>
   </div>
 </section>
+
+<style>
+  .journey-phase,
+  .journey-cross {
+    border: 1px solid #eeeeee;
+    background: #ffffff;
+    box-shadow: 0 8px 24px -6px rgba(26, 28, 30, 0.1);
+  }
+
+  .journey-track {
+    min-width: 0;
+  }
+
+  .journey-phase {
+    border-radius: 14px;
+    padding: 18px;
+  }
+
+  .journey-cross {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    border-radius: 14px;
+    padding: 18px;
+  }
+
+  .journey-icon {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #e9f2fe;
+    color: #1675f3;
+  }
+
+  .journey-dot {
+    position: absolute;
+    top: 5px;
+    left: -23px;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #1675f3;
+    box-shadow: 0 0 0 4px #e9f2fe;
+  }
+</style>

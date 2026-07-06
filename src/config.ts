@@ -75,6 +75,7 @@ export const footerNav = [
     title: 'Produit',
     links: [
       { label: 'Comment ça marche', href: '/#comment-ca-marche' },
+      { label: 'Parcours complet', href: '/#parcours' },
       { label: 'Télécharger l’app', href: '/#telecharger' },
     ],
   },

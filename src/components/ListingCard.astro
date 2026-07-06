@@ -1,0 +1,87 @@
+---
+// Carte d'annonce illustrée (maquette UI en code — pas une vraie capture).
+// Visuel = dégradé de marque + icône du matériel, pour un rendu propre et sans PII.
+interface Props {
+  title: string;
+  category: string;
+  /** Inner SVG (paths) de l'icône matériel */
+  icon: string;
+  /** ex. "Lille · 2,3 km" */
+  location: string;
+  /** ex. "4,9" */
+  rating: string;
+  reviews: number;
+  /** prix journalier sans symbole, ex. "25" */
+  price: string;
+  pro?: boolean;
+  tone?: string;
+  class?: string;
+}
+const {
+  title,
+  category,
+  icon,
+  location,
+  rating,
+  reviews,
+  price,
+  pro = false,
+  tone = 'a',
+  class: className = '',
+} = Astro.props;
+
+const tones: Record<string, string> = {
+  a: 'from-primary to-primary-dark',
+  b: 'from-primary-bold to-primary-border',
+  c: 'from-ink-2 to-ink',
+  d: 'from-[#3D8BF7] to-[#155EEF]',
+};
+---
+
+<article class={`overflow-hidden rounded-2xl border border-line bg-surface shadow-soft ${className}`}>
+  <div class={`relative flex aspect-[4/3] items-center justify-center bg-gradient-to-br ${tones[tone] ?? tones.a}`}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="h-12 w-12 text-white/85"
+      aria-hidden="true"
+      set:html={icon}
+    />
+    <span class="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z" />
+      </svg>
+    </span>
+    {pro && (
+      <span class="absolute left-2.5 top-2.5 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-primary shadow-sm">
+        Pro vérifié
+      </span>
+    )}
+    <span class="absolute bottom-2.5 left-2.5 rounded-full bg-black/25 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+      {category}
+    </span>
+  </div>
+  <div class="p-3.5">
+    <h3 class="line-clamp-1 text-sm font-semibold leading-snug text-ink">{title}</h3>
+    <p class="mt-1 flex items-center gap-1 text-xs text-muted">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+        <circle cx="12" cy="10" r="3" />
+      </svg>
+      {location}
+    </p>
+    <div class="mt-2.5 flex items-center justify-between">
+      <span class="flex items-center gap-1 text-xs font-medium text-ink">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="#FFC403" stroke="none" aria-hidden="true">
+          <path d="M12 2 15.09 8.26 22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14l-5-4.87 6.91-1.01L12 2Z" />
+        </svg>
+        {rating}<span class="font-normal text-muted">&nbsp;({reviews})</span>
+      </span>
+      <span class="text-sm font-bold text-ink">{price}&nbsp;€<span class="text-xs font-medium text-muted">/jour</span></span>
+    </div>
+  </div>
+</article>
