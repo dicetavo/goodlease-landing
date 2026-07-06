@@ -13,8 +13,7 @@ import { company, emails } from '../config';
     {company.form}<br />
     Siège social : {company.address}<br />
     {company.rcs} — SIREN : {company.siren}<br />
-    N° de TVA intracommunautaire : {company.tva}<br />
-    {company.registrationNote}
+    N° de TVA intracommunautaire : {company.tva}
   </p>
 
   <h2>Représentation légale</h2>
@@ -34,8 +33,8 @@ import { company, emails } from '../config';
 
   <h2>Contact</h2>
   <p>
-    E-mail : <a href={`mailto:${emails.contact}`}>{emails.contact}</a><br />
-    Téléphone : {company.phone}
+    E-mail : <a href={`mailto:${emails.contact}`}>{emails.contact}</a>
+    {company.phone && <><br />Téléphone : {company.phone}</>}
   </p>
 
   <h2>Hébergeur du site</h2>

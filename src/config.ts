@@ -38,13 +38,12 @@ export const company = {
   form: 'Société par actions simplifiée au capital de 1 000 €',
   address: '10 Rue de Jemmapes, 59155 Faches-Thumesnil, France',
   rcs: 'RCS Lille Métropole',
-  siren: '[À COMPLÉTER dès réception du Kbis]',
-  tva: '[À COMPLÉTER dès réception du Kbis]',
-  registrationNote: 'Société en cours d’immatriculation au Registre du Commerce et des Sociétés.',
+  siren: '106 617 467',
+  tva: 'FR54 106 617 467',
   president: 'Yacine Kalbez',
   dg: 'Gregory Pounah',
   publicationDirector: 'Gregory Pounah',
-  phone: '[À COMPLÉTER]',
+  phone: '', // vide = ligne « Téléphone » masquée sur le site ; renseigner pour l'afficher
 };
 
 // Slugs canoniques — ils DOIVENT matcher lib/utils/web_links.dart de l'app Flutter.

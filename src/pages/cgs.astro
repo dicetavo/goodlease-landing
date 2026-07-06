@@ -121,7 +121,7 @@ import { company, emails } from '../config';
   </p>
   <ul>
     <li>Par e-mail : <a href={`mailto:${emails.support}`}>{emails.support}</a></li>
-    <li>Par téléphone : {company.phone}</li>
+    {company.phone && <li>Par téléphone : {company.phone}</li>}
   </ul>
 
   <h2>9. Conditions financières</h2>
