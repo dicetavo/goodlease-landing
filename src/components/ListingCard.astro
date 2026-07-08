@@ -1,9 +1,14 @@
 ---
 // Carte d'annonce illustrée (maquette UI en code — pas une vraie capture).
-// Visuel = dégradé de marque + icône du matériel, pour un rendu propre et sans PII.
+// Visuel = photo d'annonce générée (prop `image`) ou, à défaut, dégradé de
+// marque + icône du matériel. Dans les deux cas : rendu propre et sans PII.
+import { Image } from 'astro:assets';
+
 interface Props {
   title: string;
   category: string;
+  /** Photo d'annonce (import depuis src/assets/annonces/) — prioritaire sur l'icône */
+  image?: ImageMetadata;
   /** Inner SVG (paths) de l'icône matériel */
   icon: string;
   /** ex. "Lille · 2,3 km" */
@@ -20,6 +25,7 @@ interface Props {
 const {
   title,
   category,
+  image,
   icon,
   location,
   rating,
@@ -40,17 +46,28 @@ const tones: Record<string, string> = {
 
 <article class={`overflow-hidden rounded-2xl border border-line bg-surface shadow-soft ${className}`}>
   <div class={`relative flex aspect-[4/3] items-center justify-center bg-gradient-to-br ${tones[tone] ?? tones.a}`}>
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.6"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      class="h-12 w-12 text-white/85"
-      aria-hidden="true"
-      set:html={icon}
-    />
+    {image ? (
+      <Image
+        src={image}
+        alt=""
+        width={640}
+        height={480}
+        format="webp"
+        class="absolute inset-0 h-full w-full object-cover"
+      />
+    ) : (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="h-12 w-12 text-white/85"
+        aria-hidden="true"
+        set:html={icon}
+      />
+    )}
     <span class="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-ink shadow-sm">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7Z" />

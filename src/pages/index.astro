@@ -11,6 +11,16 @@ import { routes } from '../config';
 
 import shotMicros from '../assets/screenshots/03-micros.png';
 
+// Photos d'annonces générées (IA, style catalogue cohérent) — cf. src/assets/annonces/
+import photoEnceinte from '../assets/annonces/enceinte.png';
+import photoParLed from '../assets/annonces/par-led.png';
+import photoTente from '../assets/annonces/tente.png';
+import photoTablesChaises from '../assets/annonces/tables-chaises.png';
+import photoMachineFumee from '../assets/annonces/machine-fumee.png';
+import photoMicrosHf from '../assets/annonces/micros-hf.png';
+import photoArcheFlorale from '../assets/annonces/arche-florale.png';
+import photoMangeDebout from '../assets/annonces/mange-debout.png';
+
 const steps = [
   {
     n: '1',
@@ -97,14 +107,14 @@ const catIcons = {
 };
 
 const listings = [
-  { title: 'Enceinte active 15" + caisson', category: 'Sonorisation', icon: catIcons.speaker, location: 'Lille · 2,3 km', rating: '4,9', reviews: 32, price: '25', pro: true, tone: 'a' },
-  { title: 'Pack 4 PAR LED RGBW', category: 'Éclairage', icon: catIcons.light, location: 'Roubaix · 5 km', rating: '4,8', reviews: 17, price: '30', tone: 'b' },
-  { title: 'Tente de réception 4×8 m', category: 'Mobilier', icon: catIcons.tent, location: 'Lens · 12 km', rating: '5,0', reviews: 8, price: '90', pro: true, tone: 'c' },
-  { title: '10 tables + 40 chaises', category: 'Mobilier', icon: catIcons.chair, location: 'Douai · 9 km', rating: '4,7', reviews: 21, price: '45', tone: 'd' },
-  { title: 'Machine à fumée + DMX', category: 'Effets', icon: catIcons.sparkles, location: 'Lille · 1,1 km', rating: '4,9', reviews: 12, price: '18', tone: 'b' },
-  { title: 'Micros HF (paire)', category: 'Sonorisation', icon: catIcons.mic, location: "Villeneuve-d'Ascq · 6 km", rating: '4,8', reviews: 40, price: '15', pro: true, tone: 'a' },
-  { title: 'Arche florale + déco', category: 'Décoration', icon: catIcons.flower, location: 'Lille · 3,4 km', rating: '4,9', reviews: 15, price: '35', tone: 'd' },
-  { title: 'Mange-debout (lot de 6)', category: 'Mobilier', icon: catIcons.chair, location: 'Arras · 18 km', rating: '4,6', reviews: 9, price: '12', tone: 'c' },
+  { title: 'Enceinte active 15" + caisson', category: 'Sonorisation', image: photoEnceinte, icon: catIcons.speaker, location: 'Lille · 2,3 km', rating: '4,9', reviews: 32, price: '25', pro: true, tone: 'a' },
+  { title: 'Pack 4 PAR LED RGBW', category: 'Éclairage', image: photoParLed, icon: catIcons.light, location: 'Roubaix · 5 km', rating: '4,8', reviews: 17, price: '30', tone: 'b' },
+  { title: 'Tente de réception 4×8 m', category: 'Mobilier', image: photoTente, icon: catIcons.tent, location: 'Lens · 12 km', rating: '5,0', reviews: 8, price: '90', pro: true, tone: 'c' },
+  { title: '10 tables + 40 chaises', category: 'Mobilier', image: photoTablesChaises, icon: catIcons.chair, location: 'Douai · 9 km', rating: '4,7', reviews: 21, price: '45', tone: 'd' },
+  { title: 'Machine à fumée + DMX', category: 'Effets', image: photoMachineFumee, icon: catIcons.sparkles, location: 'Lille · 1,1 km', rating: '4,9', reviews: 12, price: '18', tone: 'b' },
+  { title: 'Micros HF (paire)', category: 'Sonorisation', image: photoMicrosHf, icon: catIcons.mic, location: "Villeneuve-d'Ascq · 6 km", rating: '4,8', reviews: 40, price: '15', pro: true, tone: 'a' },
+  { title: 'Arche florale + déco', category: 'Décoration', image: photoArcheFlorale, icon: catIcons.flower, location: 'Lille · 3,4 km', rating: '4,9', reviews: 15, price: '35', tone: 'd' },
+  { title: 'Mange-debout (lot de 8)', category: 'Mobilier', image: photoMangeDebout, icon: catIcons.chair, location: 'Arras · 18 km', rating: '4,6', reviews: 9, price: '12', tone: 'c' },
 ];
 const heroListings = listings.slice(0, 3);
 ---
