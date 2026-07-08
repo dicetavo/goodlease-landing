@@ -100,11 +100,14 @@ browsers and the app's `launchUrl` follow it.
 - **Product visuals — code-built illustrations preferred over screenshots.** `PhoneMockup.astro` renders a
   phone frame around **either** an optimized image (`image` prop → `astro:assets` `<Image format="webp">`,
   640px WebP into `_astro/`; or raw `src`) **or slotted content** (`Astro.slots.has('default')`) — an
-  on-brand fake app screen built in code. The illustrated system: `ListingCard.astro` (annonce card =
-  brand-gradient tile + equipment icon, **no real photo**, crisp FR text, Pro badge, price/jour) and
-  `ExplorerScreen.astro` (a full "Explorer" feed screen slotted into the hero phone). The hero and the
-  "Annonces" section use these — **prefer them for new product UI** (no PII, fully on-brand, no image gen,
-  localizable). Card visuals use a gradient + line icon, not photos, on purpose.
+  on-brand fake app screen built in code. The illustrated system: `ListingCard.astro` (annonce card:
+  crisp FR text, Pro badge, price/jour; visual = **AI-generated catalog photo** via the `image` prop —
+  masters in `src/assets/annonces/*.png`, generated with Higgsfield `marketing_studio_image` (4:3, light-
+  grey studio style, prompts in the git history) through the higgsfield MCP server; without `image` it
+  falls back to a brand-gradient tile + equipment icon) and `ExplorerScreen.astro` (a full "Explorer"
+  feed screen slotted into the hero phone). The hero and the "Annonces" section use these — **prefer
+  them for new product UI** (no PII, fully on-brand, localizable). Keep new annonce photos in the same
+  consistent catalog style (clean bright light-grey seamless studio background, no people/text/logos).
 - **Real captures** still exist (masters in `src/assets/screenshots/*.png`, 1206×2622) and are still used in
   a couple of sections (e.g. "Pour les loueurs"), also via `astro:assets` WebP — no `public/screenshots/`
   copies. **These ship publicly** — never include user PII (the app's product-detail screen shows the
