@@ -38,7 +38,9 @@ original brief). **Renaming a page = breaking a live link in the shipped app.** 
 `/regles-de-contenu`, `/supprimer-mon-compte` (the 8 app slugs) + `/cgs` and `/cookies` (footer-only).
 
 Astro emits `/<slug>/index.html`, so `/<slug>` returns a **308 → `/<slug>/`** then 200. That is expected;
-browsers and the app's `launchUrl` follow it.
+browsers and the app's `launchUrl` follow it. Path-only redirects live in **`public/_redirects`**
+(currently `/conditions-generales` → `/cgs/` 301). Pages also 308-redirects any `*.html` URL to its
+extensionless path ("pretty URLs") — a file dropped in `public/` is never served at its literal `.html` URL.
 
 ## Architecture
 
@@ -55,6 +57,9 @@ browsers and the app's `launchUrl` follow it.
   schema.org, set `site:` in `astro.config.mjs`; also wires the full favicon set + conditional Plausible
   script) and `src/layouts/Legal.astro` (legal/help page shell, `prose-gl` styling, optional `draftNote`
   banner).
+- **`src/pages/404.astro` must exist**: on Cloudflare Pages a static site returns a **soft-404** (200 +
+  homepage content) for unknown paths unless the build emits a `404.html`. Don't delete this page — it's
+  what makes real 404s (and correct SEO) work.
 - **Landing page (`src/pages/index.astro`)** is one long page composed of inline `<section>`s plus a few
   section components, with a deliberate **light/dark rhythm** (light `canvas`/`surface` sections alternating
   with `bg-ink` dark ones — e.g. `ThreeScene` and the "Sécurité" section). Two cross-cutting systems:
@@ -139,8 +144,10 @@ browsers and the app's `launchUrl` follow it.
   The MX records (`mx1/mx2/mx3.mail.ovh.net`) and the SPF TXT (`v=spf1 include:mx.ovh.com -all`) must
   remain **DNS-only** and untouched — deleting/proxying them breaks mail.
 - **OVH email = free MX Plan → redirections only, no mailboxes** ("You cannot create an email account").
-  `support@goodlease.fr` and `contact@goodlease.fr` are **redirections → `gregorypounah@gmail.com`** (OVH
-  Manager → Emails → Manage redirections). An empty **Email Pro** service also exists but is unused (it
+  `support@goodlease.fr`, `contact@goodlease.fr` and `gregorypounah@goodlease.fr` are **redirections →
+  `gregorypounah@gmail.com`** (OVH Manager → Emails → Manage redirections; `gregorypounah@` created
+  2026-07-09 as the org-domain e-mail Apple requires for the Apple Developer **Organization** enrollment).
+  An empty **Email Pro** service also exists but is unused (it
   would require associating the domain + swapping the MX in Cloudflare). To send *as* a branded address
   you'd need a real mailbox (Email Pro); redirections only *receive*.
 - **Brevo sending is domain-authenticated** (added in Cloudflare DNS, all **DNS-only**): two DKIM CNAMEs
@@ -150,9 +157,17 @@ browsers and the app's `launchUrl` follow it.
 - `goodlease.fr` + `www` are Pages **Custom domains** → CNAME (proxied) to `goodlease-landing.pages.dev`.
   `www → apex` is a **Cloudflare Redirect Rule** (301), not an Astro `_redirects` file (Pages `_redirects`
   is path-only and ignores hostnames). `api.goodlease.fr` is an unrelated record kept **DNS-only**.
+- **Google Search Console**: the URL-prefix property `https://goodlease.fr/` is verified (2026-07-13,
+  Google account `gregorypounah@gmail.com`) via the `google-site-verification` **meta tag in
+  `Base.astro`** — **never remove it** (Google re-checks periodically; it's the site-ownership proof the
+  Google Play Console *organization verification* relies on). The HTML-file method does **not** work on
+  this site (Pages 308s `*.html` and Google won't follow redirects for the verification file);
+  `public/googlee397a609380dec65.html` is kept anyway as a backup proof (served extensionless).
 
 ## Conventions
 
+- **`AGENTS.md` is a manually-synced copy of this file** (for non-Claude agents). Any edit to CLAUDE.md
+  must be applied to AGENTS.md too, and vice versa.
 - All user-facing copy is **French**, equipment-rental domain (avoid travel/hotel wording).
 - Money is shown as `12,50 €` style. Don't reintroduce the old "GoodLease — Click and Reserve" red logo;
   current brand is the blue `#1675F3` "G" mark.
