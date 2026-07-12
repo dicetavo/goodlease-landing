@@ -1,0 +1,4 @@
+# Redirections Cloudflare Pages (chemins uniquement — les règles par hostname
+# comme www→apex restent des Redirect Rules dans le dashboard Cloudflare).
+/conditions-generales /cgs/ 301
+/conditions-generales/ /cgs/ 301
