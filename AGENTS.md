@@ -99,9 +99,16 @@ extensionless path ("pretty URLs") — a file dropped in `public/` is never serv
   - **Live as of 2026-06-29** (Brevo free plan, sender `gregorypounah@gmail.com`): waitlist list **ID 3**,
     newsletter list **ID 4**, sender **`contact@goodlease.fr`** (validated via domain auth). Currently
     **single opt-in** — the two `BREVO_DOI_*` vars are unset (no DOI template created yet).
-- **Store badges** (`StoreBadges.astro`): hand-built inline-SVG App Store / Play Store badges. They show
-  a **"Bientôt disponible"** state and are non-clickable until `stores.appStore`/`stores.playStore` are
-  set in `config.ts`. Before launch, swap in the official Apple/Google assets (brand-guideline reasons).
+- **Store badges** (`StoreBadges.astro`): hand-built inline-SVG App Store / Play Store badges. A badge is
+  non-clickable until its URL is set in `config.ts` `stores`; the pill under them adapts («Bientôt
+  disponible» / «Bientôt sur Google Play» / «Bientôt sur l'App Store»). **The iOS app is LIVE since
+  2026-07-20** — « Good Lease : Location Matériel », `stores.appStore` points to the fiche
+  (`apps.apple.com/fr/app/...id6758953661`, also `installUrl` in the home schema.org). `stores.playStore`
+  is still empty (Android pending) and the landing copy says "Disponible sur l'App Store / bientôt sur
+  Google Play" — the waitlist is now framed as an Android-launch alert; revisit that copy when Play ships.
+  Still TODO: swap in the official Apple/Google badge assets (brand-guideline reasons) — the Apple
+  marketing-tools SVG endpoints aren't fetchable by CLI (404), download manually from
+  https://developer.apple.com/app-store/marketing/guidelines/.
 - **Product visuals — code-built illustrations preferred over screenshots.** `PhoneMockup.astro` renders a
   phone frame around **either** an optimized image (`image` prop → `astro:assets` `<Image format="webp">`,
   640px WebP into `_astro/`; or raw `src`) **or slotted content** (`Astro.slots.has('default')`) — an

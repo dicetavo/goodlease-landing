@@ -15,11 +15,11 @@ export const analytics = {
   plausibleDomain: '',
 };
 
-// Liens vers les fiches stores. Vides tant que l'app n'est pas publiée
-// → les badges s'affichent en mode « Bientôt disponible » (non cliquables).
-// Renseigner dès la mise en ligne sur l'App Store / Google Play.
+// Liens vers les fiches stores. Vide = badge « Bientôt disponible » (non cliquable).
+// App Store : « Good Lease : Location Matériel », publiée le 20/07/2026.
+// Renseigner playStore dès la mise en ligne sur Google Play.
 export const stores = {
-  appStore: '',
+  appStore: 'https://apps.apple.com/fr/app/good-lease-location-mat%C3%A9riel/id6758953661',
   playStore: '',
 };
 

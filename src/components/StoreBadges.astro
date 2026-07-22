@@ -13,7 +13,14 @@ const { size = 'md', center = false, class: className = '' } = Astro.props;
 const h = size === 'lg' ? 'h-14' : 'h-12';
 const appLive = Boolean(stores.appStore);
 const playLive = Boolean(stores.playStore);
-const comingSoon = !appLive || !playLive;
+// Libellé du pill selon ce qui manque encore (rien si les deux stores sont en ligne).
+const comingSoonLabel = !appLive && !playLive
+  ? 'Bientôt disponible'
+  : !playLive
+    ? 'Bientôt sur Google Play'
+    : !appLive
+      ? 'Bientôt sur l’App Store'
+      : '';
 ---
 
 <div class={`flex flex-col gap-3 ${center ? 'items-center' : 'items-start'} ${className}`}>
@@ -21,6 +28,8 @@ const comingSoon = !appLive || !playLive;
     <!-- App Store -->
     <a
       href={appLive ? stores.appStore : undefined}
+      target={appLive ? '_blank' : undefined}
+      rel={appLive ? 'noopener' : undefined}
       aria-label="Télécharger dans l’App Store"
       class={`${appLive ? '' : 'pointer-events-none opacity-90'} transition hover:opacity-80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-[8px]`}
     >
@@ -42,6 +51,8 @@ const comingSoon = !appLive || !playLive;
     <!-- Google Play -->
     <a
       href={playLive ? stores.playStore : undefined}
+      target={playLive ? '_blank' : undefined}
+      rel={playLive ? 'noopener' : undefined}
       aria-label="Disponible sur Google Play"
       class={`${playLive ? '' : 'pointer-events-none opacity-90'} transition hover:opacity-80 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-[8px]`}
     >
@@ -61,10 +72,10 @@ const comingSoon = !appLive || !playLive;
   </div>
 
   {
-    comingSoon && (
+    comingSoonLabel && (
       <span class="inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-3 py-1 text-xs font-medium text-primary">
         <span class="h-1.5 w-1.5 rounded-full bg-primary" />
-        Bientôt disponible
+        {comingSoonLabel}
       </span>
     )
   }
