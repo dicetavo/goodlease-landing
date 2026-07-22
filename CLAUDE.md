@@ -25,6 +25,8 @@ npx wrangler pages deploy dist --project-name=goodlease-landing --branch=main --
 - **Flaky build**: `astro build` occasionally crashes with a native assertion
   (`BuilderBase.h … block_for_offset`, exit 134/non-zero) — it is **non-deterministic**, not a code
   error. **Just re-run `npm run build`**; it passes on the next try.
+- **No lint / tests / typecheck** are configured (`dev`/`build`/`preview` are the only npm scripts) —
+  a passing `npm run build` is the verification gate, plus grepping `dist/` for the expected output.
 - **`.cloudflare.env`** (gitignored) holds `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID`
   (`9eced5d3235e032982dc03d32b7c7395`). The token only has **Cloudflare Pages: Edit** + **User Details:
   Read** — it **cannot** edit DNS or zone rules (those are done in the Cloudflare dashboard by hand).
@@ -54,7 +56,9 @@ extensionless path ("pretty URLs") — a file dropped in `public/` is never serv
   `@fontsource-variable/inter`). `src/components/Logo.astro` pairs `public/mark.svg` (the "G" glyph
   extracted from the brand SVG) with an Inter wordmark. Keep new UI consistent with these tokens.
 - **Layouts**: `src/layouts/Base.astro` (SEO head per page — title/description/canonical/OG/Twitter +
-  schema.org, set `site:` in `astro.config.mjs`; also wires the full favicon set + conditional Plausible
+  schema.org; canonical URLs come from `site: 'https://goodlease.fr'` in `astro.config.mjs`, which also
+  feeds `@astrojs/sitemap` → `sitemap-index.xml`, referenced by `public/robots.txt`; Base also wires the
+  full favicon set + conditional Plausible
   script) and `src/layouts/Legal.astro` (legal/help page shell, `prose-gl` styling, optional `draftNote`
   banner).
 - **`src/pages/404.astro` must exist**: on Cloudflare Pages a static site returns a **soft-404** (200 +
@@ -176,5 +180,8 @@ extensionless path ("pretty URLs") — a file dropped in `public/` is never serv
 - **`AGENTS.md` is a manually-synced copy of this file** (for non-Claude agents). Any edit to CLAUDE.md
   must be applied to AGENTS.md too, and vice versa.
 - All user-facing copy is **French**, equipment-rental domain (avoid travel/hotel wording).
+- **`SPECS.md` is the original launch checklist and is largely STALE** (Brevo is live, SIREN/TVA filled,
+  site + iOS app shipped). Treat this file (CLAUDE.md) as current status; re-verify any unchecked
+  SPECS.md box before acting on it.
 - Money is shown as `12,50 €` style. Don't reintroduce the old "GoodLease — Click and Reserve" red logo;
   current brand is the blue `#1675F3` "G" mark.
