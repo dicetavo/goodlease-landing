@@ -130,17 +130,18 @@ extensionless path ("pretty URLs") — a file dropped in `public/` is never serv
   lender's email and the wallet/transactions screens show balances/emails; use only browse, product-top,
   map, and calendar screens).
 
-## Legal content status (don't present as final)
+## Legal content status
 
 - `/mentions-legales`: content from the project brief. **SIREN + N° TVA are filled** from the Kbis
   (received 2026-07-03; immatriculation RCS Lille Métropole 02/07/2026): SIREN `106 617 467`, TVA
   `FR54 106 617 467` (key derived from SIREN — cross-check against the SIE mémento fiscal when it
   arrives). `company.phone` is empty → the « Téléphone » line is conditionally hidden on
   `/mentions-legales`, `/contact` and `/cgs`; fill it in `config.ts` to show it again.
-- `/cgs` and `/confidentialite`: transcribed from the lawyer's `.docx`, **pending final lawyer
-  validation** (both carry a `draftNote`). Corrections already applied to CGS: removed the (closed) EU
-  ODR platform reference, fixed "le Prêteur → le Locataire" for rétractation, harmonised CGS/CGU.
-- FEVAD mediation clause is conditioned on confirming GoodLease's FEVAD membership.
+- `/cgs` and `/confidentialite`: **lawyer-validated** (dated « 18 juin 2026 », `draftNote` banners
+  removed). ⚠ Two additions in `/confidentialite` were made *after* the validated `.docx` (« Transferts
+  hors UE » Stripe/Google + retention 10 y compta / 5 y KYC) — flag them at the next lawyer pass.
+- Consumer mediator is **CM2C** (named in CGS §18 and `/resolution-des-litiges`) — it replaced FEVAD
+  (too expensive). GoodLease still has to **actually subscribe** with CM2C (art. L612-1) — see SPECS.md.
 
 ## Deployment & DNS (Cloudflare Pages, email on OVH)
 
@@ -180,8 +181,8 @@ extensionless path ("pretty URLs") — a file dropped in `public/` is never serv
 - **`AGENTS.md` is a manually-synced copy of this file** (for non-Claude agents). Any edit to CLAUDE.md
   must be applied to AGENTS.md too, and vice versa.
 - All user-facing copy is **French**, equipment-rental domain (avoid travel/hotel wording).
-- **`SPECS.md` is the original launch checklist and is largely STALE** (Brevo is live, SIREN/TVA filled,
-  site + iOS app shipped). Treat this file (CLAUDE.md) as current status; re-verify any unchecked
-  SPECS.md box before acting on it.
+- **`SPECS.md` is the open-items TODO list** (cleaned 2026-07-22 — done items removed, only genuinely
+  open work remains). CLAUDE.md stays authoritative for current status; still re-verify a SPECS box
+  before acting on it if some time has passed.
 - Money is shown as `12,50 €` style. Don't reintroduce the old "GoodLease — Click and Reserve" red logo;
   current brand is the blue `#1675F3` "G" mark.
