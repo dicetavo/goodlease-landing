@@ -35,9 +35,6 @@
 
 ## 🟢 P4 — Stores
 
-- [ ] **Badges officiels** Apple / Google à la place des SVG faits main (`StoreBadges.astro`) — chartes
-      de marque strictes, obligatoire maintenant que l'app est publiée. Les endpoints Apple ne répondent
-      pas en CLI (404) → télécharger à la main sur developer.apple.com/app-store/marketing/guidelines.
 - [ ] **Double opt-in Brevo** (optionnel, recommandé) : créer le template de confirmation dans Brevo +
       poser `BREVO_DOI_TEMPLATE_ID` et `BREVO_DOI_REDIRECT_URL` (`https://goodlease.fr/?confirm=1`)
       en **secret_text** → aujourd'hui single opt-in. Cf. en-tête de `functions/api/waitlist.ts`.

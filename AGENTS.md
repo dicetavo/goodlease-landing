@@ -103,7 +103,10 @@ extensionless path ("pretty URLs") — a file dropped in `public/` is never serv
   - **Live as of 2026-06-29** (Brevo free plan, sender `gregorypounah@gmail.com`): waitlist list **ID 3**,
     newsletter list **ID 4**, sender **`contact@goodlease.fr`** (validated via domain auth). Currently
     **single opt-in** — the two `BREVO_DOI_*` vars are unset (no DOI template created yet).
-- **Store badges** (`StoreBadges.astro`): hand-built inline-SVG App Store / Play Store badges. A badge is
+- **Store badges** (`StoreBadges.astro`): the **official Apple/Google badge SVGs** (FR), served as `<img>`
+  from `public/badges/` (`app-store-fr.svg` fetched from the tools.applemediaservices.com badge API —
+  it answers CLI again despite the old 404 note; `google-play-fr.svg` = Google's official
+  `google-play-badge-fr.eps` artwork). Brand guidelines: never modify or rebuild these files. A badge is
   non-clickable until its URL is set in `config.ts` `stores`; the pill under them adapts («Bientôt
   disponible» / «Bientôt sur Google Play» / «Bientôt sur l'App Store»). **Both apps are LIVE** — iOS
   since 2026-07-20 (« Good Lease : Location Matériel », `apps.apple.com/fr/app/...id6758953661`), Android
@@ -111,9 +114,7 @@ extensionless path ("pretty URLs") — a file dropped in `public/` is never serv
   `config.ts` `stores` (badges clickable, no pill) and in the home schema.org `installUrl` array. The
   former Android-launch waitlist is reframed as a product-news signup («Recevez les nouveautés de l'app
   par e-mail», button « S'inscrire ») — backend unchanged (Brevo waitlist list 3 + optional newsletter
-  list 4). Still TODO: swap in the official Apple/Google badge assets (brand-guideline reasons) — the Apple
-  marketing-tools SVG endpoints aren't fetchable by CLI (404), download manually from
-  https://developer.apple.com/app-store/marketing/guidelines/.
+  list 4).
 - **Product visuals — code-built illustrations preferred over screenshots.** `PhoneMockup.astro` renders a
   phone frame around **either** an optimized image (`image` prop → `astro:assets` `<Image format="webp">`,
   640px WebP into `_astro/`; or raw `src`) **or slotted content** (`Astro.slots.has('default')`) — an
