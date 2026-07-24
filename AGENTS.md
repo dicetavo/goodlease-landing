@@ -105,12 +105,13 @@ extensionless path ("pretty URLs") — a file dropped in `public/` is never serv
     **single opt-in** — the two `BREVO_DOI_*` vars are unset (no DOI template created yet).
 - **Store badges** (`StoreBadges.astro`): hand-built inline-SVG App Store / Play Store badges. A badge is
   non-clickable until its URL is set in `config.ts` `stores`; the pill under them adapts («Bientôt
-  disponible» / «Bientôt sur Google Play» / «Bientôt sur l'App Store»). **The iOS app is LIVE since
-  2026-07-20** — « Good Lease : Location Matériel », `stores.appStore` points to the fiche
-  (`apps.apple.com/fr/app/...id6758953661`, also `installUrl` in the home schema.org). `stores.playStore`
-  is still empty (Android pending) and the landing copy says "Disponible sur l'App Store / bientôt sur
-  Google Play" — the waitlist is now framed as an Android-launch alert; revisit that copy when Play ships.
-  Still TODO: swap in the official Apple/Google badge assets (brand-guideline reasons) — the Apple
+  disponible» / «Bientôt sur Google Play» / «Bientôt sur l'App Store»). **Both apps are LIVE** — iOS
+  since 2026-07-20 (« Good Lease : Location Matériel », `apps.apple.com/fr/app/...id6758953661`), Android
+  since 2026-07-24 (`play.google.com/store/apps/details?id=com.goodlease.app`); both URLs are in
+  `config.ts` `stores` (badges clickable, no pill) and in the home schema.org `installUrl` array. The
+  former Android-launch waitlist is reframed as a product-news signup («Recevez les nouveautés de l'app
+  par e-mail», button « S'inscrire ») — backend unchanged (Brevo waitlist list 3 + optional newsletter
+  list 4). Still TODO: swap in the official Apple/Google badge assets (brand-guideline reasons) — the Apple
   marketing-tools SVG endpoints aren't fetchable by CLI (404), download manually from
   https://developer.apple.com/app-store/marketing/guidelines/.
 - **Product visuals — code-built illustrations preferred over screenshots.** `PhoneMockup.astro` renders a

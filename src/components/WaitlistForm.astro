@@ -18,12 +18,12 @@ const { compact = false } = Astro.props;
     />
     <!-- Honeypot anti-spam -->
     <input type="text" name="company" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
-    <button type="submit" class="btn-primary shrink-0">Rejoindre la liste d’attente</button>
+    <button type="submit" class="btn-primary shrink-0">S’inscrire</button>
   </div>
 
   <label class="mt-3 flex items-start gap-2 text-xs text-muted">
     <input type="checkbox" name="newsletter" class="mt-0.5 h-4 w-4 rounded border-line text-primary focus:ring-primary" />
-    <span>Je souhaite aussi recevoir les actualités GoodLease par e-mail (facultatif).</span>
+    <span>Je souhaite aussi recevoir la newsletter GoodLease par e-mail (facultatif).</span>
   </label>
 
   <p class="form-msg mt-3 hidden text-sm" role="status" aria-live="polite"></p>
@@ -59,7 +59,7 @@ const { compact = false } = Astro.props;
         });
         if (!res.ok) throw new Error('bad status');
         form.reset();
-        show('Merci ! Vous êtes sur la liste. Surveillez votre boîte mail.', true);
+        show('Merci ! Votre inscription est bien enregistrée.', true);
       } catch {
         show('Une erreur est survenue. Réessayez ou écrivez-nous à contact@goodlease.fr.', false);
       } finally {

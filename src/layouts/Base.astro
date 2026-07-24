@@ -86,7 +86,9 @@ const ogUrl = new URL(ogImage, site.url).href;
                 operatingSystem: 'iOS, Android',
                 applicationCategory: 'LifestyleApplication',
                 offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
-                ...(stores.appStore ? { installUrl: stores.appStore } : {}),
+                ...(stores.appStore || stores.playStore
+                  ? { installUrl: [stores.appStore, stores.playStore].filter(Boolean) }
+                  : {}),
               },
             ],
           })}

@@ -38,9 +38,6 @@
 - [ ] **Badges officiels** Apple / Google à la place des SVG faits main (`StoreBadges.astro`) — chartes
       de marque strictes, obligatoire maintenant que l'app est publiée. Les endpoints Apple ne répondent
       pas en CLI (404) → télécharger à la main sur developer.apple.com/app-store/marketing/guidelines.
-- [ ] **À la sortie Android** : renseigner `stores.playStore` (`src/config.ts`) → badge cliquable, pill
-      « Bientôt sur Google Play » disparaît. Revoir aussi le texte waitlist de `index.astro`
-      (aujourd'hui cadré « alerte sortie Google Play ») : le garder en newsletter ou le retirer.
 - [ ] **Double opt-in Brevo** (optionnel, recommandé) : créer le template de confirmation dans Brevo +
       poser `BREVO_DOI_TEMPLATE_ID` et `BREVO_DOI_REDIRECT_URL` (`https://goodlease.fr/?confirm=1`)
       en **secret_text** → aujourd'hui single opt-in. Cf. en-tête de `functions/api/waitlist.ts`.
