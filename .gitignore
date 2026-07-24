@@ -26,3 +26,7 @@ pnpm-debug.log*
 
 # wrangler
 .wrangler/
+
+# fichiers d'agents / notes markdown — gardés en local uniquement (README.md reste suivi)
+*.md
+!README.md
