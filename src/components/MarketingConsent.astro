@@ -1,0 +1,36 @@
+---
+import { analytics } from '../config';
+const config = { gtmId: analytics.gtmId, ga4Id: analytics.ga4Id, metaPixelId: analytics.metaPixelId, consentVersion: analytics.consentVersion };
+const google = Boolean(config.gtmId || config.ga4Id);
+const meta = Boolean(config.metaPixelId);
+const providers = [google ? 'Google' : '', meta ? 'Meta' : ''].filter(Boolean).join(' et ');
+---
+
+<div id="goodlease-marketing-config" data-config={JSON.stringify(config)} hidden></div>
+<aside id="marketing-consent-banner" hidden aria-label="Vos préférences de confidentialité" class="consent-banner">
+  <p class="font-semibold text-ink">Vos préférences de confidentialité</p>
+  <p class="mt-2 text-sm leading-relaxed text-muted">Avec votre accord, les outils {providers ? `de ${providers}` : 'de mesure'} peuvent mesurer l’utilisation du site et l’efficacité de nos campagnes. Vous pouvez accepter, refuser ou choisir par finalité. <a href="/cookies/" class="text-primary underline">En savoir plus</a></p>
+  <div class="mt-4 flex flex-wrap gap-3"><button type="button" data-consent-choice="accept" class="btn-secondary">Accepter</button><button type="button" data-consent-choice="refuse" class="btn-secondary">Refuser</button><button type="button" data-consent-open class="btn-secondary">Personnaliser</button></div>
+</aside>
+<dialog id="marketing-consent-dialog" aria-labelledby="consent-title" class="consent-dialog">
+  <form id="marketing-consent-form">
+    <h2 id="consent-title" class="text-xl font-semibold">Vos préférences de cookies</h2>
+    <p class="mt-3 text-sm text-muted">Votre choix est conservé six mois et peut être modifié depuis la page Gestion des cookies. Les outils concernés sont {providers || 'les outils de mesure configurés'}.</p>
+    <p class="mt-5 rounded-field bg-canvas p-4 text-sm"><strong>Fonctionnement du service</strong><br />Les données nécessaires à la connexion, au catalogue et à votre choix de confidentialité permettent d’utiliser GoodLease.</p>
+    <label class="mt-5 flex items-start gap-3"><input name="analytics" type="checkbox" class="mt-1 h-4 w-4 accent-primary" /><span><strong class="text-sm">Mesure d’audience</strong><span class="mt-1 block text-sm text-muted">Comprendre les visites et les actions effectuées sur le site.</span></span></label>
+    <label class="mt-5 flex items-start gap-3"><input name="marketing" type="checkbox" class="mt-1 h-4 w-4 accent-primary" /><span><strong class="text-sm">Publicité et mesure des campagnes</strong><span class="mt-1 block text-sm text-muted">Mesurer les campagnes publicitaires et permettre la création d’audiences.</span></span></label>
+    <p class="mt-5 text-sm"><a href="/confidentialite/" class="text-primary underline">Politique de confidentialité</a></p>
+    <div class="mt-6 flex flex-wrap gap-3"><button type="submit" class="btn-secondary">Enregistrer mes choix</button><button type="button" data-consent-close class="btn-secondary">Fermer</button></div>
+  </form>
+</dialog>
+<script>
+  import { initMarketingConsent } from '../scripts/marketing-consent';
+  initMarketingConsent();
+</script>
+<style is:global>
+  .consent-banner { position: fixed; bottom: 1rem; left: 1rem; right: 1rem; z-index: 100; max-width: 48rem; margin: 0 auto; padding: 1.5rem; border: 1px solid #e3e5e8; border-radius: 16px; background: white; box-shadow: 0 12px 48px rgb(0 0 0 / 16%); }
+  .consent-banner[hidden] { display: none; }
+  .consent-dialog { max-width: min(36rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow: auto; padding: 1.5rem; border: 1px solid #e3e5e8; border-radius: 16px; color: #1a1c1e; background: white; }
+  .consent-dialog::backdrop { background: rgb(0 0 0 / 45%); }
+  .consent-dialog input:focus-visible { outline: 2px solid #1675f3; outline-offset: 3px; }
+</style>

@@ -8,6 +8,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "test": "npm run build && node --experimental-strip-types --test tests/*.test.mjs",
     "astro": "astro"
   },
   "dependencies": {
@@ -19,6 +20,8 @@
     "three": "^0.171.0"
   },
   "devDependencies": {
+    "miniflare": "^3.20250718.3",
+    "parse5": "^7.3.0",
     "wrangler": "^3.99.0"
   }
 }

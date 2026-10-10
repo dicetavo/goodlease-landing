@@ -1,0 +1,2267 @@
+{
+  "version": 4,
+  "received_on": "2026-10-10",
+  "source": "Retour écrit d’Achour et classeur de référence transmis par Grégory",
+  "source_counts": {
+    "current_lines": 21,
+    "app_events": 11,
+    "backend_events": 9,
+    "derived_indicators": 1,
+    "proposal_lines": 10,
+    "p0_claimed": 12,
+    "p1_claimed": 9,
+    "per_event_priority_provided": true,
+    "p0_verified": 12,
+    "p1_verified": 9,
+    "proposal_p0": 6,
+    "proposal_p1": 4,
+    "conditional_proposals": 2
+  },
+  "scope_note": "Texte de référence et propositions marketing ; ce document ne valide ni un changement de règles métier, ni des conditions commerciales, ni une campagne. Le périmètre site déjà préparé est distinct de la liste app/backend.",
+  "global_parameters_as_supplied": [
+    "user_id",
+    "platform",
+    "user_type",
+    "app_version",
+    "account_type"
+  ],
+  "identity_notes": [
+    "user_id est le réglage User-ID Analytics, pas une dimension événement contenant un e-mail ; absent pour un visiteur anonyme.",
+    "Classification serveur par User.id et empreinte de comptes autorisés ; builds dev/test exclus des rapports commerciaux via account_type.",
+    "platform et app_version sont à rapprocher des champs natifs du SDK ; web garde sa propre origine.",
+    "Les identifiants pseudonymes restent à protéger ; aucune recherche libre, message, adresse exacte, GPS, secret ou coordonnées dans les événements."
+  ],
+  "current_events": [
+    {
+      "name": "app_open",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Visited",
+      "trigger_as_supplied": "Lancement de l’app",
+      "parameters_as_supplied": [
+        "source",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par session",
+      "previous_name": "app_opened",
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": true,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "ios_debugview_verified_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/analytics/tracking_service.dart",
+        "../good-lease/lib/main.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I6"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A6:K6",
+        "trigger": "Lancement de l'app (passage au premier plan)",
+        "parameters_raw": "source (push|direct|deeplink), utm_source, utm_medium, utm_campaign si lien profond",
+        "source": "App (iOS/Android)",
+        "funnel": "1 Visited",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par ouverture de session",
+        "status": "Plan actuel",
+        "notes": "Ancien nom : app_opened. Nom prédéfini Firebase : vérifier qu'il n'est pas déjà journalisé automatiquement avant de le coder."
+      },
+      "parameters_from_workbook": [
+        "source",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false,
+      "live_evidence": "GA4 DebugView iOS, 10 octobre 2026 ; account_type=test ; simulateur dev."
+    },
+    {
+      "name": "home_viewed",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Visited",
+      "trigger_as_supplied": "Accueil affiché",
+      "parameters_as_supplied": [
+        "user_type",
+        "category_highlighted"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par affichage ; ignorer les retours <30 s",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": true,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "ios_debugview_verified_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/analytics/app_tracking.dart",
+        "../good-lease/lib/view/buttom_naviagation_view/buttom_navigation_view.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I7"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A7:K7",
+        "trigger": "Écran d'accueil affiché",
+        "parameters_raw": "user_type, category_highlighted",
+        "source": "App (iOS/Android)",
+        "funnel": "1 Visited",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par affichage ; ignorer les retours arrière de moins de 30 s",
+        "status": "Plan actuel",
+        "notes": "Redondant avec screen_view (automatique). À garder seulement si category_highlighted sert à l'analyse."
+      },
+      "parameters_from_workbook": [
+        "user_type",
+        "category_highlighted"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false,
+      "live_evidence": "GA4 DebugView iOS, 10 octobre 2026 ; account_type=test ; simulateur dev."
+    },
+    {
+      "name": "view_item_list",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Visited",
+      "trigger_as_supplied": "Liste catégorie/filtres affichée",
+      "parameters_as_supplied": [
+        "item_list_name",
+        "filters_applied",
+        "results_count"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Catégorie + filtres + session",
+      "previous_name": "listing_viewed",
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": true,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "ios_debugview_verified_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/api_sdk/bloc/leases/leases_cubit.dart",
+        "../good-lease/lib/view/buttom_naviagtion_screens/explore_view.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I8"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A8:K8",
+        "trigger": "Liste de produits affichée (catégorie / filtres)",
+        "parameters_raw": "item_list_name (catégorie), filters_applied, results_count",
+        "source": "App (iOS/Android)",
+        "funnel": "1 Visited",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par couple catégorie + filtres et par session",
+        "status": "Plan actuel",
+        "notes": "Ancien nom : listing_viewed. Nom GA4 recommandé."
+      },
+      "parameters_from_workbook": [
+        "item_list_name",
+        "filters_applied",
+        "results_count"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false,
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "live_evidence": "GA4 DebugView iOS, 10 octobre 2026 ; account_type=test ; simulateur dev."
+    },
+    {
+      "name": "search",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Visited",
+      "trigger_as_supplied": "Recherche validée",
+      "parameters_as_supplied": [
+        "search_term",
+        "category",
+        "results_count"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par validation",
+      "previous_name": "search_performed",
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "mobile_code_tested_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/api_sdk/bloc/leases/leases_cubit.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I9"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A9:K9",
+        "trigger": "Recherche validée dans la barre",
+        "parameters_raw": "search_term, category, results_count",
+        "source": "App (iOS/Android)",
+        "funnel": "1 Visited",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par validation (jamais à la frappe)",
+        "status": "Plan actuel",
+        "notes": "Ancien nom : search_performed. Nom GA4 recommandé."
+      },
+      "parameters_from_workbook": [
+        "search_term",
+        "category",
+        "results_count"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false
+    },
+    {
+      "name": "view_item",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Interacted",
+      "trigger_as_supplied": "Fiche produit affichée",
+      "parameters_as_supplied": [
+        "item_id",
+        "item_category",
+        "price_per_day",
+        "source"
+      ],
+      "destinations_as_supplied": [
+        "GA4",
+        "Meta:ViewContent",
+        "TikTok:conditional"
+      ],
+      "deduplication_as_supplied": "Produit + session ; même event_id si client + serveur",
+      "previous_name": "product_viewed",
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "mobile_code_tested_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/view/product_detail_view/product_detail_view.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I10"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A10:K10",
+        "trigger": "Fiche produit affichée",
+        "parameters_raw": "item_id, item_name, item_category, price_per_day, currency, source (list|search|agent|wishlist|deeplink)",
+        "source": "App (iOS/Android)",
+        "funnel": "2 Interacted",
+        "destinations_raw": "GA4 · Meta : ViewContent · TikTok* : ViewContent",
+        "deduplication": "1 par produit et par session ; Meta/TikTok : même event_id si envoi client + serveur",
+        "status": "Plan actuel",
+        "notes": "Ancien nom : product_viewed. Le paramètre source permet de mesurer la part de l'agent IA."
+      },
+      "parameters_from_workbook": [
+        "item_id",
+        "item_name",
+        "item_category",
+        "price_per_day",
+        "currency",
+        "source"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false,
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+    },
+    {
+      "name": "photo_swiped",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Interacted",
+      "trigger_as_supplied": "Glissement dans la galerie",
+      "parameters_as_supplied": [
+        "item_id",
+        "photo_index"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Fiche + session",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "mobile_code_tested_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/view/product_detail_view/product_detail_view.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I11"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A11:K11",
+        "trigger": "Glissement dans la galerie photos",
+        "parameters_raw": "item_id, photo_index, total_photos",
+        "source": "App (iOS/Android)",
+        "funnel": "2 Interacted",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par fiche et par session (premier glissement)",
+        "status": "Plan actuel",
+        "notes": "Analyse seulement (qualité des fiches). Jamais envoyé aux plateformes publicitaires."
+      },
+      "parameters_from_workbook": [
+        "item_id",
+        "photo_index",
+        "total_photos"
+      ],
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false
+    },
+    {
+      "name": "owner_profile_viewed",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Interacted",
+      "trigger_as_supplied": "Clic profil hôte",
+      "parameters_as_supplied": [
+        "item_id",
+        "owner_id",
+        "owner_rating"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Hôte + session",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "mobile_code_tested_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/view/product_detail_view/product_detail_view.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I12"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A12:K12",
+        "trigger": "Clic sur le profil de l'hôte",
+        "parameters_raw": "item_id, owner_id, owner_rating",
+        "source": "App (iOS/Android)",
+        "funnel": "2 Interacted",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par hôte et par session",
+        "status": "Plan actuel",
+        "notes": "owner_id = identifiant interne ; jamais de nom ni d'email."
+      },
+      "parameters_from_workbook": [
+        "item_id",
+        "owner_id",
+        "owner_rating"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false,
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+    },
+    {
+      "name": "availability_checked",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Interested",
+      "trigger_as_supplied": "Dates choisies dans le calendrier",
+      "parameters_as_supplied": [
+        "item_id",
+        "start_date",
+        "end_date",
+        "duration_days",
+        "is_available",
+        "price_total"
+      ],
+      "destinations_as_supplied": [
+        "GA4",
+        "Meta:custom"
+      ],
+      "deduplication_as_supplied": "Produit + dates + session",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "mobile_code_tested_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/view/product_detail_view/product_detail_view.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I13"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A13:K13",
+        "trigger": "Dates sélectionnées dans le calendrier",
+        "parameters_raw": "item_id, start_date, end_date, duration_days, is_available, price_total (si calculé)",
+        "source": "App (iOS/Android)",
+        "funnel": "3 Interested",
+        "destinations_raw": "GA4 · Meta : événement personnalisé (audience « intention forte »)",
+        "deduplication": "1 par produit + période et par session",
+        "status": "Plan actuel",
+        "notes": "Signal d'intention le plus fort avant la demande. Intègre price_total : rental_price_calculated devient inutile."
+      },
+      "parameters_from_workbook": [
+        "item_id",
+        "start_date",
+        "end_date",
+        "duration_days",
+        "is_available",
+        "price_total"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false,
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+    },
+    {
+      "name": "rental_price_calculated",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Interested",
+      "trigger_as_supplied": "Prix total affiché",
+      "parameters_as_supplied": [
+        "item_id",
+        "price_total",
+        "duration_days"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Uniquement si le prix change ; fusion envisageable avec availability_checked",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "mobile_code_tested_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/view/payment/booking_confirmation_view.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I14"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A14:K14",
+        "trigger": "Prix total affiché après sélection des dates",
+        "parameters_raw": "item_id, price_total, duration_days",
+        "source": "App (iOS/Android)",
+        "funnel": "3 Interested",
+        "destinations_raw": "GA4",
+        "deduplication": "Seulement si le prix change",
+        "status": "Plan actuel",
+        "notes": "Recommandation : fusionner dans availability_checked pour éviter deux événements simultanés. À trancher."
+      },
+      "parameters_from_workbook": [
+        "item_id",
+        "price_total",
+        "duration_days"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false,
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+    },
+    {
+      "name": "add_to_wishlist",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Interested",
+      "trigger_as_supplied": "Ajout en favori",
+      "parameters_as_supplied": [
+        "item_id",
+        "item_category"
+      ],
+      "destinations_as_supplied": [
+        "GA4",
+        "Meta:AddToWishlist",
+        "TikTok:conditional"
+      ],
+      "deduplication_as_supplied": "Une fois par ajout ; retrait + réajout <5 s ignoré",
+      "previous_name": "wishlist_added",
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "mobile_code_tested_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/api_sdk/bloc/like_dislike_leases/like_dislike_lleases_cubit.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I15"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A15:K15",
+        "trigger": "Ajout en favori",
+        "parameters_raw": "item_id, item_category",
+        "source": "App (iOS/Android)",
+        "funnel": "3 Interested",
+        "destinations_raw": "GA4 · Meta : AddToWishlist · TikTok* : AddToWishlist",
+        "deduplication": "1 par ajout ; ignorer retrait + ré-ajout en moins de 5 s",
+        "status": "Plan actuel",
+        "notes": "Ancien nom : wishlist_added. Nom GA4 recommandé."
+      },
+      "parameters_from_workbook": [
+        "item_id",
+        "item_category"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false
+    },
+    {
+      "name": "contact_owner_clicked",
+      "scope": "current",
+      "source_as_supplied": "app",
+      "funnel": "Interested",
+      "trigger_as_supplied": "Clic contacter l’hôte",
+      "parameters_as_supplied": [
+        "item_id",
+        "owner_id"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Fiche + session",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "mobile_code_tested_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/view/product_detail_view/product_detail_view.dart"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I16"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A16:K16",
+        "trigger": "Clic sur « Contacter l'hôte »",
+        "parameters_raw": "item_id, owner_id",
+        "source": "App (iOS/Android)",
+        "funnel": "3 Interested",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par fiche et par session",
+        "status": "Plan actuel",
+        "notes": "Contact via la messagerie interne uniquement."
+      },
+      "parameters_from_workbook": [
+        "item_id",
+        "owner_id"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false,
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+    },
+    {
+      "name": "rental_request_sent",
+      "scope": "current",
+      "source_as_supplied": "backend",
+      "funnel": "Requested",
+      "trigger_as_supplied": "Demande de location créée en base",
+      "parameters_as_supplied": [
+        "booking_id",
+        "item_id",
+        "price_total",
+        "duration_days",
+        "owner_id",
+        "booking_flow"
+      ],
+      "destinations_as_supplied": [
+        "GA4:key",
+        "GoogleAds",
+        "Meta:InitiateCheckout",
+        "LinkedIn:later",
+        "TikTok:conditional"
+      ],
+      "deduplication_as_supplied": "Une fois par booking_id ; event_id = booking_id + _req",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I17"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A17:K17",
+        "trigger": "Le locataire confirme et envoie la demande de location",
+        "parameters_raw": "booking_id, item_id, item_category, price_total, duration_days, owner_id, currency, booking_flow (manual|agent)",
+        "source": "Backend (création de la réservation en base)",
+        "funnel": "4 Requested",
+        "destinations_raw": "GA4 (key event) · Google Ads (import GA4) · Meta : InitiateCheckout · TikTok* : InitiateCheckout · LinkedIn : conversion « demande »",
+        "deduplication": "1 émission par booking_id ; Meta/TikTok : event_id = booking_id + « _req »",
+        "status": "Plan actuel",
+        "notes": "Émis côté serveur après écriture en base, pas au clic : évite les doublons et les faux positifs si l'écriture échoue."
+      },
+      "parameters_from_workbook": [
+        "booking_id",
+        "item_id",
+        "item_category",
+        "price_total",
+        "duration_days",
+        "owner_id",
+        "currency",
+        "booking_flow"
+      ],
+      "workbook_parameter_enrichment": "item_category numérique depuis le backend si présent, y compris items[] ; absence conservée si catégorie non disponible.",
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false,
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider."
+    },
+    {
+      "name": "purchase_request_sent",
+      "scope": "current",
+      "source_as_supplied": "backend",
+      "funnel": "Requested",
+      "trigger_as_supplied": "Demande d’achat créée en base",
+      "parameters_as_supplied": [
+        "request_id",
+        "item_id",
+        "price",
+        "owner_id"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par request_id ; existence de la vente à confirmer",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": false,
+      "live_reception_verified": false,
+      "local_code_prepared": false,
+      "local_preparation_date": null,
+      "implementation_status": "no_existing_sale_workflow",
+      "implementation_note": "Aucun service de vente actuel ; ne pas fabriquer de demande d’achat.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I18"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A18:K18",
+        "trigger": "Le client envoie une demande d'achat (vente de matériel)",
+        "parameters_raw": "request_id, item_id, item_category, price, owner_id, currency",
+        "source": "Backend",
+        "funnel": "4 Requested",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par request_id",
+        "status": "Plan actuel",
+        "notes": "Cycle de vie de la vente absent des statuts. À confirmer : la vente est-elle ouverte au lancement ? Le tableau de bord n'affiche que du type Location."
+      },
+      "parameters_from_workbook": [
+        "request_id",
+        "item_id",
+        "item_category",
+        "price",
+        "owner_id",
+        "currency"
+      ]
+    },
+    {
+      "name": "request_expired",
+      "scope": "current",
+      "source_as_supplied": "backend",
+      "funnel": "Dropped",
+      "trigger_as_supplied": "Délai de réponse hôte expiré",
+      "parameters_as_supplied": [
+        "booking_id",
+        "owner_id",
+        "hours_without_response"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par booking_id",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I19"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A19:K19",
+        "trigger": "Aucune réponse de l'hôte dans le délai",
+        "parameters_raw": "booking_id, item_id, owner_id, hours_without_response",
+        "source": "Backend (tâche planifiée)",
+        "funnel": "X Dropped (depuis Requested)",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par booking_id (état terminal, idempotent)",
+        "status": "Plan actuel",
+        "notes": "Délai d'expiration à fixer (24 h ? 48 h ?). Alimente le taux de réponse hôte < 48 h."
+      },
+      "parameters_from_workbook": [
+        "booking_id",
+        "item_id",
+        "owner_id",
+        "hours_without_response"
+      ],
+      "workbook_parameter_enrichment": "item_category numérique depuis le backend si présent, y compris items[] ; absence conservée si catégorie non disponible.",
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false,
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider."
+    },
+    {
+      "name": "booking_confirmed",
+      "scope": "current",
+      "source_as_supplied": "backend",
+      "funnel": "Confirmed",
+      "trigger_as_supplied": "Acceptée ET payée selon le nouveau plan",
+      "parameters_as_supplied": [
+        "booking_id",
+        "item_id",
+        "price_total",
+        "owner_id"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par booking_id ; définition à aligner sur le mode actif",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I20"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A20:K20",
+        "trigger": "Réservation ferme : acceptée par l'hôte ET payée",
+        "parameters_raw": "booking_id, item_id, item_category, price_total, duration_days, owner_id",
+        "source": "Backend (calcul au changement de statut)",
+        "funnel": "5 Confirmed",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par booking_id",
+        "status": "Plan actuel — définition modifiée",
+        "notes": "Dans le plan initial = acceptation par l'hôte. Redéfini pour séparer acceptation (request_accepted) et paiement (purchase). À valider selon le flux réel."
+      },
+      "parameters_from_workbook": [
+        "booking_id",
+        "item_id",
+        "item_category",
+        "price_total",
+        "duration_days",
+        "owner_id"
+      ],
+      "workbook_parameter_enrichment": "item_category numérique depuis le backend si présent, y compris items[] ; absence conservée si catégorie non disponible.",
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false
+    },
+    {
+      "name": "purchase",
+      "scope": "current",
+      "source_as_supplied": "backend",
+      "funnel": "Confirmed",
+      "trigger_as_supplied": "Paiement capturé confirmé par le prestataire",
+      "parameters_as_supplied": [
+        "transaction_id",
+        "value",
+        "currency",
+        "amount_paid",
+        "platform_revenue"
+      ],
+      "destinations_as_supplied": [
+        "GA4",
+        "GoogleAds",
+        "Meta:Purchase",
+        "LinkedIn:later",
+        "TikTok:conditional"
+      ],
+      "deduplication_as_supplied": "transaction_id ; Meta/TikTok event_id = transaction_id dans le plan",
+      "previous_name": "payment_completed",
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I21"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A21:K21",
+        "trigger": "Paiement réussi",
+        "parameters_raw": "transaction_id (= booking_id), value, currency (EUR), amount_paid, platform_revenue, item_id, item_category, payment_method",
+        "source": "Backend (webhook du prestataire de paiement)",
+        "funnel": "5 Confirmed",
+        "destinations_raw": "GA4 (purchase) · Google Ads (import GA4) · Meta : Purchase (Conversions API) · TikTok* : CompletePayment · LinkedIn : conversion « réservation »",
+        "deduplication": "GA4 : transaction_id ; Meta/TikTok : event_id = transaction_id ; 1 émission par paiement réussi",
+        "status": "Plan actuel",
+        "notes": "Ancien nom : payment_completed. Jamais déclenché depuis l'écran de succès de l'app. Valeur à trancher : montant payé (GMV) ou revenu plateforme (recommandé pour piloter les pubs ; deck : 15 % de commission hôte + 5 % de frais locataire)."
+      },
+      "parameters_from_workbook": [
+        "transaction_id",
+        "value",
+        "currency",
+        "amount_paid",
+        "platform_revenue",
+        "item_id",
+        "item_category",
+        "payment_method"
+      ],
+      "workbook_parameter_enrichment": "item_category numérique depuis le backend si présent, y compris items[] ; absence conservée si catégorie non disponible.",
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false
+    },
+    {
+      "name": "booking_cancelled",
+      "scope": "current",
+      "source_as_supplied": "backend",
+      "funnel": "Dropped",
+      "trigger_as_supplied": "Annulation enregistrée",
+      "parameters_as_supplied": [
+        "booking_id",
+        "cancelled_by",
+        "days_before_event",
+        "stage",
+        "refund_amount"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par booking_id ; remboursement effectué distinct de l’intention",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I22"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A22:K22",
+        "trigger": "Annulation (avant ou après confirmation)",
+        "parameters_raw": "booking_id, item_id, cancelled_by (renter|host|admin), reason, days_before_event, stage (before_confirmation|after_confirmation), refund_amount",
+        "source": "Backend",
+        "funnel": "X Dropped (annulation)",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par booking_id",
+        "status": "Plan actuel",
+        "notes": "Le remboursement effectif est un événement distinct : refund (proposition)."
+      },
+      "parameters_from_workbook": [
+        "booking_id",
+        "item_id",
+        "cancelled_by",
+        "reason",
+        "days_before_event",
+        "stage",
+        "refund_amount"
+      ],
+      "workbook_parameter_enrichment": "item_category numérique depuis le backend si présent, y compris items[] ; absence conservée si catégorie non disponible.",
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false
+    },
+    {
+      "name": "rental_completed",
+      "scope": "current",
+      "source_as_supplied": "backend",
+      "funnel": "Completed",
+      "trigger_as_supplied": "Location terminée : règles serveur à rapprocher",
+      "parameters_as_supplied": [
+        "booking_id",
+        "item_id",
+        "duration_days",
+        "completed_by"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par booking_id",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I23"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A23:K23",
+        "trigger": "Location terminée (fin de période + restitution)",
+        "parameters_raw": "booking_id, item_id, item_category, duration_days, completed_by (host_confirmation|auto)",
+        "source": "Backend (action hôte ou tâche planifiée)",
+        "funnel": "6 Completed",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par booking_id",
+        "status": "Plan actuel",
+        "notes": "Déclenche la demande d'avis, le versement à l'hôte et la comptabilisation du revenu plateforme. Définition à valider (onglet Statuts)."
+      },
+      "parameters_from_workbook": [
+        "booking_id",
+        "item_id",
+        "item_category",
+        "duration_days",
+        "completed_by"
+      ],
+      "workbook_parameter_enrichment": "item_category numérique depuis le backend si présent, y compris items[] ; absence conservée si catégorie non disponible.",
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false
+    },
+    {
+      "name": "review_submitted",
+      "scope": "current",
+      "source_as_supplied": "backend",
+      "funnel": "Completed",
+      "trigger_as_supplied": "Avis publié",
+      "parameters_as_supplied": [
+        "review_id",
+        "booking_id",
+        "rating",
+        "reviewer_type"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par review_id",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I24"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A24:K24",
+        "trigger": "Avis publié après location",
+        "parameters_raw": "review_id, booking_id, item_id, rating, reviewer_type (renter|host)",
+        "source": "Backend",
+        "funnel": "6 Completed",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par review_id",
+        "status": "Plan actuel",
+        "notes": null
+      },
+      "parameters_from_workbook": [
+        "review_id",
+        "booking_id",
+        "item_id",
+        "rating",
+        "reviewer_type"
+      ],
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false
+    },
+    {
+      "name": "session_ended_without_action",
+      "scope": "current",
+      "source_as_supplied": "derived",
+      "funnel": "Dropped",
+      "trigger_as_supplied": "Sessions avec view_item sans rental_request_sent",
+      "parameters_as_supplied": [
+        "last_status_reached",
+        "last_item_id",
+        "session_duration_sec"
+      ],
+      "destinations_as_supplied": [
+        "GA4:derived"
+      ],
+      "deduplication_as_supplied": "Indicateur à calculer ; aucun événement de fermeture à émettre",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": false,
+      "live_reception_verified": false,
+      "local_code_prepared": false,
+      "local_preparation_date": null,
+      "implementation_status": "derived_report_not_emitted",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I25"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A25:K25",
+        "trigger": "Fermeture de l'app sans demande envoyée",
+        "parameters_raw": "last_status_reached, last_item_id, session_duration_sec",
+        "source": "À calculer (non instrumenté)",
+        "funnel": "X Dropped",
+        "destinations_raw": "GA4 (calculé)",
+        "deduplication": "—",
+        "status": "Plan actuel — non recommandé",
+        "notes": "La fermeture d'une app n'est pas détectable de façon fiable. À calculer : sessions avec view_item ou availability_checked sans rental_request_sent, ou drop_at_status en base. Ne pas coder."
+      },
+      "parameters_from_workbook": [
+        "last_status_reached",
+        "last_item_id",
+        "session_duration_sec"
+      ]
+    },
+    {
+      "name": "request_declined",
+      "scope": "current",
+      "source_as_supplied": "backend",
+      "funnel": "Dropped",
+      "trigger_as_supplied": "Refus de l’hôte",
+      "parameters_as_supplied": [
+        "booking_id",
+        "owner_id",
+        "reason",
+        "response_time_minutes"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par booking_id ; raison contrôlée, aucun texte libre",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I26"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A26:K26",
+        "trigger": "L'hôte refuse la demande",
+        "parameters_raw": "booking_id, item_id, owner_id, reason, response_time_minutes",
+        "source": "Backend",
+        "funnel": "X Dropped (depuis Requested)",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par booking_id",
+        "status": "Plan actuel",
+        "notes": "response_time_minutes = refus − envoi de la demande (alimente Time to Accept)."
+      },
+      "parameters_from_workbook": [
+        "booking_id",
+        "item_id",
+        "owner_id",
+        "reason",
+        "response_time_minutes"
+      ],
+      "workbook_parameter_enrichment": "item_category numérique depuis le backend si présent, y compris items[] ; absence conservée si catégorie non disponible.",
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false,
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider."
+    }
+  ],
+  "proposed_events": [
+    {
+      "name": "sign_up",
+      "scope": "proposal_not_automatically_approved",
+      "source_as_supplied": "app+backend",
+      "funnel": "Acquisition",
+      "trigger_as_supplied": "Compte créé",
+      "parameters_as_supplied": [
+        "method",
+        "user_type",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign"
+      ],
+      "destinations_as_supplied": [
+        "GA4",
+        "GoogleAds",
+        "Meta:CompleteRegistration",
+        "LinkedIn:later",
+        "TikTok:conditional"
+      ],
+      "deduplication_as_supplied": "Une fois par user_id ; choisir une seule source canonique",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I27"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A27:K27",
+        "trigger": "Compte créé (inscription terminée)",
+        "parameters_raw": "method (email|google|apple), user_type (locataire|bailleur|les deux), utm_source, utm_medium, utm_campaign",
+        "source": "App + backend (création du compte)",
+        "funnel": "Acquisition (avant Visited)",
+        "destinations_raw": "GA4 (key event) · Google Ads (import GA4) · Meta : CompleteRegistration · TikTok* : CompleteRegistration · LinkedIn : conversion « inscription »",
+        "deduplication": "1 par user_id à vie ; Meta/TikTok : event_id = user_id",
+        "status": "Proposition",
+        "notes": "Alimente « Inscrits » et le taux de conversion global du tableau de bord. Absent du plan actuel."
+      },
+      "parameters_from_workbook": [
+        "method",
+        "user_type",
+        "utm_source",
+        "utm_medium",
+        "utm_campaign"
+      ],
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false,
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider."
+    },
+    {
+      "name": "host_onboarded",
+      "scope": "proposal_not_automatically_approved",
+      "source_as_supplied": "backend",
+      "funnel": "Offre",
+      "trigger_as_supplied": "Onboarding hôte terminé",
+      "parameters_as_supplied": [
+        "onboarding_steps_completed",
+        "days_since_signup"
+      ],
+      "destinations_as_supplied": [
+        "GA4",
+        "GoogleAds",
+        "Meta:custom",
+        "LinkedIn:later"
+      ],
+      "deduplication_as_supplied": "Une fois par user_id ; définition manquante",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I28"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A28:K28",
+        "trigger": "L'hôte termine son onboarding",
+        "parameters_raw": "user_id, onboarding_steps_completed, days_since_signup",
+        "source": "Backend",
+        "funnel": "Offre (hôte)",
+        "destinations_raw": "GA4 (key event) · Google Ads (import GA4) · Meta : personnalisé HostOnboarded · LinkedIn : conversion « hôte »",
+        "deduplication": "1 par user_id à vie",
+        "status": "Proposition",
+        "notes": "Définition d'« hôte onboardé » à fixer (profil complet ? moyen de versement renseigné ? première annonce publiée ?). Le KPI affiche 0 aujourd'hui."
+      },
+      "parameters_from_workbook": [
+        "user_id",
+        "onboarding_steps_completed",
+        "days_since_signup"
+      ],
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false,
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider."
+    },
+    {
+      "name": "listing_created",
+      "scope": "proposal_not_automatically_approved",
+      "source_as_supplied": "backend",
+      "funnel": "Offre",
+      "trigger_as_supplied": "Annonce créée",
+      "parameters_as_supplied": [
+        "listing_id",
+        "item_category",
+        "type",
+        "price_per_day",
+        "photos_count"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par listing_id",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I29"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A29:K29",
+        "trigger": "Annonce créée (enregistrée)",
+        "parameters_raw": "listing_id, owner_id, item_category, type (location|vente), price_per_day, condition, photos_count",
+        "source": "Backend",
+        "funnel": "Offre (hôte)",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par listing_id",
+        "status": "Proposition",
+        "notes": "Alimente l'onglet « Annonces » du tableau de bord (créations)."
+      },
+      "parameters_from_workbook": [
+        "listing_id",
+        "owner_id",
+        "item_category",
+        "type",
+        "price_per_day",
+        "condition",
+        "photos_count"
+      ],
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false,
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider."
+    },
+    {
+      "name": "listing_published",
+      "scope": "proposal_not_automatically_approved",
+      "source_as_supplied": "backend",
+      "funnel": "Offre",
+      "trigger_as_supplied": "Première disponibilité enregistrée",
+      "parameters_as_supplied": [
+        "listing_id",
+        "owner_id",
+        "item_category",
+        "hours_since_signup"
+      ],
+      "destinations_as_supplied": [
+        "GA4",
+        "GoogleAds",
+        "Meta:custom",
+        "LinkedIn:later"
+      ],
+      "deduplication_as_supplied": "Une fois par listing_id, première publication uniquement",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I30"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A30:K30",
+        "trigger": "Première mise en ligne (première disponibilité enregistrée)",
+        "parameters_raw": "listing_id, owner_id, item_category, hours_since_signup",
+        "source": "Backend",
+        "funnel": "Offre (hôte)",
+        "destinations_raw": "GA4 (key event) · Google Ads (import GA4) · Meta : personnalisé ListingPublished · LinkedIn : conversion « annonce publiée »",
+        "deduplication": "1 par listing_id (première fois seulement)",
+        "status": "Proposition",
+        "notes": "Conversion à optimiser pour les campagnes de recrutement d'hôtes. Définition identique à celle du tableau de bord."
+      },
+      "parameters_from_workbook": [
+        "listing_id",
+        "owner_id",
+        "item_category",
+        "hours_since_signup"
+      ],
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false,
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider."
+    },
+    {
+      "name": "request_accepted",
+      "scope": "proposal_not_automatically_approved",
+      "source_as_supplied": "backend",
+      "funnel": "Requested→Confirmed",
+      "trigger_as_supplied": "Hôte accepte",
+      "parameters_as_supplied": [
+        "booking_id",
+        "owner_id",
+        "response_time_minutes"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par booking_id ; proposé mais requis par la nouvelle définition de Confirmed",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_authorization": "Demande de Grégory de raccorder le tracking app/backend ; règles métier inchangées, activation financière encore à valider.",
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I31"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A31:K31",
+        "trigger": "L'hôte accepte la demande",
+        "parameters_raw": "booking_id, item_id, owner_id, response_time_minutes",
+        "source": "Backend",
+        "funnel": "4 Requested → 5 Confirmed",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par booking_id",
+        "status": "Proposition",
+        "notes": "Nécessaire au Time to Accept : le tableau de bord indique que l'app n'enregistre pas encore l'heure de réponse de l'hôte (responded_at à stocker en base)."
+      },
+      "parameters_from_workbook": [
+        "booking_id",
+        "item_id",
+        "owner_id",
+        "response_time_minutes"
+      ],
+      "workbook_parameter_enrichment": "item_category numérique depuis le backend si présent, y compris items[] ; absence conservée si catégorie non disponible.",
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false
+    },
+    {
+      "name": "refund",
+      "scope": "proposal_not_automatically_approved",
+      "source_as_supplied": "backend",
+      "funnel": "Dropped",
+      "trigger_as_supplied": "Remboursement effectué confirmé par le prestataire",
+      "parameters_as_supplied": [
+        "transaction_id",
+        "refund_id",
+        "value"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "transaction_id + refund_id ; ne pas recompter les montants cumulés",
+      "previous_name": null,
+      "priority_as_supplied": "P0",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_authorization": "Demande de Grégory de raccorder le tracking app/backend ; règles métier inchangées, activation financière encore à valider.",
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider.",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I32"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A32:K32",
+        "trigger": "Remboursement effectué",
+        "parameters_raw": "transaction_id (= booking_id), refund_id, value (montant remboursé), currency, refund_reason",
+        "source": "Backend (webhook du prestataire de paiement)",
+        "funnel": "X Dropped (annulation)",
+        "destinations_raw": "GA4 (refund)",
+        "deduplication": "transaction_id + refund_id",
+        "status": "Proposition",
+        "notes": "GMV, panier moyen et revenus nets du tableau de bord doivent être nets des remboursements."
+      },
+      "parameters_from_workbook": [
+        "transaction_id",
+        "refund_id",
+        "value",
+        "currency",
+        "refund_reason"
+      ],
+      "workbook_parameter_enrichment": "item_category numérique depuis le backend si présent, y compris items[] ; absence conservée si catégorie non disponible.",
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false
+    },
+    {
+      "name": "add_to_cart",
+      "scope": "proposal_not_automatically_approved",
+      "source_as_supplied": "app",
+      "funnel": "Interested",
+      "trigger_as_supplied": "Ajout au panier",
+      "parameters_as_supplied": [
+        "item_id",
+        "start_date",
+        "end_date",
+        "source"
+      ],
+      "destinations_as_supplied": [
+        "GA4",
+        "Meta:AddToCart",
+        "TikTok:conditional"
+      ],
+      "deduplication_as_supplied": "Une fois par ajout ; panier IA présent dans le code",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I33"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A33:K33",
+        "trigger": "Produit ajouté au panier (manuellement ou par l'agent IA)",
+        "parameters_raw": "item_id, item_category, price_per_day, start_date, end_date, source (manual|agent)",
+        "source": "App (iOS/Android)",
+        "funnel": "3 Interested",
+        "destinations_raw": "GA4 · Meta : AddToCart · TikTok* : AddToCart",
+        "deduplication": "1 par ajout",
+        "status": "Proposition — conditionnel",
+        "notes": "Seulement si un panier existe dans l'app (l'agent IA « met dans le panier »). Si oui, l'étape panier manque au funnel actuel."
+      },
+      "parameters_from_workbook": [
+        "item_id",
+        "item_category",
+        "price_per_day",
+        "start_date",
+        "end_date",
+        "source"
+      ],
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false,
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider."
+    },
+    {
+      "name": "handover_confirmed",
+      "scope": "proposal_not_automatically_approved",
+      "source_as_supplied": "backend",
+      "funnel": "Confirmed→Completed",
+      "trigger_as_supplied": "Remise du matériel",
+      "parameters_as_supplied": [
+        "booking_id",
+        "owner_id"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par booking_id ; distinguer remise hôte et réception locataire",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I34"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A34:K34",
+        "trigger": "Matériel remis au locataire (confirmé par l'hôte)",
+        "parameters_raw": "booking_id, item_id, owner_id",
+        "source": "Backend",
+        "funnel": "5 Confirmed → 6 Completed",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par booking_id",
+        "status": "Proposition — conditionnel",
+        "notes": "Le tableau de bord parle de réservations « remises par l'hôte » entre paiement et fin de location : étape absente du plan, à confirmer."
+      },
+      "parameters_from_workbook": [
+        "booking_id",
+        "item_id",
+        "owner_id"
+      ],
+      "production_runtime_deployed": true,
+      "public_mobile_release_done": false,
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_status": "backend_deployed_live_reception_pending",
+      "code_evidence": [
+        "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
+      ],
+      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider."
+    },
+    {
+      "name": "agent_query_sent",
+      "scope": "proposal_not_automatically_approved",
+      "source_as_supplied": "app",
+      "funnel": "Interacted",
+      "trigger_as_supplied": "Message envoyé à l’assistant",
+      "parameters_as_supplied": [
+        "agent_session_id",
+        "has_dates",
+        "has_category"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par message ; jamais le texte brut",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I35"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A35:K35",
+        "trigger": "Message envoyé à l'agent IA",
+        "parameters_raw": "agent_session_id, has_dates (bool), has_category (bool), message_length",
+        "source": "App (iOS/Android)",
+        "funnel": "2 Interacted",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par message ; jamais le texte brut (données personnelles)",
+        "status": "Proposition",
+        "notes": "Mesure l'usage de l'agent IA."
+      },
+      "parameters_from_workbook": [
+        "agent_session_id",
+        "has_dates",
+        "has_category",
+        "message_length"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false,
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_status": "mobile_code_tested_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/api_sdk/bloc/assistant/assistant_cubit.dart"
+      ],
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+    },
+    {
+      "name": "agent_proposal_shown",
+      "scope": "proposal_not_automatically_approved",
+      "source_as_supplied": "app",
+      "funnel": "Interacted",
+      "trigger_as_supplied": "Propositions affichées",
+      "parameters_as_supplied": [
+        "agent_session_id",
+        "results_count"
+      ],
+      "destinations_as_supplied": [
+        "GA4"
+      ],
+      "deduplication_as_supplied": "Une fois par réponse",
+      "previous_name": null,
+      "priority_as_supplied": "P1",
+      "mobile_or_backend_instrumentation_verified": true,
+      "live_reception_verified": false,
+      "local_code_prepared": true,
+      "local_preparation_date": "2026-10-10",
+      "priority_source": {
+        "kind": "xlsx",
+        "sheet": "Événements",
+        "cell": "I36"
+      },
+      "workbook_reference": {
+        "sheet": "Événements",
+        "range": "A36:K36",
+        "trigger": "L'agent affiche des propositions",
+        "parameters_raw": "agent_session_id, results_count",
+        "source": "App (iOS/Android)",
+        "funnel": "2 Interacted",
+        "destinations_raw": "GA4",
+        "deduplication": "1 par réponse de l'agent",
+        "status": "Proposition",
+        "notes": "Avec source = agent sur view_item / add_to_cart et booking_flow = agent sur rental_request_sent : permet de mesurer le parcours agent bout en bout."
+      },
+      "parameters_from_workbook": [
+        "agent_session_id",
+        "results_count"
+      ],
+      "production_runtime_deployed": false,
+      "public_mobile_release_done": false,
+      "destinations_prepared": [
+        "GA4"
+      ],
+      "implementation_status": "mobile_code_tested_not_publicly_released",
+      "code_evidence": [
+        "../good-lease/lib/api_sdk/bloc/assistant/assistant_cubit.dart"
+      ],
+      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+    }
+  ],
+  "key_events_proposed_by_achour": [
+    "sign_up",
+    "host_onboarded",
+    "listing_published",
+    "rental_request_sent",
+    "purchase"
+  ],
+  "key_events_configuration_status": "Console vérifiée le 10 octobre : sign_up, host_onboarded, listing_published, rental_request_sent, booking_confirmed, purchase, rental_completed marqués clés. Préexistants conservés. Aucune conversion Ads importée.",
+  "resources_verified_on": "2026-10-09",
+  "resources": {
+    "ga4": {
+      "account_id": "411472589",
+      "property_id": "558279528",
+      "web_stream_id": "16095873500",
+      "web_measurement_id": "G-LNH4QWT6VG",
+      "ios_stream_id": "16095862853",
+      "android_stream_id": "16095921756",
+      "firebase_project": "goodlease-25f53",
+      "collection_verified": true,
+      "native_app_ids_verified_on": "2026-10-10",
+      "ios_firebase_app_id": "1:811643706004:ios:a170fefb9aa09c6280b281",
+      "android_firebase_app_id": "1:811643706004:android:bc90d3fcbb13a93c80b281",
+      "measurement_protocol_secrets_created": true,
+      "collection_verification_scope": "iOS DebugView : app_open, home_viewed, view_item_list et événements automatiques ; funnel métier encore à vérifier",
+      "secret_aliases": [
+        "GoodLease Backend - iOS",
+        "GoodLease Backend - Android",
+        "GoodLease Backend - Web"
+      ],
+      "secret_storage": "Google Cloud Secret Manager, dev/prod, version 1 ; aucun secret dans ce document",
+      "custom_dimensions": {
+        "account_type": "USER",
+        "user_type": "USER",
+        "environment": "EVENT",
+        "booking_flow": "EVENT"
+      }
+    },
+    "gtm": {
+      "container_id": null,
+      "status": "Pas de conteneur configuré localement ; intégrations directes préparées, aucun doublon à créer."
+    },
+    "google_ads": {
+      "account_id": null,
+      "status": "Compte et liaison GA4 non inventoriés."
+    },
+    "search_console": {
+      "property": "https://goodlease.fr/",
+      "status": "Vérifiée ; droits Achour enregistrés, liaison GA4 non vérifiée."
+    },
+    "meta": {
+      "business_id": "2094707458105435",
+      "page_id": "1290143220859109",
+      "instagram_id": "17841429086404952",
+      "instagram_handle": "goodlease.app",
+      "ads_id": "2328767691209625",
+      "pixel_id": "1132228155919207",
+      "domain": "goodlease.fr",
+      "domain_verified": true,
+      "collection_verified": false
+    },
+    "linkedin": {
+      "account_id": null,
+      "status": "Non inventorié ; phase ultérieure à confirmer, aucun tag ajouté."
+    },
+    "tiktok": {
+      "business_center_id": "7694728904967569460",
+      "ads_id": "7694728931131310086",
+      "handle": "goodlease",
+      "profile_id": "7694766739598622728",
+      "pixel_id": null,
+      "status": "Ressources déjà créées et conservées. Nouveau plan : organique, Ads reporté à confirmer ; aucune campagne ni dépense."
+    }
+  },
+  "web_preparation": {
+    "production_deployed": false,
+    "live_reception_verified": false,
+    "event_names": [
+      "view_item",
+      "search",
+      "sign_up",
+      "listing_published",
+      "app_store_click",
+      "booking_app_handoff"
+    ],
+    "page_events": {
+      "ga4": "page_view",
+      "meta": "PageView"
+    },
+    "meta_mappings": {
+      "view_item": "ViewContent",
+      "sign_up": "CompleteRegistration",
+      "listing_published": "custom"
+    },
+    "source": "web",
+    "notes": [
+      "listing_published observe le succès création + disponibilité ; consolidation et déduplication avec le backend restent à faire.",
+      "sign_up observe l’activation effective par code e-mail, pas la demande de code.",
+      "booking_app_handoff est un transfert vers l’app, jamais une demande acceptée ni un paiement.",
+      "search_term reste exclu sur le web pour préserver les données personnelles ; le rapport natif de termes de recherche n’est pas alimenté.",
+      "app_store_click est un clic, pas une installation ; destination_platform indique iOS/Android."
+    ]
+  },
+  "implementation_findings": [
+    "29 noms métier préparés (13 SDK + 16 backend).",
+    "purchase_request_sent non applicable, session_ended_without_action dérivé.",
+    "Le backend est la seule source des inscriptions/publications/conversions financières ; le web ne les double pas dans GA4.",
+    "Les paramètres libres sensibles sont volontairement exclus.",
+    "Déclarations des stores à publier avant la prochaine version publique."
+  ],
+  "technical_corrections": [
+    "Les événements e-commerce GA4 exigent le format items[] approprié ; les noms seuls ne suffisent pas. Ajouter currency lorsque value est envoyé et choisir une valeur cohérente avec price × quantity.",
+    "Le backend mobile Measurement Protocol utilise firebase_app_id + app_instance_id, un secret par flux gardé côté serveur et le session_id réel du SDK quand pertinent ; jamais le G-ID web pour simuler une installation.",
+    "Consentement effectif et son retrait doivent bloquer les envois client et serveur par finalité. ATT iOS et paramétrage Meta sont à traiter dans l’intégration mobile ; aucun SDK publicitaire activé implicitement.",
+    "Une réponse MP HTTP 2xx ne prouve pas l’acceptation des données. Valider les payloads puis vérifier DebugView/Temps réel avec un appareil et des comptes de test autorisés.",
+    "Garantir l’unicité durable au serveur par événement + entité/transition + destination ; outbox transactionnelle et reprises contrôlées. Aucun appel analytics bloquant dans un webhook Stripe.",
+    "GA4 n’offre pas une déduplication générique par event_id ; maintenir un émetteur unique. Vérifier séparément les garanties achat de GA4 pour les flux mobiles. Meta client/serveur : même événement et même event_id stable.",
+    "Ne pas émettre session_ended_without_action ; calculer un indicateur d’abandon par session avec fenêtre temporelle explicite. Ne pas inventer le funnel CRM tant que les sources backend ne sont pas raccordées.",
+    "Les conversions Ads d’une même réservation ne doivent pas devenir toutes des objectifs primaires, sous peine de multiplier les résultats. Choisir demande ou paiement comme objectif principal selon la campagne.",
+    "app_open est un événement recommandé Flutter disponible via logAppOpen ; vérifier les événements automatiques du SDK et une seule instrumentation de session, sans supposer une collecte déjà active.",
+    "Le transaction_id ne déduplique purchase automatiquement que dans les flux web GA4, pas dans les flux app : conserver les clés SQL et l’émetteur backend unique (documentation Google vérifiée le 10 octobre 2026).",
+    "Le filtre de données GA4 trafic interne par IP concerne le web. Dans l’app, account_type sert aux exclusions de rapports/explorations/dashboard ; il ne crée pas un filtre de données équivalent (documentation Google vérifiée le 10 octobre 2026).",
+    "La convention GMV du classeur doit être précisée : le montant payé peut inclure les frais locataire ; le code conserve gmv locatif, amount_paid et platform_revenue séparément. Les taux du deck ne remplacent pas les montants réels et le barème serveur."
+  ],
+  "rollout_order": [
+    "Valider la valeur financière, la définition Completed et les comptes internes/test.",
+    "Créer les deux secrets MP des flux natifs, les stocker exclusivement dans Secret Manager ; synchroniser la configuration non secrète du CI.",
+    "Déployer backend et migration avant la nouvelle version mobile ; vérifier le mode métier de la révision utilisée.",
+    "Tester la version interne de l’app et les remboursements Stripe test : refus, accord, retrait connecté/déconnecté, reprise réseau, 3DS, acceptation et doublons.",
+    "Valider les payloads MP et la réception réelle GA4 ; contrôler l’attribution des événements tardifs.",
+    "Configurer rapports/dimensions/événements clés et objectifs Ads sans additionner les jalons d’une réservation comme plusieurs ventes.",
+    "Publier la version mobile après mise à jour des déclarations stores ; déploiement web distinct. Meta natif nécessite son propre App ID et consentement ; pas de pixel web dans Flutter."
+  ],
+  "validation_status": "331 tests Flutter ; 30 ciblés interface ; 17 analytics après dernière modification. Backend : 739 réussis / 8 ignorés ; PostgreSQL isolé vérifié. Web : 40 tests / build 16 pages. Backend dev/prod déployé ; iOS DebugView 3 événements métier vus. Mobile public et web non déployés ; funnel complet non testé.",
+  "official_references": [
+    "https://firebase.google.com/docs/analytics/flutter/get-started",
+    "https://developers.google.com/analytics/devguides/collection/ga4/ecommerce",
+    "https://developers.google.com/analytics/devguides/collection/ga4/reference/events",
+    "https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference",
+    "https://support.google.com/analytics/answer/12313109?hl=en",
+    "https://support.google.com/analytics/answer/10104470?hl=en"
+  ],
+  "local_mobile_backend_preparation": {
+    "date": "2026-10-10",
+    "app_event_names": 13,
+    "server_event_names": 16,
+    "current_backend_names": 8,
+    "additional_names": [
+      "add_to_cart",
+      "handover_confirmed",
+      "host_onboarded",
+      "listing_created",
+      "listing_published",
+      "refund",
+      "request_accepted",
+      "sign_up",
+      "agent_query_sent",
+      "agent_proposal_shown"
+    ],
+    "total_emitted_names_prepared": 29,
+    "mobile_tests_passed": 331,
+    "backend_tests_passed": 739,
+    "backend_tests_skipped": 8,
+    "postgresql_migration_concurrency_revoke_test_passed": true,
+    "mobile_tracking_analyzer_clean": true,
+    "server_default_enabled": false,
+    "ga4_server_default_enabled": false,
+    "purchase_value_default": "UNSET",
+    "internal_account_ids_chosen": true,
+    "deployment_done": true,
+    "live_reception_verified": true,
+    "android_debug_build_passed": true,
+    "ios_simulator_debug_build_passed": true,
+    "native_build_environment": "prod",
+    "production_configuration_tracking_tests_passed": 17,
+    "live_verification_scope": "Trois comportements iOS en DebugView ; pas de preuve financière live",
+    "purchase_value_approved": "AMOUNT_PAID",
+    "ga4_server_runtime_enabled": true,
+    "server_runtime_enabled": true,
+    "web_mp_secret_created": true
+  },
+  "source_workbook": {
+    "filename": "GoodLease_Plan_Tracking_GA4.xlsx",
+    "path": "/Users/gregorypounah/Downloads/GoodLease_Plan_Tracking_GA4.xlsx",
+    "sha256": "a79d10b89094927a8ca07c5700961d10fcc163f3af82655eebebbbf2ec0ded1f",
+    "received_on": "2026-10-10",
+    "read_on": "2026-10-10",
+    "version_as_supplied": "Version 1, octobre 2026",
+    "sheet_ranges": {
+      "Stratégie": "A1:F33",
+      "Événements": "A1:K36",
+      "Statuts": "A1:F15",
+      "Canaux": "A1:G10",
+      "À confirmer": "A1:D13"
+    },
+    "summary_independently_checked": {
+      "current_lines": 21,
+      "current_p0": 12,
+      "current_p1": 9,
+      "proposals": 10,
+      "conditional_proposals": 2,
+      "derived_not_instrumented": 1,
+      "maximum_if_all_retained": 30
+    },
+    "cached_summary_matches_row_counts": true,
+    "original_modified": false,
+    "authority": "Référence et propositions d’Achour ; ne constitue pas une validation de définitions métier, de droits, de conditions commerciales ou de campagnes."
+  },
+  "workbook_reconciliation": {
+    "date": "2026-10-10",
+    "event_names_identical_to_written_reply": true,
+    "text_parameters_preserved": true,
+    "reference_note": "Les champs *_as_supplied conservent le résumé écrit. workbook_reference contient les formulations intégrales du classeur ; parameters_from_workbook et priority_as_supplied reprennent sa précision supplémentaire.",
+    "additional_parameters_vs_written_reply": [
+      {
+        "event": "view_item",
+        "additional_parameters": [
+          "item_name",
+          "currency"
+        ],
+        "source_range": "Événements!D10"
+      },
+      {
+        "event": "photo_swiped",
+        "additional_parameters": [
+          "total_photos"
+        ],
+        "source_range": "Événements!D11"
+      },
+      {
+        "event": "rental_request_sent",
+        "additional_parameters": [
+          "item_category",
+          "currency"
+        ],
+        "source_range": "Événements!D17"
+      },
+      {
+        "event": "purchase_request_sent",
+        "additional_parameters": [
+          "item_category",
+          "currency"
+        ],
+        "source_range": "Événements!D18"
+      },
+      {
+        "event": "request_expired",
+        "additional_parameters": [
+          "item_id"
+        ],
+        "source_range": "Événements!D19"
+      },
+      {
+        "event": "booking_confirmed",
+        "additional_parameters": [
+          "item_category",
+          "duration_days"
+        ],
+        "source_range": "Événements!D20"
+      },
+      {
+        "event": "purchase",
+        "additional_parameters": [
+          "item_id",
+          "item_category",
+          "payment_method"
+        ],
+        "source_range": "Événements!D21"
+      },
+      {
+        "event": "booking_cancelled",
+        "additional_parameters": [
+          "item_id",
+          "reason"
+        ],
+        "source_range": "Événements!D22"
+      },
+      {
+        "event": "rental_completed",
+        "additional_parameters": [
+          "item_category"
+        ],
+        "source_range": "Événements!D23"
+      },
+      {
+        "event": "review_submitted",
+        "additional_parameters": [
+          "item_id"
+        ],
+        "source_range": "Événements!D24"
+      },
+      {
+        "event": "request_declined",
+        "additional_parameters": [
+          "item_id"
+        ],
+        "source_range": "Événements!D26"
+      },
+      {
+        "event": "host_onboarded",
+        "additional_parameters": [
+          "user_id"
+        ],
+        "source_range": "Événements!D28"
+      },
+      {
+        "event": "listing_created",
+        "additional_parameters": [
+          "owner_id",
+          "condition"
+        ],
+        "source_range": "Événements!D29"
+      },
+      {
+        "event": "request_accepted",
+        "additional_parameters": [
+          "item_id"
+        ],
+        "source_range": "Événements!D31"
+      },
+      {
+        "event": "refund",
+        "additional_parameters": [
+          "currency",
+          "refund_reason"
+        ],
+        "source_range": "Événements!D32"
+      },
+      {
+        "event": "add_to_cart",
+        "additional_parameters": [
+          "item_category",
+          "price_per_day"
+        ],
+        "source_range": "Événements!D33"
+      },
+      {
+        "event": "handover_confirmed",
+        "additional_parameters": [
+          "item_id"
+        ],
+        "source_range": "Événements!D34"
+      },
+      {
+        "event": "agent_query_sent",
+        "additional_parameters": [
+          "message_length"
+        ],
+        "source_range": "Événements!D35"
+      }
+    ],
+    "core_safe_enrichments": [
+      "photo_swiped.total_photos depuis les deux galeries",
+      "item_category depuis le Categorie.id backend, dans les paramètres et items[] ; jamais le libellé libre"
+    ],
+    "additional_p0_still_not_prepared_in_mobile_backend": [],
+    "proposals_do_not_change_core_financial_decisions": true,
+    "host_onboarded_definition": "Validée par Grégory : profil complet + versement activé + première annonce disponible ; baseline historique sans rejeu.",
+    "remaining_parameter_caveats": [
+      {
+        "events": [
+          "app_open",
+          "sign_up"
+        ],
+        "finding": "Codes de campagne contrôlés raccordés ; attribution publicitaire installation/conversion encore à valider sur appareils réels."
+      },
+      {
+        "events": [
+          "view_item"
+        ],
+        "finding": "item_name libre volontairement exclu. item_id/category et items[] structurés sont utilisés ; currency=EUR est déjà transmis."
+      },
+      {
+        "events": [
+          "search"
+        ],
+        "finding": "search_term libre volontairement exclu. category/results_count/has_search_term servent à la mesure."
+      },
+      {
+        "events": [
+          "home_viewed",
+          "owner_profile_viewed",
+          "add_to_wishlist"
+        ],
+        "finding": "category_highlighted, owner_rating et catégorie du favori ne sont pas toujours disponibles dans les hooks ; valeurs absentes non inventées."
+      },
+      {
+        "events": [
+          "all"
+        ],
+        "finding": "user_type=guest|locataire|bailleur est contrôlé ; il décrit le rôle au moment de l’action, pas un statut CRM libre."
+      },
+      {
+        "events": [
+          "rental_request_sent"
+        ],
+        "finding": "booking_flow=manual|agent transmis et origine figée côté backend."
+      },
+      {
+        "events": [
+          "purchase",
+          "refund",
+          "booking_cancelled"
+        ],
+        "finding": "payment_method, refund_reason et reason ne sont pas encore transmis. Aucun texte libre de motif ne doit être ajouté sans vocabulaire contrôlé."
+      },
+      {
+        "events": [
+          "review_submitted"
+        ],
+        "finding": "Le modèle d’avis est lié à l’annonce ; booking_id non inventé si aucun lien autoritaire avec une réservation."
+      }
+    ],
+    "channel_notes": [
+      "Les IDs GA4/Meta/TikTok à confirmer dans le classeur sont déjà inventoriés dans resources ; conserver les ressources et les droits vérifiés.",
+      "Google Ads/GTM/LinkedIn restent non inventoriés. LinkedIn après Google Ads et TikTok Ads restent des choix de stratégie, pas des déploiements implicites.",
+      "Le seuil proposé 60–80 annonces actives avant acquisition ne permet pas de lancer une campagne ni un budget.",
+      "Les statistiques 0 inscrits/0 hôtes/15 annonces sont un constat d’Achour, sans preuve de la qualité de la source dashboard."
+    ],
+    "verification": {
+      "mobile_targeted_tracking_tests_passed": 17,
+      "mobile_configuration": "ENV=prod, faux SDK sans appel fournisseur",
+      "backend_targeted_tests_passed": 739,
+      "backend_targeted_classes": [
+        "AnalyticsTrackingTest",
+        "AnalyticsOriginTest",
+        "Ga4TransportTest"
+      ],
+      "analyzer_errors": 0,
+      "product_detail_analyzer_issues": 18,
+      "analyzer_scope": "lib/analytics et fiche produit ; les avertissements/infos UI ne sont pas une preuve de collecte",
+      "git_diff_check_passed_repositories": [
+        "landing",
+        "mobile",
+        "backend"
+      ],
+      "native_build_repeated_this_turn": true,
+      "deployment_done": true,
+      "live_reception_verified": true,
+      "live_verification_scope": "iOS DebugView, app_open/home_viewed/view_item_list ; pas tout le funnel"
+    }
+  },
+  "deployment_evidence": {
+    "date": "2026-10-10",
+    "dev_revision": "goodlease-back-00223-xiw",
+    "prod_revision": "goodlease-back-prod-00030-ses",
+    "traffic_percent": 100,
+    "image_digest": "sha256:28f87d2ded343334e32782b67e8da9c0278cd95e9bccef011825d25a9062d1d9",
+    "migrations": [
+      "20261010.01",
+      "20261010.02",
+      "20261010.03"
+    ],
+    "preexisting_runtime_settings_preserved": 37,
+    "ios_live_business_events": [
+      "app_open",
+      "home_viewed",
+      "view_item_list"
+    ],
+    "key_events": [
+      "sign_up",
+      "host_onboarded",
+      "listing_published",
+      "rental_request_sent",
+      "booking_confirmed",
+      "purchase",
+      "rental_completed"
+    ],
+    "native_public_release_done": false,
+    "web_deployed": false
+  }
+}

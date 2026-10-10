@@ -1,13 +1,13 @@
 ---
 import Legal from '../layouts/Legal.astro';
-import { company, emails } from '../config';
+import { company, emails, analytics } from '../config';
 ---
 
 <Legal
   title="Politique de confidentialité"
   description="Politique de protection des données personnelles de GoodLease : responsable de traitement, finalités, durées de conservation, destinataires, cookies et droits des utilisateurs."
   intro="« Confidentialité et gestion des données » — comment GoodLease collecte et traite vos données personnelles."
-  updated="18 juin 2026"
+  updated="10 octobre 2026"
 >
   <p>
     Pour permettre l’utilisation de la plateforme, GOODLEASE collecte des données à caractère personnel
@@ -83,7 +83,7 @@ import { company, emails } from '../config';
   </p>
   <ul>
     <li>les données des Utilisateurs sont conservées pendant 2 ans à compter de la dernière activité de l’Utilisateur sur l’application ;</li>
-    <li>les cookies de mesure d’audience se déposent sur le terminal de l’Utilisateur pendant une durée de 13 mois, et le choix exprimé par l’Utilisateur est conservé pendant une durée de 6 mois ;</li>
+    <li>sur le site web, les cookies de mesure d’audience se déposent sur le terminal de l’Utilisateur pendant une durée de 13 mois, et le choix exprimé par l’Utilisateur est conservé pendant une durée de 6 mois ;</li>
     <li>les données comptables et de facturation sont conservées 10 ans, conformément aux obligations légales ;</li>
     <li>les données collectées au titre de la vérification d’identité et de la lutte contre la fraude (KYC / LCB-FT) sont conservées 5 ans après la fin de la relation.</li>
   </ul>
@@ -117,6 +117,40 @@ import { company, emails } from '../config';
   </p>
 
   <h2>7. Cookies, tags et traceurs</h2>
+  <p>
+    Sur le site web, les outils de mesure d’audience détaillée et de publicité soumis à consentement
+    ne sont chargés qu’après votre accord. Ils peuvent mesurer les visites et les actions relatives
+    aux annonces, aux inscriptions, aux publications et aux téléchargements de l’application.
+    Les événements du site n’incluent ni les champs des formulaires, ni les adresses e-mail,
+    ni les messages, ni les adresses précises, ni les coordonnées GPS.
+    {(analytics.gtmId || analytics.ga4Id || analytics.metaPixelId) ? ' Les fournisseurs configurés sont présentés dans le panneau de préférences.' : ' Aucun de ces outils marketing n’est actuellement activé sur le site.'}
+    Votre choix est conservé six mois et peut être modifié depuis la
+    <a href="/cookies/">gestion des cookies</a>.
+  </p>
+  <h3>Statistiques de l’application et des réservations</h3>
+  <p>
+    Dans l’application mobile, Google Analytics pour Firebase mesure la navigation et les actions
+    de réservation uniquement après votre accord. Vous pouvez refuser tout en utilisant l’application,
+    puis modifier votre choix dans Compte → Statistiques de l’app, y compris sans être connecté.
+    Le suivi publicitaire et l’utilisation des identifiants publicitaires restent désactivés.
+    Les mesures portent sur les écrans et actions, les catégories de matériel, les réservations et
+    leurs montants, la version de l’application et des identifiants pseudonymes d’installation et de compte.
+    Aucune recherche libre, aucun message, aucune adresse e-mail, aucun téléphone ni aucune position GPS
+    ne sont envoyés à cet outil de statistiques.
+    Google peut déduire une zone approximative, comme le pays ou la ville, à partir de l’adresse IP.
+    Cette information ne correspond pas à la position GPS précise de votre appareil.
+  </p>
+  <p>
+    Lorsque vous avez accepté les statistiques, notre serveur peut transmettre les actions et
+    résultats effectivement confirmés, notamment les inscriptions, les publications d’annonces,
+    les demandes de location, les paiements, les remboursements et les fins de location.
+    Le contexte de suivi conservé par GoodLease expire après 180 jours d’inactivité ; les contenus
+    des messages préparés pour cet envoi sont retirés après 72 heures. Des clés minimales restent
+    conservées pour éviter de compter plusieurs fois la même action.
+    Le retrait de votre accord arrête les nouveaux envois et efface les identifiants du contexte
+    correspondant. Les données déjà reçues par Google ne sont pas effacées automatiquement par ce
+    retrait ; vous pouvez exercer vos droits auprès de <a href={`mailto:${emails.rgpd}`}>{emails.rgpd}</a>.
+  </p>
   <h3>Qu’est-ce qu’un cookie ?</h3>
   <p>
     Les cookies sont de petits fichiers texte, souvent cryptés, stockés dans le navigateur de votre
@@ -142,6 +176,6 @@ import { company, emails } from '../config';
     L’enregistrement d’un cookie dans un terminal est subordonné au consentement de l’Utilisateur. Vous
     pouvez exprimer et modifier à tout moment, gratuitement, vos préférences en matière de cookies, à
     travers les choix qui vous sont offerts au sein du gestionnaire de consentement mis en place par
-    GOODLEASE. Voir la page <a href="/cookies">Gestion des cookies</a>.
+    GOODLEASE. Voir la page <a href="/cookies/">Gestion des cookies</a>.
   </p>
 </Legal>

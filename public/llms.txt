@@ -1,0 +1,28 @@
+# GoodLease
+
+> GoodLease est une plateforme française de location de matériel événementiel entre particuliers et professionnels. Le site officiel est https://goodlease.fr/.
+
+## Service
+
+Louez ou proposez de la sonorisation, de l'éclairage, des tentes et barnums, du mobilier, de la décoration, de la vaisselle et du linge de table. La disponibilité, le tarif et le lieu de retrait sont propres à chaque annonce. La réservation et le paiement se finalisent dans l'application mobile iOS ou Android.
+
+## Pages de référence
+
+- [Catalogue public](https://goodlease.fr/catalogue) : annonces publiées et sélections par catégorie et ville.
+- [À propos](https://goodlease.fr/a-propos/) : entreprise, services et zones présentes dans le catalogue.
+- [Louer son matériel](https://goodlease.fr/louer-son-materiel/) : informations pour les propriétaires.
+- [FAQ](https://goodlease.fr/faq/) : inscription, location, paiement et dépôt de garantie.
+- [Sécurité](https://goodlease.fr/securite/) : fonctionnement du bail et précautions de location.
+- [Conditions générales](https://goodlease.fr/cgs/) : conditions contractuelles du service.
+- [Confidentialité](https://goodlease.fr/confidentialite/) : protection des données personnelles.
+- [Contact](https://goodlease.fr/contact/) : joindre GoodLease.
+- [Mentions légales](https://goodlease.fr/mentions-legales/) : identité officielle de l'éditeur.
+- [Sitemap](https://goodlease.fr/sitemap-index.xml) : liste des URL publiques indexables.
+
+## Lecture des annonces
+
+Les fiches publiques descriptives utilisent /materiel/{titre-ville-id}. Les liens /annonce/{id} restent les liens de partage de l'application. Les pages locales regroupent les annonces par communes de la zone annoncée : elles ne représentent pas un rayon GPS. Un matériel publié n'est pas nécessairement disponible à toutes les dates.
+
+## Éditeur
+
+GOODLEASE, société par actions simplifiée, SIREN 106 617 467, RCS Lille Métropole. Siège : 10 Rue de Jemmapes, 59155 Faches-Thumesnil, France. Contact : contact@goodlease.fr. Support : support@goodlease.fr.

@@ -1,0 +1,22 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appIDs": [
+          "53A3WSX234.com.goodlease.app"
+        ],
+        "components": [
+          {
+            "/": "/annonce/*",
+            "comment": "Ouvre une annonce partagee dans l'app GoodLease."
+          },
+          {
+            "/": "/profil/*",
+            "comment": "Ouvre un profil partage dans l'app GoodLease."
+          }
+        ]
+      }
+    ]
+  }
+}

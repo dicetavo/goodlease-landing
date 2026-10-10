@@ -6,7 +6,10 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://goodlease.fr',
-  integrations: [tailwind(), sitemap()],
+  integrations: [tailwind(), sitemap({
+    filter: (page) => !['/app', '/catalogue', '/404'].includes(new URL(page).pathname.replace(/\/$/, '')),
+    customSitemaps: ['https://goodlease.fr/sitemap-catalogue.xml'],
+  })],
   build: {
     inlineStylesheets: 'auto',
   },

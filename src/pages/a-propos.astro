@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import { company, emails } from '../config';
+---
+
+<Base title="À propos : location de matériel entre particuliers" description="GoodLease met en relation particuliers et professionnels pour louer du matériel événementiel. Découvrez l’entreprise, son catalogue et ses services." homeSchema>
+  <section class="container-gl py-16 sm:py-20">
+    <div class="max-w-3xl" data-reveal>
+      <span class="eyebrow">À propos de GoodLease</span>
+      <h1 class="mt-4 text-3xl font-semibold sm:text-4xl">La location de matériel entre particuliers et professionnels</h1>
+      <p class="mt-6 text-lg leading-relaxed text-muted">GoodLease vous aide à équiper un mariage, un anniversaire, une soirée ou un événement professionnel en louant du matériel près de chez vous. Les propriétaires peuvent proposer leurs équipements et organiser leurs disponibilités.</p>
+      <h2 class="mt-10 text-2xl font-semibold">Une entreprise implantée dans la métropole lilloise</h2>
+      <p class="mt-4 leading-relaxed text-muted">La plateforme est éditée par {company.legalName}, {company.form.toLocaleLowerCase('fr-FR')}, immatriculée au {company.rcs} sous le numéro {company.siren}. Son siège social se situe au {company.address}.</p>
+      <h2 class="mt-10 text-2xl font-semibold">Du matériel pour vos événements</h2>
+      <p class="mt-4 leading-relaxed text-muted">Sonorisation, éclairage, tentes et barnums, décoration, vaisselle, nappes et mobilier : le catalogue rassemble les équipements publiés par les loueurs. Les pages par ville couvrent les communes où du matériel est proposé, notamment la métropole lilloise et les zones d’Île-de-France présentes dans le catalogue.</p>
+      <p id="about-catalogue-count" class="mt-4 text-muted">Consultez le catalogue pour connaître les annonces actuellement publiées.</p>
+      <h2 class="mt-10 text-2xl font-semibold">Un parcours de location encadré</h2>
+      <p class="mt-4 leading-relaxed text-muted">Consultez une annonce, échangez avec le loueur, puis confirmez vos dates et les conditions de retrait. La réservation et le paiement se finalisent dans l’application mobile GoodLease. Les conditions du bail et du dépôt de garantie sont présentées avant confirmation.</p>
+      <div class="mt-8 flex flex-wrap gap-3"><a href="/catalogue" class="btn-primary">Explorer le catalogue</a><a href="/louer-son-materiel/" class="btn-secondary">Louer son matériel</a></div>
+      <p class="mt-8 text-sm text-muted">Une question ? <a class="text-primary underline" href={`mailto:${emails.contact}`}>{emails.contact}</a> · <a class="text-primary underline" href="/mentions-legales/">Mentions légales</a></p>
+    </div>
+  </section>
+</Base>

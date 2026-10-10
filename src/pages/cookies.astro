@@ -1,39 +1,25 @@
 ---
 import Legal from '../layouts/Legal.astro';
+import { analytics } from '../config';
+const configured = Boolean(analytics.gtmId || analytics.ga4Id || analytics.metaPixelId);
 ---
 
-<Legal
-  title="Gestion des cookies"
-  description="Préférences cookies de goodlease.fr. GoodLease utilise une mesure d'audience respectueuse de la vie privée, sans cookie de suivi publicitaire."
-  intro="Vous contrôlez les traceurs déposés lors de votre visite sur goodlease.fr."
->
-  <h2>Notre approche</h2>
-  <p>
-    GoodLease privilégie une mesure d’audience <strong>respectueuse de la vie privée et sans cookie</strong>
-    (solution cookieless, données agrégées et anonymisées). Aucun cookie publicitaire ni traceur tiers de
-    suivi n’est déposé sans votre consentement.
-  </p>
-
+<Legal title="Gestion des cookies" description="Gérez votre consentement à la mesure d’audience et aux outils publicitaires sur goodlease.fr. Vos choix sont modifiables à tout moment." intro="Vous contrôlez les traceurs utilisés lors de votre visite sur goodlease.fr." updated="8 octobre 2026">
+  <h2>Les données nécessaires au service</h2>
+  <p>La connexion, l’affichage du catalogue, les favoris et la mémorisation de vos préférences utilisent des données de fonctionnement dans votre navigateur. Elles ne servent pas au suivi publicitaire.</p>
+  <h2>La mesure d’audience et les campagnes</h2>
+  {configured ? (
+    <p>Avec votre accord, les outils configurés peuvent mesurer les visites, les vues d’annonces, les recherches, les inscriptions, les publications d’annonces et les clics vers les stores. Le suivi publicitaire et la création d’audiences nécessitent votre accord pour la finalité publicitaire.</p>
+  ) : (
+    <p>Aucun outil marketing soumis à consentement n’est actuellement activé sur le site. S’il est activé, un bandeau vous permettra d’accepter, de refuser ou de personnaliser vos choix avant son chargement.</p>
+  )}
+  <p>Les outils soumis à consentement sont bloqués tant que vous ne les avez pas autorisés. Refuser est aussi simple qu’accepter. Les formulaires, adresses e-mail, messages, adresses précises et coordonnées GPS ne sont pas envoyés dans les événements de mesure du site.</p>
   <h2>Vos préférences</h2>
-  <p>
-    Si des traceurs soumis à consentement venaient à être utilisés (par exemple pour des statistiques
-    détaillées ou du marketing), un bandeau vous proposerait trois choix équivalents — <strong>Accepter</strong>,
-    <strong>Refuser</strong> et <strong>Personnaliser</strong> — et aucun script tiers ne se déclencherait
-    avant votre choix. Votre choix serait mémorisé pendant 6 mois et modifiable à tout moment depuis cette
-    page.
-  </p>
-
+  <p>Votre accord ou votre refus est conservé six mois dans votre navigateur. Vous pouvez modifier ce choix à tout moment. Un retrait du consentement arrête les outils concernés et recharge la page pour appliquer vos nouvelles préférences.</p>
   <div id="cmp-panel" class="my-6 rounded-card border border-line bg-canvas p-5">
-    <p class="text-sm text-muted">
-      Aucun traceur soumis à consentement n’est actuellement actif sur ce site. Le panneau de gestion du
-      consentement s’affichera ici dès qu’une mesure d’audience ou un outil marketing nécessitant un
-      consentement sera mis en place.
-    </p>
+    <button type="button" data-consent-open hidden class="btn-secondary">Modifier mes préférences</button>
+    {!configured && <p class="text-sm text-muted">Vous n’avez actuellement aucun choix de suivi marketing à effectuer.</p>}
   </div>
-
   <h2>En savoir plus</h2>
-  <p>
-    Pour le détail des durées de conservation et de vos droits, consultez notre
-    <a href="/confidentialite">politique de confidentialité</a>.
-  </p>
+  <p>Pour connaître les traitements de données et exercer vos droits, consultez notre <a href="/confidentialite/">politique de confidentialité</a>.</p>
 </Legal>

@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { routes } from '../config';
+import { routes, pageHref } from '../config';
 
 const faq = [
   {
@@ -42,12 +42,12 @@ const faq = [
     cat: 'Compte & données',
     items: [
       { q: 'Comment supprimer mon compte ?', a: 'Vous pouvez demander la suppression de votre compte et de vos données. Voir la page « Supprimer mon compte ».' },
-      { q: 'Comment exercer mes droits RGPD ?', a: 'Écrivez à rgpd@goodlease.fr. Vos droits (accès, rectification, suppression, portabilité, opposition) sont détaillés dans notre politique de confidentialité.' },
+      { q: 'Comment exercer mes droits RGPD ?', a: 'Écrivez à contact@goodlease.fr. Vos droits (accès, rectification, suppression, portabilité, opposition) sont détaillés dans notre politique de confidentialité.' },
     ],
   },
 ];
 
-// Données structurées FAQPage (rich results Google) — construites depuis le même tableau.
+// Données structurées FAQPage — même contenu que les réponses visibles, sans promesse de résultat enrichi.
 const faqSchema = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -62,10 +62,10 @@ const faqSchema = {
 ---
 
 <Base
-  title="FAQ"
+  title="FAQ location de matériel entre particuliers"
   description="Questions fréquentes sur GoodLease : inscription, location, paiement et dépôt de garantie, mise en location, litiges, compte et données personnelles."
 >
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema).replace(/</g, '\\u003c')} is:inline />
 
   <section class="border-b border-line bg-surface">
     <div class="container-gl py-12 sm:py-16">
@@ -73,7 +73,7 @@ const faqSchema = {
       <h1 class="mt-4 text-3xl font-semibold sm:text-4xl">Questions fréquentes</h1>
       <p class="mt-4 max-w-2xl text-[15px] leading-relaxed text-muted">
         Vous ne trouvez pas votre réponse&nbsp;?
-        <a href={routes.contact} class="font-medium text-primary hover:underline">Contactez notre service client</a>.
+        <a href={pageHref(routes.contact)} class="font-medium text-primary hover:underline">Contactez notre service client</a>.
       </p>
     </div>
   </section>

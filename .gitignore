@@ -30,3 +30,11 @@ pnpm-debug.log*
 # fichiers d'agents / notes markdown — gardés en local uniquement (README.md reste suivi)
 *.md
 !README.md
+
+# Tracking secrets, private account inventory and generated proofs
+.env.*
+!.env.example
+output/
+outputs/
+docs/COMPTES_ET_EMAILS.md
+docs/ga4-configuration-prepared.json

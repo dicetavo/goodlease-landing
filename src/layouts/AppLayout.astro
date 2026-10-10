@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import { site } from '../config';
+import MarketingConsent from '../components/MarketingConsent.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Application web',
+  description = 'Louez et proposez du matériel avec GoodLease depuis votre navigateur.',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, site.url).href;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title} · {site.name}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex,follow" />
+    <link rel="canonical" href={canonical} />
+    <meta name="google-site-verification" content="SFG0dMk6KQygWFWcJe6APSicPiNG14HTlSV9pr2DJ_Q" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#1675F3" />
+    <script id="google-identity-services" src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body class="app-body">
+    <a href="#app-content" class="sr-only focus:not-sr-only">Aller au contenu</a>
+    <slot />
+    <MarketingConsent />
+    <script is:inline>
+      if ('serviceWorker' in navigator && location.protocol === 'https:') {
+        const scope = location.pathname.startsWith('/annonce/')
+          ? '/annonce/'
+          : location.pathname.startsWith('/profil/')
+            ? '/profil/'
+            : '/app/';
+        navigator.serviceWorker.getRegistrations()
+          .then((registrations) => Promise.all(
+            registrations
+              .filter((registration) => new URL(registration.scope).pathname === '/')
+              .map((registration) => registration.unregister()),
+          ))
+          .then(() => navigator.serviceWorker.register('/sw.js', { scope }))
+          .catch(() => {});
+      }
+    </script>
+  </body>
+</html>

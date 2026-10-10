@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { mainNav } from '../config';
+import { mainNav, routes, pageHref } from '../config';
 ---
 
 <header class="sticky top-0 z-40 border-b border-line/70 bg-canvas/80 backdrop-blur-md">
@@ -20,7 +20,7 @@ import { mainNav } from '../config';
     </nav>
 
     <div class="flex items-center gap-3">
-      <a href="/#telecharger" class="btn-primary hidden sm:inline-flex">Télécharger l’app</a>
+      <a href={pageHref(routes.app)} class="btn-primary hidden sm:inline-flex">Ouvrir l’app</a>
 
       <button
         type="button"
@@ -49,7 +49,7 @@ import { mainNav } from '../config';
           </a>
         ))
       }
-      <a href="/#telecharger" class="btn-primary mt-2">Télécharger l’app</a>
+      <a href={pageHref(routes.app)} class="btn-primary mt-2">Ouvrir l’app</a>
     </nav>
   </div>
 </header>

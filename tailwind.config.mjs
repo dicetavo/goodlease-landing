@@ -1,6 +1,18 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}'],
+  // Ces classes sont assemblées par le rendu TypeScript des cartes et fiches.
+  safelist: [
+    'icon-favorite-border',
+    'icon-favorite',
+    'icon-star',
+    'icon-chevron-right',
+    'icon-payment',
+    'icon-verified',
+    'icon-inventory',
+    'icon-swap',
+    'icon-calendar',
+  ],
   theme: {
     extend: {
       colors: {

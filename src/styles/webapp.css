@@ -1,0 +1,520 @@
+@layer base {
+  .app-body { @apply min-h-screen overflow-x-hidden bg-canvas; }
+  .app-body button, .app-body input, .app-body textarea, .app-body select { font: inherit; }
+  .app-body button { cursor: pointer; }
+}
+
+@layer components {
+  .app-icon { --app-icon: none; display: inline-block; width: 1.5rem; height: 1.5rem; flex: 0 0 auto; background: currentColor; -webkit-mask: var(--app-icon) center / contain no-repeat; mask: var(--app-icon) center / contain no-repeat; }
+  .app-icon.inline { width: 1rem; height: 1rem; vertical-align: -0.18em; }
+  .icon-explore { --app-icon: url('/webapp-icons/exploreicon.svg'); }
+  .icon-favorites { --app-icon: url('/webapp-icons/favoritesicon.svg'); }
+  .icon-my-ads { --app-icon: url('/webapp-icons/myadsicon.svg'); }
+  .icon-add { --app-icon: url('/webapp-icons/addnewicon.svg'); }
+  .icon-messages { --app-icon: url('/webapp-icons/messageicon.svg'); }
+  .icon-account { --app-icon: url('/webapp-icons/accounticon.svg'); }
+  .icon-wallet { --app-icon: url('/webapp-icons/rewardicon.svg'); }
+  .icon-help { --app-icon: url('/webapp-icons/questionaskedicon.svg'); }
+  .icon-notifications { --app-icon: url('/webapp-icons/notifications-outlined.svg'); }
+  .icon-calendar { --app-icon: url('/webapp-icons/calendar-outlined.svg'); }
+  .icon-location { --app-icon: url('/webapp-icons/locationicon.svg'); }
+  .icon-all { --app-icon: url('/webapp-icons/menuicon.svg'); }
+  .icon-sound { --app-icon: url('/webapp-icons/soundicon.svg'); }
+  .icon-lights { --app-icon: url('/webapp-icons/lightsicon.svg'); }
+  .icon-furniture { --app-icon: url('/webapp-icons/furnitureicon.svg'); }
+  .icon-reception { --app-icon: url('/webapp-icons/receptionicon.svg'); }
+  .icon-structures { --app-icon: url('/webapp-icons/structuresicon.svg'); }
+  .icon-video { --app-icon: url('/webapp-icons/videoicon.svg'); }
+  .icon-textile { --app-icon: url('/webapp-icons/textileicon.svg'); }
+  .icon-transport { --app-icon: url('/webapp-icons/transporticon.svg'); }
+  .icon-divers { --app-icon: url('/webapp-icons/diversicon.svg'); }
+  .icon-share { --app-icon: url('/webapp-icons/ios-share.svg'); }
+  .icon-favorite-border { --app-icon: url('/webapp-icons/favorite-border.svg'); }
+  .icon-favorite { --app-icon: url('/webapp-icons/favorite.svg'); }
+  .icon-star { --app-icon: url('/webapp-icons/star.svg'); }
+  .icon-chevron-right { --app-icon: url('/webapp-icons/chevron-right.svg'); }
+  .icon-payment { --app-icon: url('/webapp-icons/paymenticon.svg'); }
+  .icon-verified { --app-icon: url('/webapp-icons/identityvarificationicon.svg'); }
+  .icon-inventory { --app-icon: url('/webapp-icons/inventory-outlined.svg'); }
+  .icon-swap { --app-icon: url('/webapp-icons/swap-horizontal.svg'); }
+
+  .webapp { --sidebar: 244px; min-height: 100vh; color: #1a1c1e; }
+  .app-sidebar { @apply fixed inset-y-0 left-0 z-40 flex w-[244px] flex-col border-r border-line bg-surface px-4 py-6; }
+  .app-logo { @apply mb-9 flex px-3; }
+  .app-nav { @apply flex flex-1 flex-col gap-1; }
+  .app-sidebar-bottom { @apply flex flex-col gap-1 border-t border-line pt-4; }
+  .app-nav-item { @apply flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium text-muted transition hover:bg-primary-50 hover:text-primary; }
+  .app-nav-item > .app-icon { @apply h-6 w-6; }
+  .app-nav-item.is-active { color: #155eef; @apply bg-primary-100; }
+  .app-nav-item b { @apply ml-auto rounded-full bg-primary px-2 py-0.5 text-[11px] text-white; }
+  .app-nav-item i { @apply ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold not-italic text-white; }
+
+  .app-shell { margin-left: var(--sidebar); min-height: 100vh; }
+  .app-topbar { @apply sticky top-0 z-30 flex h-[76px] items-center gap-4 border-b border-line bg-surface/95 px-8 backdrop-blur; }
+  .app-mobile-logo { @apply hidden; }
+  .app-search-wrap { @apply flex h-11 max-w-xl flex-1 items-center gap-3 rounded-xl bg-canvas px-4 text-muted; }
+  .app-search-wrap input { @apply min-w-0 flex-1 bg-transparent text-sm text-ink outline-none; }
+  .app-location { @apply flex h-11 items-center gap-2 rounded-xl border border-line bg-surface px-4 text-sm font-medium hover:border-primary; }
+  .app-location .app-icon, .app-primary .app-icon { @apply h-5 w-5; }
+  .app-primary { @apply inline-flex min-h-11 items-center justify-center rounded-[13px] bg-primary px-5 text-sm font-semibold text-white shadow-soft transition hover:bg-primary-dark disabled:cursor-wait disabled:opacity-60; }
+  .app-primary.wide { @apply w-full; }
+  .app-secondary { @apply inline-flex min-h-10 items-center justify-center rounded-xl border border-line bg-surface px-4 text-sm font-semibold text-ink transition hover:border-primary hover:text-primary; }
+  .app-secondary.wide { @apply mt-5 w-full; }
+  .app-account-button { @apply flex h-11 shrink-0 items-center gap-2 rounded-[13px] border border-line bg-surface px-4 text-sm font-semibold text-ink transition hover:border-primary hover:text-primary; }
+  .app-account-button .app-icon { @apply h-5 w-5; }
+  .app-content { @apply mx-auto max-w-[1440px] p-8 pb-16; }
+  .app-view { display: none; animation: app-view-in .25s ease-out; }
+  .app-view.is-active { display: block; }
+  @keyframes app-view-in { from { opacity: 0; transform: translateY(5px); } }
+
+  .app-kicker { @apply mb-2 text-xs font-bold uppercase tracking-[.13em] text-primary; }
+  .welcome-row, .page-title { @apply mb-7 flex items-end justify-between gap-6; }
+  .welcome-row h1, .page-title h1 { @apply text-3xl font-bold sm:text-4xl; }
+  .welcome-row > div > p:last-child, .page-title > div > p:last-child { @apply mt-2 text-sm text-muted sm:text-base; }
+  .service-state { @apply grid min-w-[230px] grid-cols-[auto_1fr] rounded-card border border-line bg-surface px-4 py-3 shadow-soft; }
+  .service-state > span { @apply row-span-2 mr-3 mt-1 h-2.5 w-2.5 rounded-full bg-online shadow-[0_0_0_5px_rgba(23,178,106,.12)]; }
+  .service-state strong { @apply text-xs; }
+  .service-state small { @apply text-[11px] text-muted; }
+
+  .search-panel { @apply grid grid-cols-[1.4fr_1fr_.75fr_.75fr_auto] gap-2 rounded-card border border-line bg-surface p-3 shadow-soft; }
+  .search-panel label { @apply border-r border-line px-3; }
+  .search-panel label span { @apply block text-[10px] font-bold uppercase tracking-wider text-muted; }
+  .search-panel input { @apply mt-1 w-full bg-transparent text-sm font-medium outline-none; }
+  .category-row { @apply my-7 flex gap-6 overflow-x-auto pb-2; scrollbar-width: none; }
+  .category-chip { @apply relative flex min-w-[72px] shrink-0 flex-col items-center gap-2 border-0 bg-transparent px-1 py-2 text-xs font-medium text-[#717680] transition hover:text-ink; }
+  .category-chip .app-icon { @apply h-7 w-7; }
+  .category-chip.is-active { @apply text-ink; }
+  .category-chip.is-active::after { content: ''; @apply absolute -bottom-1 left-1/2 h-[3px] w-10 -translate-x-1/2 rounded-full bg-primary; }
+  .section-heading { @apply mb-5 flex items-end justify-between gap-4; }
+  .section-heading h2 { @apply text-xl font-bold sm:text-2xl; }
+  .section-heading p { @apply mt-1 text-sm text-muted; }
+  .view-controls { @apply flex gap-2; }
+  .view-controls button, .view-controls span { @apply flex h-10 items-center justify-center rounded-lg border border-line bg-surface px-3 text-sm; }
+  .view-controls button.is-active, .view-controls span.is-active { @apply border-primary bg-primary-50 text-primary; }
+
+  .listing-grid { @apply grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4; }
+  .market-card { @apply relative flex min-h-full flex-col overflow-hidden rounded-card border border-line bg-surface shadow-[0_5px_20px_rgba(26,28,30,.05)] transition hover:-translate-y-1 hover:shadow-card; }
+  .market-card-link { @apply block flex-1 text-ink outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset; }
+  .market-card-image { @apply relative aspect-[4/3] overflow-hidden bg-field; }
+  .market-card-image img { @apply h-full w-full object-cover transition duration-500; }
+  .market-card:hover .market-card-image img { @apply scale-[1.03]; }
+  .favorite-button { @apply absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-ink shadow-soft backdrop-blur; }
+  .favorite-button .app-icon { @apply h-5 w-5; }
+  .favorite-button.is-liked { color: #ff472e; }
+  .verified-pill { @apply absolute bottom-3 left-3 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-bold text-primary shadow-soft; }
+  .verified-pill.static { position: static; @apply inline-flex; }
+  .card-body { @apply block w-full p-4 text-left; }
+  .card-meta { @apply mb-2 flex items-center justify-between text-[11px] font-semibold text-muted; }
+  .card-meta span:first-child { @apply text-primary; }
+  .card-body h3 { @apply truncate text-[15px] font-bold; }
+  .card-body > p { @apply my-2 text-xs text-muted; }
+  .card-body > strong { @apply text-base; }
+  .card-body > strong small { @apply font-normal text-muted; }
+  .card-profile-link { @apply relative z-[2] flex items-center gap-2 border-t border-line px-4 py-3 text-xs font-semibold text-[#535862] transition hover:bg-primary-50 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset; }
+  .card-profile-link .app-icon { @apply h-4 w-4; }
+  .card-profile-link .icon-chevron-right { @apply ml-auto; }
+  .empty-state { @apply rounded-card border border-dashed border-line bg-surface p-14 text-center; }
+  .empty-state > span { @apply mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-2xl text-primary; }
+  .empty-state h3 { @apply text-lg; }
+  .empty-state p { @apply my-2 text-sm text-muted; }
+
+  .tabs { @apply mb-6 flex gap-1 overflow-x-auto border-b border-line; }
+  .tabs button { @apply whitespace-nowrap border-b-2 border-transparent px-4 py-3 text-sm font-medium text-muted; }
+  .tabs button.is-active { @apply border-primary text-primary; }
+  .tabs b { @apply ml-1 rounded-full bg-primary-100 px-2 py-0.5 text-[10px]; }
+  .stack-list { @apply flex flex-col gap-4; }
+  .booking-card, .owner-listing { @apply flex items-center gap-5 rounded-card border border-line bg-surface p-4 shadow-soft; }
+  .booking-card > img, .owner-listing > img { @apply h-28 w-32 rounded-xl object-cover; }
+  .grow { @apply min-w-0 flex-1; }
+  .grow h3 { @apply mt-2 text-base font-bold; }
+  .grow p { @apply mt-1 text-sm text-muted; }
+  .status { @apply inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider; }
+  .status-confirmed, .status-live { @apply bg-success/10 text-success; }
+  .status-draft { @apply bg-warning/15 text-[#9a6900]; }
+  .progress-track { @apply mt-4 grid max-w-md grid-cols-4 gap-1; }
+  .progress-track span { @apply h-1 rounded-full bg-line; }
+  .progress-track span.done { @apply bg-primary; }
+  .booking-card small { @apply mt-2 block text-xs text-muted; }
+  .booking-actions { @apply flex min-w-[170px] flex-col gap-2; }
+  .booking-actions > strong { @apply mb-1 text-right text-lg; }
+  .draft-image { @apply flex h-28 w-32 items-center justify-center rounded-xl border-2 border-dashed border-primary-200 bg-primary-50 text-3xl text-primary; }
+  .icon-button { @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-surface hover:border-primary; }
+  .icon-button .app-icon { @apply h-5 w-5; }
+  .stats-grid { @apply mb-8 grid grid-cols-2 gap-4 xl:grid-cols-4; }
+  .stats-grid > div { @apply rounded-card border border-line bg-surface p-5 shadow-soft; }
+  .stats-grid span { @apply block text-xs text-muted; }
+  .stats-grid strong { @apply my-2 block text-2xl; }
+  .stats-grid small { @apply text-xs text-muted; }
+  .positive { color: #039855 !important; }
+
+  .messages-view.is-active { @apply grid min-h-[calc(100vh-140px)] grid-cols-[340px_1fr] overflow-hidden rounded-card border border-line bg-surface shadow-soft; }
+  .conversations { @apply border-r border-line; }
+  .page-title.compact { @apply m-0 p-5 pb-3; }
+  .page-title.compact h1 { @apply text-2xl; }
+  .mini-search { @apply mx-4 mb-3 w-[calc(100%-2rem)] rounded-xl bg-canvas px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-primary; }
+  .conversation { @apply grid w-full grid-cols-[auto_1fr_auto] items-center gap-3 border-l-2 border-transparent p-4 text-left hover:bg-canvas; }
+  .conversation.is-active { @apply border-primary bg-primary-50; }
+  .conversation span:nth-child(2) { @apply min-w-0; }
+  .conversation strong, .conversation small { @apply block truncate text-xs; }
+  .conversation small { @apply mt-1 text-muted; }
+  .conversation time { @apply self-start text-[10px] text-muted; }
+  .person-avatar { @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-white; }
+  .person-avatar.purple { @apply bg-purple-500; }
+  .chat-panel { @apply grid min-h-0 grid-rows-[auto_1fr_auto]; }
+  .chat-panel > header { @apply flex items-center gap-3 border-b border-line p-4; }
+  .chat-panel > header > div { @apply flex flex-1 flex-col text-sm; }
+  .chat-panel > header small { @apply text-xs text-muted; }
+  .chat-panel > header small i { @apply mr-1 inline-block h-2 w-2 rounded-full bg-online; }
+  .chat-back { @apply hidden h-10 w-10 items-center justify-center rounded-full border border-line text-2xl; }
+  .chat-messages { @apply flex max-h-[calc(100vh-290px)] flex-col gap-3 overflow-y-auto bg-canvas/60 p-6; }
+  .day-separator { @apply my-2 text-center text-[10px] font-semibold uppercase tracking-wider text-muted; }
+  .message { @apply max-w-[68%] rounded-2xl px-4 py-3 text-sm leading-relaxed; }
+  .message.incoming { @apply self-start rounded-bl-sm border border-line bg-surface; }
+  .message.outgoing { @apply self-end rounded-br-sm bg-primary text-white; }
+  .composer { @apply flex gap-2 border-t border-line p-4; }
+  .composer input { @apply min-w-0 flex-1 rounded-xl bg-canvas px-4 text-sm outline-none focus:ring-1 focus:ring-primary; }
+  .composer > button { @apply flex h-11 w-11 items-center justify-center rounded-full text-xl; }
+  .send-button { @apply bg-transparent p-0; }
+  .send-button img { @apply h-11 w-11; }
+
+  .wallet-card { @apply mb-9 flex items-end justify-between rounded-[24px] bg-gradient-to-br from-[#155EEF] to-[#1249ae] p-7 text-white shadow-card; }
+  .wallet-card span, .wallet-card small { @apply block text-sm text-white/70; }
+  .wallet-card strong { @apply my-2 block text-4xl text-white; }
+  .wallet-action { @apply rounded-xl bg-white px-5 py-3 text-sm font-bold text-primary; }
+  .transaction-list { @apply overflow-hidden rounded-card border border-line bg-surface shadow-soft; }
+  .transaction-list > div { @apply grid grid-cols-[auto_1fr_auto] items-center gap-4 border-b border-line p-4 last:border-0; }
+  .transaction-list strong, .transaction-list small { @apply block text-sm; }
+  .transaction-list small { @apply mt-1 text-xs text-muted; }
+  .transaction-icon { @apply flex h-10 w-10 items-center justify-center rounded-full font-bold; }
+  .transaction-icon.income { @apply bg-success/10 text-success; }
+  .transaction-icon.payout { @apply bg-primary-100 text-primary; }
+  .account-placeholder { @apply grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-card border border-dashed border-line bg-surface p-5 text-left; }
+  .account-placeholder.compact { @apply m-4 grid-cols-[1fr_auto] rounded-xl p-4; }
+  .account-placeholder strong, .account-placeholder small { @apply block; }
+  .account-placeholder small { @apply mt-1 text-xs leading-relaxed text-muted; }
+  .notification-list { @apply flex flex-col gap-3; }
+  .notification-list article { @apply grid grid-cols-[auto_1fr_auto] gap-4 rounded-card border border-line bg-surface p-5 opacity-75; }
+  .notification-list article.unread { @apply border-primary-200 opacity-100 shadow-soft; }
+  .notification-list article.unread:before { content: ''; @apply absolute; }
+  .notification-list h3 { @apply text-sm; }
+  .notification-list p { @apply mt-1 text-sm text-muted; }
+  .notification-list time { @apply mt-2 block text-xs text-muted; }
+  .notification-list article > button { @apply self-center text-xs font-semibold text-primary; }
+  .notice-icon { @apply flex h-10 w-10 items-center justify-center rounded-full font-bold; }
+  .notice-icon.blue { @apply bg-primary-100 text-primary; }
+  .notice-icon.green { @apply bg-success/10 text-success; }
+  .notice-icon.amber { @apply bg-warning/15 text-[#9a6900]; }
+
+  .profile-grid { @apply grid grid-cols-[300px_1fr] items-start gap-6; }
+  .profile-card, .settings-card { @apply rounded-card border border-line bg-surface p-6 shadow-soft; }
+  .profile-card { @apply text-center; }
+  .profile-avatar { @apply mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-ink text-2xl font-bold text-white; }
+  .profile-avatar > img { @apply h-full w-full rounded-full object-cover; }
+  .profile-card h2 { @apply mt-4 text-xl; }
+  .profile-card > p { @apply mt-1 text-xs text-muted; }
+  .verified { @apply mx-auto mt-4 inline-flex rounded-full bg-success/10 px-3 py-1.5 text-xs font-semibold text-success; }
+  .profile-score { @apply mt-6 grid grid-cols-3 border-t border-line pt-5; }
+  .profile-score span { @apply border-r border-line last:border-0; }
+  .profile-score strong, .profile-score small { @apply block; }
+  .profile-score small { @apply mt-1 text-[10px] text-muted; }
+  .settings-card h2 { @apply mb-5 text-lg; }
+  .form-grid { @apply grid grid-cols-2 gap-4; }
+  .form-grid label, .auth-dialog label, .wizard-step label, .booking-dialog label { @apply text-xs font-semibold text-muted; }
+  .form-grid .wide { @apply col-span-2; }
+  .form-grid input, .auth-dialog input, .wizard-step input, .wizard-step select, .wizard-step textarea, .booking-dialog input { @apply mt-2 w-full rounded-xl border border-line bg-canvas px-4 py-3 text-sm text-ink outline-none focus:border-primary focus:ring-1 focus:ring-primary; }
+  .form-actions { @apply mt-5 flex justify-end; }
+  .settings-card hr { @apply my-7 border-line; }
+  .settings-row { @apply flex w-full items-center justify-between border-b border-line py-4 text-sm font-medium last:border-0; }
+  .settings-row span { @apply text-xl text-muted; }
+  .danger-row { @apply text-danger; }
+
+  .mobile-tabbar { @apply hidden; }
+  .app-dialog { @apply m-auto max-h-[92vh] max-w-[calc(100vw-2rem)] overflow-auto rounded-[24px] border-0 bg-surface p-0 text-ink shadow-[0_32px_100px_rgba(0,0,0,.3)]; }
+  .app-dialog::backdrop { background: rgba(10, 17, 30, .52); backdrop-filter: blur(4px); }
+  .dialog-close { @apply absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-2xl shadow-soft; }
+  .detail-dialog { @apply w-[940px]; }
+  #detail-content { @apply grid grid-cols-[1.05fr_.95fr]; }
+  .detail-image { @apply min-h-[560px] bg-field; }
+  .detail-image img { @apply h-full w-full object-cover; }
+  .detail-copy { @apply flex flex-col p-8; }
+  .detail-meta { @apply flex items-center justify-between text-xs text-muted; }
+  .detail-copy h2 { @apply mt-5 text-3xl; }
+  .detail-title-row { @apply flex items-start gap-3; }
+  .detail-title-row h2 { @apply flex-1; }
+  .detail-title-row .icon-button { @apply mt-4; }
+  .detail-place { @apply mb-5 mt-2 text-sm text-muted; }
+  .detail-copy > p:not(.detail-place) { @apply text-sm leading-relaxed text-muted; }
+  .detail-features { @apply my-6 grid grid-cols-3 gap-2; }
+  .detail-features span { @apply rounded-xl bg-canvas p-3 text-center text-xs font-semibold; }
+  .owner-card { @apply my-6 rounded-2xl border border-line bg-surface p-4 shadow-soft; }
+  .owner-card-heading { @apply mb-3 flex items-center justify-between; }
+  .owner-card-heading > span { @apply text-xs font-bold uppercase tracking-[.12em] text-muted; }
+  .owner-share { @apply inline-flex items-center gap-2 rounded-xl px-2 py-2 text-xs font-semibold text-primary transition hover:bg-primary-50; }
+  .owner-share .app-icon { @apply h-4 w-4; }
+  .owner-main { @apply flex items-center gap-3 rounded-xl text-ink outline-none transition hover:text-primary focus-visible:ring-2 focus-visible:ring-primary; }
+  .owner-main strong, .owner-main small { @apply block text-sm; }
+  .owner-main small { @apply mt-1 text-xs text-muted; }
+  .owner-metrics { @apply mt-1 flex flex-wrap gap-x-3 text-[11px] text-muted; }
+  .owner-main .icon-chevron-right { @apply ml-auto h-5 w-5 text-muted; }
+  .detail-book { @apply mt-auto flex items-end justify-between pt-6; }
+  .detail-book strong { @apply text-2xl; }
+  .detail-book small { @apply text-muted; }
+  .detail-book p { @apply mt-1 text-[11px] text-muted; }
+  .auth-dialog, .wizard-dialog, .booking-dialog, .generic-dialog { @apply w-[500px] p-8; }
+  .auth-dialog > img { @apply mb-5 h-14 w-14 rounded-xl; }
+  .auth-dialog h2, .wizard-dialog h2, .booking-dialog h2, .generic-dialog h2 { @apply text-2xl; }
+  .auth-dialog > p:not(.app-kicker), .generic-dialog > p { @apply mb-6 mt-2 text-sm text-muted; }
+  .auth-dialog form, .booking-dialog form { @apply mt-6 flex flex-col gap-4; }
+  .form-error { @apply rounded-xl bg-danger/10 p-3 text-xs text-danger; }
+  .text-button { @apply my-4 w-full text-center text-xs font-semibold text-primary; }
+  .dialog-separator { @apply my-4 flex items-center gap-3 text-xs text-muted before:h-px before:flex-1 before:bg-line after:h-px after:flex-1 after:bg-line; }
+  .social-button { @apply mb-2 w-full rounded-xl border border-line px-4 py-3 text-sm font-semibold hover:border-primary; }
+  .google-signin { @apply mb-3 flex min-h-11 w-full items-center justify-center overflow-hidden rounded-xl text-xs text-muted; }
+  .legal-consent { @apply mt-4 text-center text-[10px] leading-relaxed text-muted; }
+  .legal-consent a { @apply underline; }
+  .wizard-progress { @apply my-6 grid grid-cols-4 gap-2; }
+  .wizard-progress span { @apply h-1.5 rounded-full bg-line; }
+  .wizard-progress span.is-active { @apply bg-primary; }
+  .wizard-step { @apply hidden flex-col gap-4; }
+  .wizard-step.is-active { @apply flex; }
+  .wizard-address-row { @apply grid grid-cols-2 gap-3; }
+  .upload-zone { @apply flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-primary-200 bg-primary-50 text-center text-primary !important; }
+  .upload-zone input { @apply hidden; }
+  .upload-zone small { @apply mt-2 text-muted; }
+  .review-step { @apply items-center py-8 text-center; }
+  .review-check, .generic-icon { @apply flex h-16 w-16 items-center justify-center rounded-full bg-success/10 text-2xl font-bold text-success; }
+  .review-step p { @apply text-sm text-muted; }
+  .wizard-actions { @apply mt-6 flex justify-end gap-3; }
+  .booking-dialog form { @apply grid grid-cols-2; }
+  .booking-dialog .price-summary, .booking-dialog .consent-check, .booking-dialog .wide { @apply col-span-2; }
+  .price-summary { @apply mt-2 rounded-xl bg-canvas p-4; }
+  .price-summary > div { @apply mb-2 flex justify-between text-sm; }
+  .price-summary hr { @apply my-3 border-line; }
+  .price-summary .total { @apply text-base; }
+  .price-summary > small { @apply block text-[10px] text-muted; }
+  .consent-check { @apply flex items-start gap-2; }
+  .consent-check input { @apply mt-0 h-4 w-4; }
+  .generic-dialog { @apply text-center; }
+  .generic-icon { @apply mx-auto mb-5; }
+  .public-profile-view { @apply mx-auto max-w-[1120px]; }
+  #public-profile-content { @apply min-h-[420px]; }
+  .public-profile-loading { @apply mx-auto mt-20 flex max-w-md items-center gap-5 rounded-card border border-line bg-surface p-6 text-left shadow-soft; }
+  .public-profile-loading strong, .public-profile-loading small { @apply block; }
+  .public-profile-loading small { @apply mt-1 text-xs text-muted; }
+  .public-profile-loading-avatar { @apply h-14 w-14 shrink-0 animate-pulse rounded-full bg-primary-100; }
+  .social-profile-page { @apply pb-6; }
+  .social-profile-toolbar { @apply mb-4 flex min-h-11 items-center justify-between gap-4; }
+  .profile-back-link, .profile-toolbar-share { @apply inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-muted transition hover:bg-surface hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary; }
+  .profile-back-link > span { @apply text-lg; }
+  .profile-toolbar-share .app-icon { @apply h-5 w-5; }
+  .social-profile-hero { @apply overflow-hidden rounded-[28px] border border-line bg-surface shadow-card; }
+  .social-profile-cover { @apply relative grid h-56 grid-cols-3 overflow-hidden bg-gradient-to-br from-primary via-[#155eef] to-[#0d3b8f]; }
+  .social-profile-cover::before { content: ''; background-image: radial-gradient(circle at 15% 20%, rgba(255,255,255,.22) 0 2px, transparent 3px), radial-gradient(circle at 85% 35%, rgba(255,255,255,.14) 0 3px, transparent 4px); background-size: 48px 48px, 72px 72px; @apply absolute inset-0; }
+  .social-profile-cover-1 { @apply grid-cols-1; }
+  .social-profile-cover-2 { @apply grid-cols-2; }
+  .social-profile-cover img { @apply h-full min-w-0 w-full object-cover; }
+  .social-profile-cover-shade { background: linear-gradient(180deg, rgba(7, 28, 63, .02), rgba(7, 28, 63, .5)); @apply absolute inset-0; }
+  .social-profile-cover-brand { @apply absolute right-6 top-5 rounded-full border border-white/25 bg-ink/25 px-4 py-2 text-xs font-bold tracking-wide text-white backdrop-blur; }
+  .social-profile-summary { @apply relative grid grid-cols-[auto_minmax(0,1fr)_auto] items-end gap-5 px-7 pb-6; }
+  .social-profile-avatar-wrap { @apply -mt-14 rounded-full border-[5px] border-surface bg-surface shadow-soft; }
+  .social-profile-avatar-wrap .public-profile-avatar { @apply h-28 w-28; }
+  .public-profile-avatar { @apply block h-16 w-16 shrink-0 overflow-hidden rounded-full bg-primary-100; }
+  .public-profile-avatar img { @apply h-full w-full object-cover; }
+  .public-profile-avatar .profile-avatar { @apply m-0 h-full w-full bg-primary-100 text-xl text-primary; }
+  .social-profile-identity { @apply min-w-0 pb-1; }
+  .social-profile-name-row { @apply flex flex-wrap items-center gap-x-3 gap-y-2; }
+  .social-profile-name-row h1 { overflow-wrap: anywhere; @apply text-2xl font-bold outline-none sm:text-3xl; }
+  .profile-identity-badge { @apply inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-3 py-1.5 text-[11px] font-bold text-primary; }
+  .profile-identity-badge .app-icon { @apply h-4 w-4; }
+  .social-profile-role { @apply mt-1 text-sm font-medium text-muted; }
+  .social-profile-meta { @apply mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted; }
+  .social-profile-meta span { @apply inline-flex items-center gap-1.5; }
+  .social-profile-meta .app-icon { @apply h-4 w-4 text-primary; }
+  .social-profile-actions { @apply flex gap-2 pb-1; }
+  .social-profile-actions .app-secondary { @apply gap-2; }
+  .social-profile-actions .app-icon { @apply h-4 w-4; }
+  .social-profile-stats { @apply grid grid-cols-3 border-t border-line bg-primary-50/60; }
+  .social-profile-stats > div { @apply flex min-h-24 flex-col items-center justify-center border-r border-primary-100 px-4 text-center last:border-r-0; }
+  .social-profile-stats dd { @apply order-first flex items-center gap-1 text-xl font-bold text-ink; }
+  .social-profile-stats dd .app-icon { @apply h-5 w-5 text-[#f5a623]; }
+  .social-profile-stats dt { @apply mt-1 text-[11px] font-medium text-muted; }
+  .social-profile-layout { @apply mt-6 grid grid-cols-[300px_minmax(0,1fr)] items-start gap-6; }
+  .social-profile-sidebar { @apply sticky top-[100px] flex flex-col gap-4; }
+  .profile-about-card, .profile-trust-card, .profile-reputation-card { @apply rounded-card border border-line bg-surface p-5 shadow-soft; }
+  .profile-about-card h2, .profile-trust-card h2 { @apply mb-4 text-base font-bold; }
+  .profile-about-card > p { @apply text-sm leading-relaxed text-muted; }
+  .profile-about-list { @apply flex flex-col gap-4; }
+  .profile-about-list div { @apply border-b border-line pb-3 last:border-0 last:pb-0; }
+  .profile-about-list dt { @apply text-[10px] font-bold uppercase tracking-wider text-muted; }
+  .profile-about-list dd { overflow-wrap: anywhere; @apply mt-1 text-sm font-semibold text-ink; }
+  .profile-trust-card ul { @apply flex flex-col gap-4; }
+  .profile-trust-card li { @apply flex items-start gap-3; }
+  .profile-trust-card li > .app-icon { @apply mt-0.5 h-5 w-5 text-primary; }
+  .profile-trust-card strong, .profile-trust-card small { @apply block; }
+  .profile-trust-card strong { @apply text-xs; }
+  .profile-trust-card small { @apply mt-1 text-[11px] leading-relaxed text-muted; }
+  .profile-reputation-card { @apply bg-ink text-white; }
+  .profile-reputation-card > span { @apply flex items-center gap-3; }
+  .profile-reputation-card .app-icon { @apply h-8 w-8 text-[#fbc85b]; }
+  .profile-reputation-card strong { @apply text-lg text-white; }
+  .profile-reputation-card p { @apply mt-2 text-xs leading-relaxed text-white/65; }
+  .social-profile-feed { @apply min-w-0; }
+  .profile-listings-heading { @apply mb-4 flex items-end justify-between gap-4; }
+  .profile-listings-heading .app-kicker { @apply mb-1; }
+  .profile-listings-heading h2 { @apply text-xl font-bold sm:text-2xl; }
+  .profile-listings-heading > span { @apply inline-flex min-w-8 items-center justify-center rounded-full bg-primary-100 px-2.5 py-1.5 text-xs font-bold text-primary; }
+  .profile-listings { @apply grid grid-cols-2 items-start gap-4 text-left; }
+  .profile-listing-card { @apply min-w-0 overflow-hidden rounded-card border border-line bg-surface shadow-[0_5px_20px_rgba(26,28,30,.04)] transition hover:-translate-y-0.5 hover:border-primary-200 hover:shadow-card; }
+  .profile-listing-link { @apply flex min-h-full flex-col text-ink outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset; }
+  .profile-listing-image { @apply relative aspect-[4/3] w-full overflow-hidden bg-field; }
+  .profile-listing-image img { @apply h-full w-full object-cover transition duration-300; }
+  .profile-listing-link:hover .profile-listing-image img { @apply scale-[1.03]; }
+  .profile-photo-count { @apply absolute bottom-3 right-3 rounded-full bg-ink/75 px-2.5 py-1 text-[10px] font-semibold text-white backdrop-blur; }
+  .profile-listing-copy { @apply flex min-w-0 flex-1 flex-col p-4; }
+  .profile-listing-eyebrow { @apply mb-2 flex items-center justify-between gap-3; }
+  .profile-listing-eyebrow small { @apply text-[10px] font-bold uppercase tracking-wide text-primary; }
+  .profile-listing-eyebrow time { @apply text-[10px] text-muted; }
+  .profile-listing-copy > strong { overflow-wrap: anywhere; @apply text-base leading-snug; }
+  .profile-listing-description { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; @apply mt-2 text-xs leading-relaxed text-muted; }
+  .profile-listing-details { @apply mt-3 flex flex-wrap gap-x-3 gap-y-2 text-[11px] text-muted; }
+  .profile-listing-details > span { @apply inline-flex items-center gap-1; }
+  .profile-listing-details .app-icon { @apply h-3.5 w-3.5; }
+  .profile-listing-footer { @apply mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-line pt-3; }
+  .profile-listing-footer b { @apply mr-auto text-base text-primary; }
+  .profile-listing-footer b small { @apply font-normal text-muted; }
+  .profile-listing-footer > span { @apply inline-flex items-center gap-1 text-[11px] text-muted; }
+  .profile-listing-footer > span .app-icon { @apply h-3.5 w-3.5 text-[#f5a623]; }
+  .profile-listing-footer em { @apply inline-flex items-center gap-1 text-[11px] font-semibold not-italic text-primary; }
+  .profile-listings-empty { @apply col-span-full rounded-card border border-dashed border-line bg-surface px-6 py-16 text-center; }
+  .profile-listings-empty > span { @apply mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-xl font-bold text-primary; }
+  .profile-listings-empty h3 { @apply text-base; }
+  .profile-listings-empty p { @apply mt-2 text-sm text-muted; }
+  .public-profile-error { @apply mx-auto mt-14 max-w-xl rounded-[28px] border border-line bg-surface p-8 text-center shadow-card; }
+  .public-profile-error .generic-icon { @apply bg-danger/10 text-danger; }
+  .public-profile-error h1 { @apply text-2xl font-bold; }
+  .public-profile-error > p:not(.app-kicker) { @apply mx-auto mb-6 mt-2 max-w-md text-sm text-muted; }
+  .public-profile-error > div { @apply flex justify-center gap-3; }
+  .muted-copy { @apply col-span-full py-8 text-center text-sm text-muted; }
+  .store-links { @apply mb-2 mt-4 grid grid-cols-2 gap-2; }
+  .open-native-button { @apply hidden; }
+  .app-toast { @apply pointer-events-none fixed bottom-7 left-1/2 z-[100] -translate-x-1/2 translate-y-5 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white opacity-0 shadow-phone transition; }
+  .app-toast.is-visible { @apply translate-y-0 opacity-100; }
+  .app-toast[data-kind='error'] { @apply bg-danger; }
+}
+
+@layer components {
+@media (max-width: 1023px) {
+  .webapp { --sidebar: 82px; }
+  .app-sidebar { @apply w-[82px] px-3; }
+  .app-logo { @apply overflow-hidden px-1; }
+  .app-logo :global(.logo-wordmark) { display: none; }
+  .app-nav-item { @apply justify-center px-2 text-[0]; }
+  .app-nav-item > .app-icon { @apply h-6 w-6; }
+  .app-nav-item b, .app-nav-item i { @apply absolute ml-7 -mt-6 text-[9px]; }
+  .search-panel { @apply grid-cols-2; }
+  .search-panel label { @apply border-0; }
+  .search-panel .app-primary { @apply col-span-2; }
+  .profile-grid { @apply grid-cols-1; }
+  .social-profile-layout { @apply grid-cols-1; }
+  .social-profile-feed { @apply order-1; }
+  .social-profile-sidebar { @apply static order-2 grid grid-cols-2; }
+  .profile-reputation-card { @apply col-span-2; }
+}
+
+@media (max-width: 767px) {
+  .webapp { --sidebar: 0px; }
+  .app-sidebar { @apply hidden; }
+  .app-shell { @apply ml-0; }
+  .app-topbar { @apply h-[66px] gap-2 px-4; }
+  .app-mobile-logo { @apply block max-w-[38px] overflow-hidden; }
+  .app-search-wrap { @apply h-10 px-3; }
+  .app-location, .app-topbar > .app-primary { @apply hidden; }
+  .app-account-button { @apply h-10 w-10 justify-center p-0; }
+  .app-account-button #auth-button-label { @apply hidden; }
+  .app-content { @apply p-4 pb-28; }
+  .welcome-row, .page-title { @apply mb-5 items-start; }
+  .welcome-row h1, .page-title h1 { @apply text-2xl; }
+  .service-state, .page-title > button { @apply hidden; }
+  .search-panel { @apply grid-cols-2 p-3; }
+  .search-panel label { @apply px-1; }
+  .search-panel label:first-child, .search-panel label:nth-child(2) { @apply col-span-2; }
+  .category-row { @apply my-5; }
+  .listing-grid { @apply grid-cols-2 gap-3; }
+  .market-card { @apply rounded-xl; }
+  .card-body { @apply p-3; }
+  .card-body h3 { @apply text-xs; }
+  .card-meta span:first-child { @apply hidden; }
+  .card-meta { @apply justify-end; }
+  .verified-pill { @apply hidden; }
+  .favorite-button { @apply right-2 top-2 h-8 w-8; }
+  .booking-card, .owner-listing { @apply items-start gap-3; }
+  .booking-card > img, .owner-listing > img, .draft-image { @apply h-20 w-20; }
+  .booking-card { @apply flex-wrap; }
+  .booking-actions { @apply ml-[92px] w-[calc(100%-92px)] min-w-0 flex-row flex-wrap; }
+  .booking-actions > strong { @apply w-full text-left; }
+  .stats-grid { @apply gap-2; }
+  .stats-grid > div { @apply p-4; }
+  .stats-grid strong { @apply text-xl; }
+  .messages-view.is-active { @apply block min-h-0; }
+  .messages-view .chat-panel { @apply hidden; }
+  .messages-view.has-active-chat .conversations { @apply hidden; }
+  .messages-view.has-active-chat .chat-panel { display: grid; }
+  .chat-back { @apply flex; }
+  .chat-messages { @apply min-h-[calc(100vh-280px)] max-h-[calc(100vh-280px)] p-4; }
+  .message { @apply max-w-[85%]; }
+  .wallet-card { @apply items-start p-5; }
+  .wallet-card { @apply flex-col gap-4; }
+  .wallet-action { @apply w-full; }
+  .notification-list article { @apply grid-cols-[auto_1fr] p-4; }
+  .notification-list article > button { @apply col-start-2 justify-self-start; }
+  .form-grid { @apply grid-cols-1; }
+  .form-grid .wide { @apply col-span-1; }
+  .settings-card { @apply p-5; }
+  .mobile-tabbar { padding-bottom: env(safe-area-inset-bottom); @apply fixed inset-x-0 bottom-0 z-40 flex h-[72px] items-center justify-around border-t border-line bg-surface/95 backdrop-blur; }
+  .mobile-tabbar button { color: #717680; @apply flex min-w-14 flex-col items-center gap-1 text-[10px] font-medium; }
+  .mobile-tabbar button > .app-icon { @apply h-6 w-6; }
+  .mobile-tabbar button.is-active { color: #155eef; }
+  #detail-content { @apply block; }
+  .detail-image { @apply min-h-0 aspect-[4/3]; }
+  .detail-copy { @apply p-5; }
+  .detail-copy h2 { @apply text-2xl; }
+  .open-native-button { @apply mb-4 w-full items-center justify-between rounded-xl bg-primary-100 px-4 py-3 text-left text-xs font-semibold text-primary; }
+  .open-native-button { display: flex; }
+  .detail-features { @apply grid-cols-1; }
+  .detail-features span { @apply text-left; }
+  .detail-book { @apply mt-5 gap-3; }
+  .detail-book .app-primary { @apply px-3 text-xs; }
+  .auth-dialog, .wizard-dialog, .booking-dialog, .generic-dialog { @apply p-6; }
+  .app-dialog { @apply max-h-[90vh] w-[calc(100vw-1.25rem)] rounded-[20px]; }
+  .social-profile-toolbar { @apply mb-3; }
+  .profile-back-link, .profile-toolbar-share { @apply px-2 text-xs; }
+  .profile-toolbar-share > span:not(.app-icon) { @apply sr-only; }
+  .social-profile-hero { @apply rounded-[22px]; }
+  .social-profile-cover { @apply h-40; }
+  .social-profile-cover-brand { @apply right-4 top-4 px-3 py-1.5 text-[10px]; }
+  .social-profile-summary { @apply grid-cols-1 items-start gap-3 px-4 pb-5; }
+  .social-profile-avatar-wrap { @apply -mt-12 w-fit border-4; }
+  .social-profile-avatar-wrap .public-profile-avatar { @apply h-24 w-24; }
+  .social-profile-name-row { @apply items-start; }
+  .social-profile-name-row h1 { @apply text-2xl; }
+  .profile-identity-badge { @apply px-2.5 py-1 text-[10px]; }
+  .social-profile-meta { @apply mt-2 flex-col gap-1.5; }
+  .social-profile-actions { @apply mt-2 grid w-full grid-cols-2 pb-0; }
+  .social-profile-actions > button { @apply w-full px-3 text-xs; }
+  .social-profile-stats > div { @apply min-h-20 px-2; }
+  .social-profile-stats dd { @apply text-base; }
+  .social-profile-stats dt { @apply text-[10px]; }
+  .social-profile-layout { @apply mt-4 gap-4; }
+  .social-profile-sidebar { @apply grid-cols-1; }
+  .profile-reputation-card { @apply col-span-1; }
+  .profile-listings { @apply grid-cols-1; }
+  .profile-listings-heading { @apply items-center; }
+  .profile-listings-heading h2 { @apply text-xl; }
+  .profile-listing-copy { @apply p-4; }
+  .public-profile-loading { @apply mt-10 p-5; }
+  .public-profile-error { @apply mt-8 p-6; }
+  .public-profile-error > div { @apply flex-col; }
+  .booking-dialog form { @apply grid-cols-1; }
+  .booking-dialog .price-summary, .booking-dialog .consent-check, .booking-dialog .wide { @apply col-span-1; }
+}
+}

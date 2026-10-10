@@ -1,0 +1,495 @@
+---
+import Logo from '../Logo.astro';
+import { auth } from '../../config';
+import enceinte from '../../assets/annonces/enceinte.png';
+import tente from '../../assets/annonces/tente.png';
+import led from '../../assets/annonces/par-led.png';
+import tables from '../../assets/annonces/tables-chaises.png';
+
+const demoListings = [
+  { id: 'demo-1', title: 'Enceinte active 15” + caisson', category: 'Sonorisation', city: 'Lille', distanceKm: 2.3, priceByPeriod: 25, caution: 300, averageRating: 4.9, reviewCount: 32, photoUrls: [enceinte.src], description: 'Un système puissant et simple à installer pour vos soirées, mariages et séminaires.', quantity: 2, handoutOption: 'Retrait ou livraison' },
+  { id: 'demo-2', title: 'Tente de réception 4 × 8 m', category: 'Réception', city: 'Lens', distanceKm: 12, priceByPeriod: 90, caution: 600, averageRating: 5, reviewCount: 8, photoUrls: [tente.src], description: 'Tente professionnelle imperméable, parois incluses. Montage disponible.', quantity: 1, handoutOption: 'Livraison' },
+  { id: 'demo-3', title: 'Pack 4 PAR LED RGBW', category: 'Éclairage', city: 'Roubaix', distanceKm: 5, priceByPeriod: 30, caution: 180, averageRating: 4.8, reviewCount: 17, photoUrls: [led.src], description: 'Éclairage sur batterie, pilotage DMX ou automatique.', quantity: 3, handoutOption: 'Retrait' },
+  { id: 'demo-4', title: '10 tables + 40 chaises', category: 'Mobilier', city: 'Douai', distanceKm: 9, priceByPeriod: 45, caution: 400, averageRating: 4.7, reviewCount: 21, photoUrls: [tables.src], description: 'Mobilier pliant propre et robuste pour réception.', quantity: 2, handoutOption: 'Retrait ou livraison' },
+];
+---
+
+<div class="webapp" data-demo-listings={JSON.stringify(demoListings)} data-google-client-id={auth.googleClientId}>
+  <aside class="app-sidebar" aria-label="Navigation de l’application">
+    <a href="/" class="app-logo" aria-label="Retour au site GoodLease"><Logo /></a>
+    <nav class="app-nav">
+      <button class="app-nav-item is-active" data-route="explorer" aria-current="page"><span class="app-icon icon-explore" aria-hidden="true"></span> Explorer</button>
+      <button class="app-nav-item" data-route="favoris"><span class="app-icon icon-favorites" aria-hidden="true"></span> Favoris <b id="favorite-count">0</b></button>
+      <button class="app-nav-item" data-route="reservations"><span class="app-icon icon-my-ads" aria-hidden="true"></span> Mes locations</button>
+      <button class="app-nav-item" data-route="annonces"><span class="app-icon icon-my-ads" aria-hidden="true"></span> Mes annonces</button>
+      <button class="app-nav-item" data-route="messages"><span class="app-icon icon-messages" aria-hidden="true"></span> Messages <i id="message-count" hidden>0</i></button>
+      <button class="app-nav-item" data-route="portefeuille"><span class="app-icon icon-wallet" aria-hidden="true"></span> Portefeuille</button>
+    </nav>
+    <div class="app-sidebar-bottom">
+      <button class="app-nav-item" data-route="notifications"><span class="app-icon icon-notifications" aria-hidden="true"></span> Notifications <i id="notification-count" hidden>0</i></button>
+      <button class="app-nav-item" data-route="profil"><span class="app-icon icon-account" aria-hidden="true"></span> Mon compte</button>
+      <a class="app-nav-item" href="/faq/"><span class="app-icon icon-help" aria-hidden="true"></span> Aide</a>
+    </div>
+  </aside>
+
+  <div class="app-shell">
+    <header class="app-topbar">
+      <div class="app-mobile-logo"><Logo /></div>
+      <div class="app-search-wrap">
+        <span class="app-icon icon-explore" aria-hidden="true"></span>
+        <input id="global-search" type="search" placeholder="Rechercher du matériel…" autocomplete="off" />
+      </div>
+      <button id="location-button" class="app-location" type="button"><span class="app-icon icon-location" aria-hidden="true"></span><span>Toute la France</span></button>
+      <button id="publish-button" class="app-primary" type="button"><span class="app-icon icon-add" aria-hidden="true"></span>Déposer une annonce</button>
+      <button id="auth-button" class="app-account-button" type="button" aria-label="Se connecter"><span class="app-icon icon-account" aria-hidden="true"></span><span id="auth-button-label">Se connecter</span></button>
+    </header>
+
+    <main id="app-content" class="app-content">
+      <section class="app-view is-active" data-view="explorer">
+        <div class="welcome-row">
+          <div><p class="app-kicker">La location simple et sûre</p><h1>De quoi avez-vous besoin ?</h1><p>Du matériel près de chez vous, disponible aux bonnes dates.</p></div>
+          <div class="service-state"><span></span><strong>Marketplace en ligne</strong><small id="data-mode">Connexion au catalogue…</small></div>
+        </div>
+
+        <form id="search-form" class="search-panel">
+          <label><span>Matériel</span><input name="search" type="search" placeholder="Enceinte, tente, outils…" /></label>
+          <label><span>Lieu</span><input name="city" placeholder="Ville ou code postal" /></label>
+          <label><span>Du</span><input name="from" type="date" /></label>
+          <label><span>Au</span><input name="to" type="date" /></label>
+          <button class="app-primary" type="submit">Rechercher</button>
+        </form>
+
+        <div class="category-row" aria-label="Catégories">
+          <button class="category-chip is-active" data-category=""><span class="app-icon icon-all" aria-hidden="true"></span><span>Tout</span></button>
+          <button class="category-chip" data-category-id="1"><span class="app-icon icon-sound" aria-hidden="true"></span><span>Sonorisation</span></button>
+          <button class="category-chip" data-category-id="2"><span class="app-icon icon-lights" aria-hidden="true"></span><span>Éclairage</span></button>
+          <button class="category-chip" data-category-id="3"><span class="app-icon icon-structures" aria-hidden="true"></span><span>Tentes et barnums</span></button>
+          <button class="category-chip" data-category-id="4"><span class="app-icon icon-video" aria-hidden="true"></span><span>Photo & vidéo</span></button>
+          <button class="category-chip" data-category-id="5"><span class="app-icon icon-reception" aria-hidden="true"></span><span>Décoration et réception</span></button>
+          <button class="category-chip" data-category-id="6"><span class="app-icon icon-textile" aria-hidden="true"></span><span>Nappes et linge de table</span></button>
+          <button class="category-chip" data-category-id="7"><span class="app-icon icon-transport" aria-hidden="true"></span><span>Transport</span></button>
+          <button class="category-chip" data-category-id="9"><span class="app-icon icon-furniture" aria-hidden="true"></span><span>Mobilier</span></button>
+          <button class="category-chip" data-category-id="8"><span class="app-icon icon-divers" aria-hidden="true"></span><span>Divers</span></button>
+        </div>
+
+        <div class="section-heading"><div><h2>À louer autour de vous</h2><p id="results-label">Chargement des annonces…</p></div><div class="view-controls" aria-label="Affichage"><span class="is-active" aria-label="Vue en grille">▦</span></div></div>
+        <div id="listing-grid" class="listing-grid" aria-live="polite"></div>
+        <div id="listing-empty" class="empty-state" hidden><span>⌕</span><h3>Aucune annonce trouvée</h3><p>Essayez une autre recherche ou retirez un filtre.</p></div>
+      </section>
+
+      <section class="app-view" data-view="favoris">
+        <div class="page-title"><div><p class="app-kicker">Votre sélection</p><h1>Favoris</h1><p>Retrouvez les annonces que vous avez enregistrées.</p></div></div>
+        <div id="favorites-grid" class="listing-grid"></div>
+        <div id="favorites-empty" class="empty-state"><span><span class="app-icon icon-favorites" aria-hidden="true"></span></span><h3>Votre liste est vide</h3><p>Ajoutez des annonces depuis l’onglet Explorer.</p><button class="app-secondary" data-route="explorer">Découvrir les annonces</button></div>
+      </section>
+
+      <section class="app-view" data-view="reservations">
+        <div class="page-title"><div><p class="app-kicker">Suivi de location</p><h1>Mes locations</h1><p>Réservations, contrats, retrait et restitution.</p></div><button class="app-secondary" data-route="explorer">Nouvelle location</button></div>
+        <div id="booking-list" class="stack-list"><div class="account-placeholder"><span class="transaction-icon income"><span class="app-icon icon-my-ads" aria-hidden="true"></span></span><div><strong>Connectez-vous pour retrouver vos locations</strong><small>Les réservations affichées ici proviennent directement de votre compte GoodLease.</small></div><button class="app-secondary" data-action="login">Se connecter</button></div></div>
+      </section>
+
+      <section class="app-view" data-view="annonces">
+        <div class="page-title"><div><p class="app-kicker">Espace loueur</p><h1>Mes annonces</h1><p>Publiez, gérez les disponibilités et suivez vos annonces.</p></div><button class="app-primary" data-action="new-listing">＋ Nouvelle annonce</button></div>
+        <div class="stats-grid"><div><span>Annonces publiées</span><strong id="listing-stat-total">—</strong><small>Données de votre compte</small></div><div><span>Annonces disponibles</span><strong id="listing-stat-active">—</strong><small>Visibles dans le catalogue</small></div><div><span>Réservations</span><strong id="listing-stat-bookings">—</strong><small>Demandes réelles</small></div><div><span>Solde disponible</span><strong id="listing-stat-balance">—</strong><small>Versements sécurisés</small></div></div>
+        <div id="owner-listings" class="stack-list"><div class="account-placeholder"><span class="transaction-icon income"><span class="app-icon icon-my-ads" aria-hidden="true"></span></span><div><strong>Connectez-vous pour gérer vos annonces</strong><small>Vous pourrez publier du matériel et consulter vos annonces existantes.</small></div><button class="app-secondary" data-action="login">Se connecter</button></div></div>
+      </section>
+
+      <section class="app-view messages-view" data-view="messages">
+        <div class="conversations"><div class="page-title compact"><div><h1>Messages</h1><p>Vos échanges sécurisés</p></div></div><input id="conversation-search" class="mini-search" placeholder="Rechercher une conversation" /><div id="conversation-list"><div class="account-placeholder compact"><div><strong>Vos conversations apparaîtront ici</strong><small>Connectez-vous pour les charger.</small></div><button class="app-secondary" data-action="login">Se connecter</button></div></div></div>
+        <div class="chat-panel"><header id="chat-header" hidden><button id="chat-back" class="chat-back" type="button" aria-label="Retour aux conversations">‹</button><span id="chat-avatar" class="person-avatar">GL</span><div><strong id="chat-name">Conversation</strong><small>Messagerie GoodLease</small></div></header><div id="chat-messages" class="chat-messages"><div class="empty-state"><span class="app-icon icon-messages" aria-hidden="true"></span><h3>Sélectionnez une conversation</h3><p>Vos messages sont chargés depuis votre compte.</p></div></div><form id="message-form" class="composer" hidden><input name="message" placeholder="Écrire un message…" autocomplete="off" /><button class="send-button" type="submit" aria-label="Envoyer"><img src="/webapp-icons/sendmessageicon.svg" alt="" /></button></form></div>
+      </section>
+
+      <section class="app-view" data-view="portefeuille">
+        <div class="page-title"><div><p class="app-kicker">Paiements sécurisés</p><h1>Portefeuille</h1><p>Vos revenus, virements et transactions.</p></div><button class="app-secondary" data-action="stripe">Configurer les versements</button></div>
+        <div class="wallet-card"><div><span>Solde disponible</span><strong id="wallet-balance">—</strong><small id="wallet-caption">Connectez-vous pour afficher votre solde</small></div><button class="wallet-action" data-action="cashout">Virer vers ma banque →</button></div>
+        <div class="section-heading"><div><h2>Derniers virements</h2><p>Historique de vos demandes de retrait</p></div></div>
+        <div id="transaction-list" class="transaction-list"><div class="account-placeholder"><span class="transaction-icon income">€</span><div><strong>Vos transactions apparaîtront ici</strong><small>Connectez-vous pour consulter vos mouvements réels.</small></div><button class="app-secondary" data-action="login">Se connecter</button></div></div>
+      </section>
+
+      <section class="app-view" data-view="notifications">
+        <div class="page-title"><div><p class="app-kicker">Centre d’activité</p><h1>Notifications</h1><p>Ne manquez aucune étape importante.</p></div><button id="read-all" class="app-secondary">Tout marquer comme lu</button></div>
+        <div id="notification-list" class="notification-list"><div class="account-placeholder"><span class="notice-icon blue"><span class="app-icon icon-notifications" aria-hidden="true"></span></span><div><strong>Connectez-vous pour voir vos notifications</strong><small>Elles seront chargées depuis votre compte GoodLease.</small></div><button class="app-secondary" data-action="login">Se connecter</button></div></div>
+      </section>
+
+      <section id="public-profile-view" class="app-view public-profile-view" data-view="profil-public" aria-label="Profil public">
+        <div id="public-profile-content" aria-live="polite">
+          <div class="public-profile-loading" role="status">
+            <span class="public-profile-loading-avatar" aria-hidden="true"></span>
+            <div><strong>Chargement du profil…</strong><small>Nous récupérons ses annonces publiques.</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="app-view" data-view="profil">
+        <div class="page-title"><div><p class="app-kicker">Paramètres</p><h1>Mon compte</h1><p>Informations personnelles, sécurité et préférences.</p></div></div>
+        <div class="profile-grid"><aside class="profile-card"><div id="profile-avatar" class="profile-avatar">GL</div><h2 id="profile-name">Votre profil</h2><p id="profile-caption">Connectez-vous pour retrouver votre compte</p><div id="profile-verified" class="verified">Profil GoodLease</div><div class="profile-score"><span><strong id="profile-rating">—</strong><small>Avis</small></span><span><strong id="profile-listings">—</strong><small>Annonces</small></span><span><strong id="profile-identity">—</strong><small>Identité</small></span></div><button id="share-profile-button" class="app-secondary wide" data-action="share-profile" type="button" hidden><span class="app-icon icon-share" aria-hidden="true"></span>Partager mon profil</button></aside><form id="profile-form" class="settings-card"><h2>Informations personnelles</h2><div class="form-grid"><label class="wide">Nom d’utilisateur<input name="username" autocomplete="nickname" disabled title="Le changement de nom d’utilisateur est disponible dans l’app mobile." /></label><label class="wide">E-mail<input name="email" type="email" autocomplete="email" disabled /></label><label>Téléphone<input name="phone" type="tel" autocomplete="tel" placeholder="+33 6 …" /></label><label>Date de naissance<input name="birthDate" type="date" /></label><label>Entreprise<input name="company" autocomplete="organization" /></label><label>N° de TVA<input name="vatNumber" autocomplete="off" /></label></div><div class="form-actions"><button class="app-primary" type="submit">Enregistrer</button></div><hr /><h2>Raccourcis</h2><button type="button" class="settings-row" data-route="reservations">Mes locations <span>›</span></button><button type="button" class="settings-row" data-route="annonces">Mes annonces <span>›</span></button><button type="button" class="settings-row" data-route="portefeuille">Portefeuille <span>›</span></button><button type="button" class="settings-row" data-route="notifications">Notifications <span>›</span></button><hr /><h2>Sécurité et confidentialité</h2><button type="button" class="settings-row" data-action="forgot">Changer le mot de passe <span>›</span></button><button type="button" class="settings-row" data-action="native-feature">Utilisateurs bloqués <span>›</span></button><a class="settings-row" href="/confidentialite/">Politique de confidentialité <span>›</span></a><a class="settings-row danger-row" href="/supprimer-mon-compte/">Supprimer mon compte <span>›</span></a><button type="button" class="settings-row danger-row" data-action="logout">Se déconnecter <span>›</span></button></form></div>
+      </section>
+    </main>
+  </div>
+
+  <nav class="mobile-tabbar" aria-label="Navigation mobile"><button class="is-active" data-route="explorer"><span class="app-icon icon-explore" aria-hidden="true"></span>Explorer</button><button data-route="annonces"><span class="app-icon icon-my-ads" aria-hidden="true"></span>Annonces</button><button data-action="new-listing"><span class="app-icon icon-add" aria-hidden="true"></span>Ajouter</button><button data-route="messages"><span class="app-icon icon-messages" aria-hidden="true"></span>Messages</button><button data-route="profil"><span class="app-icon icon-account" aria-hidden="true"></span>Compte</button></nav>
+
+  <dialog id="detail-dialog" class="app-dialog detail-dialog"><button class="dialog-close" data-close aria-label="Fermer">×</button><div id="detail-content"></div></dialog>
+  <dialog id="auth-dialog" class="app-dialog auth-dialog"><button class="dialog-close" data-close aria-label="Fermer">×</button><img src="/icon-192.png" alt="" /><p class="app-kicker">Bienvenue sur GoodLease</p><h2>Connectez-vous</h2><p>Retrouvez vos réservations, annonces et messages.</p><div id="auth-error" class="form-error" hidden></div><div id="google-signin-button" class="google-signin" aria-label="Connexion avec Google"><span>Chargement de Google…</span></div><div class="dialog-separator"><span>ou avec votre e-mail</span></div><form id="auth-form"><label>E-mail ou identifiant<input name="identifier" autocomplete="username" required /></label><label>Mot de passe<input name="password" type="password" autocomplete="current-password" required /></label><button class="app-primary wide" type="submit">Se connecter</button></form><button class="text-button" data-action="forgot">Mot de passe oublié ?</button><button class="social-button" data-action="register">Créer un compte GoodLease</button><p class="legal-consent">En continuant, vous acceptez les <a href="/cgs/">CGS</a> et la <a href="/confidentialite/">politique de confidentialité</a>.</p></dialog>
+  <dialog id="social-profile-dialog" class="app-dialog auth-dialog"><p class="app-kicker">Dernière étape</p><h2>Choisissez votre nom public</h2><p>Il sera visible sur vos annonces et dans vos échanges GoodLease.</p><form id="social-profile-form"><label>Nom d’utilisateur<input name="username" autocomplete="nickname" minlength="3" maxlength="30" required /></label><div id="social-profile-error" class="form-error" hidden></div><button class="app-primary wide" type="submit">Terminer mon inscription</button></form></dialog>
+  <dialog id="register-dialog" class="app-dialog auth-dialog"><button class="dialog-close" data-close aria-label="Fermer">×</button><p class="app-kicker">Nouveau compte</p><h2>Créer votre compte</h2><p>Nous vérifions votre adresse e-mail avant l’activation.</p><form id="register-form"><label>Nom d’utilisateur<input name="username" autocomplete="nickname" required /></label><label>E-mail<input name="email" type="email" autocomplete="email" required /></label><label>Téléphone<input name="phone" type="tel" autocomplete="tel" required /></label><label>Date de naissance<input name="birthDate" type="date" autocomplete="bday" required /></label><label>Mot de passe<input name="password" type="password" autocomplete="new-password" minlength="8" required /></label><div id="register-error" class="form-error" hidden></div><button class="app-primary wide" type="submit">Recevoir mon code</button></form><p class="legal-consent">En créant un compte, vous acceptez les <a href="/cgs/">CGS</a> et la <a href="/confidentialite/">politique de confidentialité</a>.</p></dialog>
+  <dialog id="verify-dialog" class="app-dialog auth-dialog"><button class="dialog-close" data-close aria-label="Fermer">×</button><p class="app-kicker">Vérification</p><h2>Consultez votre e-mail</h2><p>Saisissez le code à 4 chiffres envoyé à <strong id="verify-email"></strong>.</p><form id="verify-form"><label>Code de vérification<input name="code" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="one-time-code" required /></label><div id="verify-error" class="form-error" hidden></div><button class="app-primary wide" type="submit">Activer mon compte</button></form></dialog>
+  <dialog id="listing-dialog" class="app-dialog wizard-dialog">
+    <button class="dialog-close" data-close aria-label="Fermer">×</button>
+    <p class="app-kicker">Nouvelle annonce</p>
+    <h2>Proposez votre matériel</h2>
+    <div class="wizard-progress"><span class="is-active"></span><span></span><span></span><span></span></div>
+    <form id="listing-form">
+      <div class="wizard-step is-active" data-step="1">
+        <label>Titre de l’annonce<input name="title" required placeholder="Ex. Enceinte active 15 pouces" /></label>
+        <label>Catégorie<select name="categoryId"><option value="1">Sonorisation</option><option value="2">Éclairage</option><option value="3">Tentes et barnums</option><option value="4">Photo & vidéo</option><option value="5">Décoration et réception</option><option value="6">Nappes et linge de table</option><option value="7">Transport</option><option value="9">Mobilier</option><option value="8">Divers</option></select></label>
+        <label>Description<textarea name="description" rows="5" required placeholder="Décrivez l’état, les accessoires et les conditions d’utilisation."></textarea></label>
+      </div>
+      <div class="wizard-step" data-step="2">
+        <label>Prix par jour (€)<input name="priceByPeriod" type="number" min="1" max="2147483647" step="1" required /></label>
+        <label>Dépôt de garantie (€)<input name="caution" type="number" min="0" max="2147483647" step="1" /></label>
+        <label>Quantité disponible<input name="quantity" type="number" min="1" max="2147483647" step="1" value="1" required /></label>
+        <div class="wizard-address-row">
+          <label>Disponible du<input name="availabilityStart" type="date" required /></label>
+          <label>Disponible jusqu’au<input name="availabilityEnd" type="date" required /></label>
+        </div>
+      </div>
+      <div class="wizard-step" data-step="3">
+        <label>Adresse de retrait<input name="street" placeholder="Numéro et voie" required /></label>
+        <div class="wizard-address-row"><label>Code postal<input name="postalCode" inputmode="numeric" required /></label><label>Ville<input name="city" required /></label></div>
+        <label>Région
+          <select name="region" required>
+            <option value="" selected disabled>Sélectionnez une région</option>
+            <option>Île-de-France</option>
+            <option>Provence-Alpes-Côte d'Azur</option>
+            <option>Auvergne-Rhône-Alpes</option>
+            <option>Occitanie</option>
+            <option>Nouvelle-Aquitaine</option>
+            <option>Grand Est</option>
+            <option>Hauts-de-France</option>
+            <option>Bretagne</option>
+            <option>Normandie</option>
+            <option>Centre-Val de Loire</option>
+            <option>Pays de la Loire</option>
+            <option>Bourgogne-Franche-Comté</option>
+            <option>Corse</option>
+          </select>
+        </label>
+        <label>Remise du matériel<select name="handoutOption"><option>Retrait sur place</option><option>Livraison</option><option>Retrait ou livraison</option></select></label>
+        <label class="upload-zone">Ajouter des photos<input name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple required /><span>Déposez vos images ici ou cliquez pour parcourir</span><small>JPG, PNG ou WebP · 10 Mo maximum</small></label>
+      </div>
+      <div class="wizard-step review-step" data-step="4"><div class="review-check">✓</div><h3>Votre annonce est prête</h3><p>Sa publication activera la période de disponibilité choisie.</p></div>
+      <div class="wizard-actions"><button id="wizard-back" class="app-secondary" type="button" hidden>Retour</button><button id="wizard-next" class="app-primary" type="button">Continuer</button><button id="wizard-submit" class="app-primary" type="submit" hidden>Publier l’annonce</button></div>
+    </form>
+  </dialog>
+  <dialog id="booking-dialog" class="app-dialog booking-dialog"><button class="dialog-close" data-close aria-label="Fermer">×</button><p class="app-kicker">Réservation sécurisée</p><h2>Choisissez vos dates</h2><form id="booking-form"><input name="listingId" type="hidden" /><label>Du<input name="from" type="date" required /></label><label>Au<input name="to" type="date" required /></label><div id="booking-summary" class="price-summary"></div><label class="consent-check"><input type="checkbox" required /> J’accepte les CGS et les conditions d’annulation.</label><button class="app-primary wide" type="submit">Continuer vers le paiement</button></form></dialog>
+  <dialog id="cashout-dialog" class="app-dialog booking-dialog"><button class="dialog-close" data-close aria-label="Fermer">×</button><p class="app-kicker">Virement bancaire</p><h2>Retirer mon solde</h2><form id="cashout-form"><div id="bank-summary" class="price-summary wide">Chargement du compte bancaire…</div><label class="wide">Montant (€)<input name="amount" type="number" min="10" step="0.01" required /></label><label class="consent-check"><input type="checkbox" required /> Je confirme cette demande de virement vers mon compte bancaire vérifié.</label><div id="cashout-error" class="form-error wide" hidden></div><button class="app-primary wide" type="submit">Confirmer le virement</button></form></dialog>
+  <dialog id="generic-dialog" class="app-dialog generic-dialog"><button class="dialog-close" data-close aria-label="Fermer">×</button><div id="generic-content"></div></dialog>
+  <div id="toast" class="app-toast" role="status" aria-live="polite"></div>
+</div>
+
+<script>
+  if (false) {
+  type Listing = { id: string | number; clientId?: number; title: string; category?: string; categoryId?: number; city?: string; distanceKm?: number; priceByPeriod?: number; bail?: number; caution?: number; averageRating?: number; reviewCount?: number; photoUrls?: string[]; description?: string; quantity?: number; handoutOption?: string; address?: { city?: string } };
+  type Session = { token?: string; accessToken?: string; refreshToken?: string; client?: Record<string, unknown> };
+
+  const root = document.querySelector<HTMLElement>('.webapp')!;
+  const fallbackListings: Listing[] = JSON.parse(root.dataset.demoListings || '[]');
+  const listingGrid = document.querySelector<HTMLElement>('#listing-grid')!;
+  const resultsLabel = document.querySelector<HTMLElement>('#results-label')!;
+  const dataMode = document.querySelector<HTMLElement>('#data-mode')!;
+  let listings: Listing[] = fallbackListings;
+  let filteredListings: Listing[] = listings;
+  let wizardStep = 1;
+  let selectedListing: Listing | null = null;
+  const favorites = new Set<string>(JSON.parse(localStorage.getItem('goodlease:favorites') || '[]'));
+  let session: Session = JSON.parse(sessionStorage.getItem('goodlease:session') || '{}');
+
+  const money = (value = 0) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
+  const categoryNames: Record<number, string> = { 1: 'Sonorisation', 2: 'Éclairage', 3: 'Structures', 4: 'Photo & vidéo', 5: 'Réception', 6: 'Textile', 7: 'Transport', 8: 'Divers', 9: 'Mobilier' };
+  const categoryRefs: Record<number, [string, string]> = { 1: ['sound', 'Son'], 2: ['light', 'Lumieres'], 3: ['struc', 'Structures'], 4: ['video', 'Video'], 5: ['place', 'Reception'], 6: ['clothe', 'Textile'], 7: ['whip', 'Transport'], 8: ['divers', 'Divers'], 9: ['furnit', 'Mobilier'] };
+  const categoryOf = (l: Listing) => l.category || categoryNames[l.categoryId || 0] || 'Matériel';
+  const depositOf = (l: Listing | null | undefined) => l?.caution ?? l?.bail ?? 0;
+  const esc = (value: unknown) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]!));
+  const imageOf = (l: Listing) => l.photoUrls?.[0] || '/og-default.png';
+  const cityOf = (l: Listing) => l.city || l.address?.city || 'À proximité';
+  const token = () => session.accessToken || session.token;
+
+  async function api(path: string, options: RequestInit = {}) {
+    const headers = new Headers(options.headers);
+    if (!(options.body instanceof FormData)) headers.set('Content-Type', 'application/json');
+    if (token()) headers.set('Authorization', `Bearer ${token()}`);
+    const response = await fetch(`/api/app/${path.replace(/^\//, '')}`, { ...options, headers });
+    const contentType = response.headers.get('content-type') || '';
+    const body = contentType.includes('json') ? await response.json() : await response.text();
+    if (!response.ok) throw new Error(typeof body === 'object' ? body.error || body.message || 'Une erreur est survenue.' : body);
+    return body;
+  }
+
+  function toast(message: string, kind: 'success' | 'error' = 'success') {
+    const el = document.querySelector<HTMLElement>('#toast')!;
+    el.textContent = message;
+    el.dataset.kind = kind;
+    el.classList.add('is-visible');
+    window.setTimeout(() => el.classList.remove('is-visible'), 3400);
+  }
+
+  function cardMarkup(l: Listing) {
+    const id = String(l.id);
+    const liked = favorites.has(id);
+    return `<article class="market-card" data-id="${esc(id)}"><div class="market-card-image"><img src="${esc(imageOf(l))}" alt="${esc(l.title)}" loading="lazy" /><button class="favorite-button ${liked ? 'is-liked' : ''}" data-favorite="${esc(id)}" aria-label="${liked ? 'Retirer des favoris' : 'Ajouter aux favoris'}">${liked ? '♥' : '♡'}</button><span class="verified-pill">✓ Vérifié</span></div><a href="/annonce/${esc(id)}" class="card-body" data-detail="${esc(id)}"><div class="card-meta"><span>${esc(categoryOf(l))}</span><span>★ ${esc((l.averageRating || 5).toFixed(1))} (${esc(l.reviewCount || 0)})</span></div><h3>${esc(l.title)}</h3><p>⌖ ${esc(cityOf(l))}${l.distanceKm != null ? ` · ${esc(l.distanceKm)} km` : ''}</p><strong>${money(l.priceByPeriod || 0)} <small>/ jour</small></strong></a></article>`;
+  }
+
+  function renderListings(target = listingGrid, source = filteredListings) {
+    target.innerHTML = source.map(cardMarkup).join('');
+    if (target === listingGrid) {
+      resultsLabel.textContent = `${source.length} annonce${source.length > 1 ? 's' : ''} disponible${source.length > 1 ? 's' : ''}`;
+      (document.querySelector<HTMLElement>('#listing-empty')!).hidden = source.length > 0;
+    }
+  }
+
+  function renderFavorites() {
+    const selected = listings.filter((l) => favorites.has(String(l.id)));
+    renderListings(document.querySelector<HTMLElement>('#favorites-grid')!, selected);
+    (document.querySelector<HTMLElement>('#favorites-empty')!).hidden = selected.length > 0;
+    document.querySelector<HTMLElement>('#favorite-count')!.textContent = String(favorites.size);
+  }
+
+  function navigate(route: string) {
+    document.querySelectorAll('.app-view').forEach((el) => el.classList.toggle('is-active', (el as HTMLElement).dataset.view === route));
+    document.querySelectorAll<HTMLElement>('[data-route]').forEach((el) => {
+      const active = el.dataset.route === route;
+      if (el.classList.contains('app-nav-item') || el.closest('.mobile-tabbar')) el.classList.toggle('is-active', active);
+      if (el.classList.contains('app-nav-item')) active ? el.setAttribute('aria-current', 'page') : el.removeAttribute('aria-current');
+    });
+    if (route === 'favoris') renderFavorites();
+    history.replaceState(null, '', `#${route}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openDialog(id: string) { document.querySelector<HTMLDialogElement>(id)?.showModal(); }
+  function closeDialog(dialog: HTMLDialogElement) { dialog.close(); }
+  document.querySelectorAll<HTMLDialogElement>('dialog').forEach((dialog) => {
+    dialog.querySelector('[data-close]')?.addEventListener('click', () => closeDialog(dialog));
+    dialog.addEventListener('click', (event) => { if (event.target === dialog) closeDialog(dialog); });
+  });
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    const routeEl = target.closest<HTMLElement>('[data-route]');
+    if (routeEl?.dataset.route) { event.preventDefault(); navigate(routeEl.dataset.route); return; }
+    const favoriteEl = target.closest<HTMLElement>('[data-favorite]');
+    if (favoriteEl) {
+      const id = favoriteEl.dataset.favorite!;
+      favorites.has(id) ? favorites.delete(id) : favorites.add(id);
+      localStorage.setItem('goodlease:favorites', JSON.stringify([...favorites]));
+      renderListings(); renderFavorites(); toast(favorites.has(id) ? 'Ajouté aux favoris' : 'Retiré des favoris'); return;
+    }
+    const detailEl = target.closest<HTMLElement>('[data-detail]');
+    if (detailEl) {
+      event.preventDefault();
+      const id = detailEl.dataset.detail!;
+      if (isMobileBrowser() && /^\d+$/.test(id)) openNativeApp('annonce', id, () => showDetail(id));
+      else showDetail(id);
+      return;
+    }
+    const profileEl = target.closest<HTMLElement>('[data-profile]');
+    if (profileEl?.dataset.profile) {
+      event.preventDefault();
+      const id = profileEl.dataset.profile;
+      if (isMobileBrowser() && /^\d+$/.test(id)) openNativeApp('profil', id, () => showProfile(id));
+      else showProfile(id);
+      return;
+    }
+    const nativeEl = target.closest<HTMLElement>('[data-open-native]');
+    if (nativeEl?.dataset.openNative && nativeEl.dataset.openId) {
+      event.preventDefault();
+      openNativeApp(nativeEl.dataset.openNative as 'annonce' | 'profil', nativeEl.dataset.openId);
+      return;
+    }
+    const shareEl = target.closest<HTMLElement>('[data-share-kind]');
+    if (shareEl?.dataset.shareKind && shareEl.dataset.shareId) {
+      event.preventDefault();
+      const kind = shareEl.dataset.shareKind as 'annonce' | 'profil';
+      const title = shareEl.dataset.shareTitle || selectedListing?.title || 'ce contenu';
+      share(kind, shareEl.dataset.shareId, title); return;
+    }
+    const actionEl = target.closest<HTMLElement>('[data-action]');
+    if (actionEl?.dataset.action) handleAction(actionEl.dataset.action);
+  });
+
+  function showDetail(id: string) {
+    selectedListing = listings.find((l) => String(l.id) === id) || null;
+    if (!selectedListing) return;
+    const l = selectedListing;
+    document.querySelector<HTMLElement>('#detail-content')!.innerHTML = `<div class="detail-image"><img src="${esc(imageOf(l))}" alt="${esc(l.title)}" /></div><div class="detail-copy"><div class="detail-meta"><span class="verified-pill static">✓ Annonce vérifiée</span><span>★ ${esc((l.averageRating || 5).toFixed(1))} · ${esc(l.reviewCount || 0)} avis</span></div><div class="detail-title-row"><h2>${esc(l.title)}</h2><button class="icon-button" data-share-kind="annonce" data-share-id="${esc(l.id)}" aria-label="Partager l’annonce">↗</button></div><button class="open-native-button" data-open-native="annonce" data-open-id="${esc(l.id)}">Ouvrir cette annonce dans l’app <span>↗</span></button><p class="detail-place">⌖ ${esc(cityOf(l))}${l.distanceKm != null ? ` · ${esc(l.distanceKm)} km` : ''}</p><p>${esc(l.description || 'Matériel entretenu et prêt à louer.')}</p><div class="detail-features"><span>▣ ${esc(l.quantity || 1)} disponible${(l.quantity || 1) > 1 ? 's' : ''}</span><span>⇄ ${esc(l.handoutOption || 'Retrait')}</span><span>♢ Bail sécurisé</span></div><a class="owner-line" href="/profil/${esc(l.clientId || 1)}" data-profile="${esc(l.clientId || 1)}"><span class="person-avatar">YM</span><div><strong>Yacine · Loueur vérifié</strong><small>Voir le profil et toutes ses annonces</small></div><span class="owner-chevron">›</span></a><div class="detail-book"><div><strong>${money(l.priceByPeriod || 0)}</strong><small> / jour</small><p>Dépôt de garantie : ${money(depositOf(l))}</p></div><button class="app-primary" data-action="book">Vérifier les disponibilités</button></div></div>`;
+    openDialog('#detail-dialog');
+  }
+
+  async function share(kind: 'annonce' | 'profil', id: string, title: string) {
+    const url = `${location.origin}/${kind}/${encodeURIComponent(id)}`;
+    try {
+      if (navigator.share) await navigator.share({ title, text: `Découvrez ${title} sur GoodLease`, url });
+      else { await navigator.clipboard.writeText(url); toast('Lien copié'); }
+    } catch (error) { if ((error as DOMException).name !== 'AbortError') toast('Partage impossible', 'error'); }
+  }
+
+  const isMobileBrowser = () => /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  function openNativeApp(kind: 'annonce' | 'profil', id: string, fallback?: () => void) {
+    const canonical = `${location.origin}/${kind}/${encodeURIComponent(id)}`;
+    if (/Android/i.test(navigator.userAgent)) {
+      location.href = `intent://${kind}/${encodeURIComponent(id)}#Intent;scheme=goodlease;package=com.goodlease.app;S.browser_fallback_url=${encodeURIComponent(canonical)};end`;
+      return;
+    }
+    const frame = document.createElement('iframe');
+    frame.hidden = true;
+    frame.src = `goodlease://${kind}/${encodeURIComponent(id)}`;
+    document.body.append(frame);
+    window.setTimeout(() => {
+      frame.remove();
+      if (document.visibilityState === 'visible') {
+        fallback?.();
+        if (!fallback) toast('Installez l’app GoodLease pour l’ouvrir directement.', 'error');
+      }
+    }, 1100);
+  }
+
+  async function showProfile(id: string) {
+    document.querySelector<HTMLDialogElement>('#detail-dialog')?.close();
+    let profile: Record<string, unknown> = { id, username: 'Yacine', displayName: 'Yacine', averageRating: 4.9 };
+    let profileListings = listings.filter((l) => String(l.clientId || '') === id);
+    try {
+      const [liveProfile, liveListings] = await Promise.all([api(`client/${encodeURIComponent(id)}`), api(`leases/client/${encodeURIComponent(id)}`)]);
+      if (liveProfile && typeof liveProfile === 'object') profile = liveProfile;
+      if (Array.isArray(liveListings)) profileListings = liveListings;
+    } catch { /* Le profil de démonstration reste visible hors ligne. */ }
+    const name = String(profile.displayName || profile.username || profile.name || 'Loueur GoodLease');
+    document.querySelector<HTMLElement>('#generic-content')!.innerHTML = `<div class="public-profile"><div class="profile-avatar">${esc(name.slice(0, 2).toUpperCase())}</div><div><span class="verified">✓ Profil vérifié</span><h2>${esc(name)}</h2><p>★ ${esc(profile.averageRating || '4,9')} · Membre GoodLease</p></div><button class="icon-button" data-share-kind="profil" data-share-id="${esc(id)}" data-share-title="${esc(name)}" aria-label="Partager le profil">↗</button></div><button class="open-native-button" data-open-native="profil" data-open-id="${esc(id)}">Ouvrir ce profil dans l’app <span>↗</span></button><p class="profile-bio">Location de matériel entretenu avec soin. Réponse rapide et remise en main propre.</p><h3 class="profile-listings-title">Ses annonces (${profileListings.length})</h3><div class="profile-listings">${profileListings.slice(0, 3).map(cardMarkup).join('') || '<p class="muted-copy">Aucune annonce publiée actuellement.</p>'}</div><button class="app-primary wide" data-close-generic>Fermer</button>`;
+    openDialog('#generic-dialog');
+    document.querySelector('[data-close-generic]')?.addEventListener('click', () => document.querySelector<HTMLDialogElement>('#generic-dialog')?.close(), { once: true });
+  }
+
+  function generic(title: string, body: string, button = 'Compris') {
+    document.querySelector<HTMLElement>('#generic-content')!.innerHTML = `<div class="generic-icon">✓</div><h2>${esc(title)}</h2><p>${esc(body)}</p><button class="app-primary wide" data-close-generic>${esc(button)}</button>`;
+    openDialog('#generic-dialog');
+    document.querySelector('[data-close-generic]')?.addEventListener('click', () => document.querySelector<HTMLDialogElement>('#generic-dialog')?.close(), { once: true });
+  }
+
+  function requireAuth(): boolean { if (token()) return true; openDialog('#auth-dialog'); toast('Connectez-vous pour continuer', 'error'); return false; }
+
+  function handleAction(action: string) {
+    if (action === 'new-listing') { wizardStep = 1; updateWizard(); openDialog('#listing-dialog'); }
+    if (action === 'book') { document.querySelector<HTMLDialogElement>('#detail-dialog')?.close(); if (!requireAuth()) return; const form = document.querySelector<HTMLFormElement>('#booking-form')!; (form.elements.namedItem('listingId') as HTMLInputElement).value = String(selectedListing?.id || ''); updateBookingSummary(); openDialog('#booking-dialog'); }
+    if (action === 'contract') generic('Contrat de location', 'Le contrat PDF signé sera disponible dès la remise du matériel.', 'Fermer');
+    if (action === 'inspection') generic('État des lieux numérique', 'Prenez des photos horodatées du matériel, vérifiez les points de contrôle puis signez à l’écran.', 'Commencer');
+    if (action === 'calendar') generic('Calendrier de disponibilité', 'Bloquez les périodes d’indisponibilité et consultez les réservations confirmées depuis cet espace.', 'Ouvrir le calendrier');
+    if (action === 'stripe') generic('Versements Stripe Connect', 'La vérification d’identité et les coordonnées bancaires s’ouvrent dans le parcours sécurisé Stripe.', 'Continuer avec Stripe');
+    if (action === 'cashout') { if (requireAuth()) generic('Virement demandé', 'Votre solde disponible sera viré sur votre compte bancaire vérifié.', 'Terminé'); }
+    if (action === 'forgot') generic('Réinitialiser le mot de passe', 'Indiquez votre adresse e-mail dans le champ de connexion : un code de vérification vous sera envoyé.', 'Compris');
+    if (action === 'login') openDialog('#auth-dialog');
+    if (action === 'social-auth') generic('Connexion sociale web', 'La connexion Google et Apple sera activée dès que leurs URL de redirection web seront validées dans les consoles développeur.', 'Compris');
+  }
+
+  document.querySelector<HTMLButtonElement>('#auth-button')!.addEventListener('click', () => {
+    if (token()) { session = {}; sessionStorage.removeItem('goodlease:session'); toast('Vous êtes déconnecté'); updateAuth(); } else openDialog('#auth-dialog');
+  });
+
+  function updateAuth() {
+    const button = document.querySelector<HTMLButtonElement>('#auth-button')!;
+    button.textContent = token() ? '✓' : 'GL';
+    button.setAttribute('aria-label', token() ? 'Se déconnecter' : 'Se connecter');
+  }
+
+  document.querySelector<HTMLFormElement>('#auth-form')!.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const submit = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    const error = document.querySelector<HTMLElement>('#auth-error')!;
+    submit.disabled = true; submit.textContent = 'Connexion…'; error.hidden = true;
+    try {
+      const values = Object.fromEntries(new FormData(form));
+      session = await api('auth/login', { method: 'POST', body: JSON.stringify(values) });
+      sessionStorage.setItem('goodlease:session', JSON.stringify(session));
+      updateAuth(); document.querySelector<HTMLDialogElement>('#auth-dialog')!.close(); toast('Connexion réussie');
+    } catch (err) { error.textContent = err instanceof Error ? err.message : 'Connexion impossible.'; error.hidden = false; }
+    finally { submit.disabled = false; submit.textContent = 'Se connecter'; }
+  });
+
+  document.querySelector<HTMLFormElement>('#search-form')!.addEventListener('submit', (event) => {
+    event.preventDefault(); const values = Object.fromEntries(new FormData(event.currentTarget)); applyFilters(String(values.search || '')); document.querySelector('#listing-grid')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  document.querySelector<HTMLInputElement>('#global-search')!.addEventListener('input', (event) => applyFilters((event.target as HTMLInputElement).value));
+  document.querySelectorAll<HTMLButtonElement>('.category-chip').forEach((chip) => chip.addEventListener('click', () => { document.querySelectorAll('.category-chip').forEach((c) => c.classList.remove('is-active')); chip.classList.add('is-active'); applyFilters('', Number(chip.dataset.categoryId || 0)); }));
+  function applyFilters(search = '', categoryId = Number(document.querySelector<HTMLElement>('.category-chip.is-active')?.dataset.categoryId || 0)) { const q = search.trim().toLocaleLowerCase('fr'); filteredListings = listings.filter((l) => (!q || `${l.title} ${l.description || ''} ${categoryOf(l)}`.toLocaleLowerCase('fr').includes(q)) && (!categoryId || l.categoryId === categoryId || l.category === categoryNames[categoryId])); renderListings(); }
+
+  document.querySelector<HTMLFormElement>('#message-form')!.addEventListener('submit', (event) => { event.preventDefault(); const input = event.currentTarget.elements.namedItem('message') as HTMLInputElement; if (!input.value.trim()) return; const bubble = document.createElement('div'); bubble.className = 'message outgoing'; bubble.textContent = input.value.trim(); document.querySelector('#chat-messages')!.append(bubble); input.value = ''; bubble.scrollIntoView({ behavior: 'smooth' }); });
+  document.querySelector<HTMLFormElement>('#profile-form')!.addEventListener('submit', (event) => { event.preventDefault(); if (requireAuth()) toast('Profil enregistré'); });
+  document.querySelector<HTMLButtonElement>('#read-all')!.addEventListener('click', () => { document.querySelectorAll('#notification-list .unread').forEach((n) => n.classList.remove('unread')); toast('Toutes les notifications sont lues'); });
+
+  const wizardNext = document.querySelector<HTMLButtonElement>('#wizard-next')!;
+  const wizardBack = document.querySelector<HTMLButtonElement>('#wizard-back')!;
+  wizardNext.addEventListener('click', () => { const step = document.querySelector<HTMLElement>(`.wizard-step[data-step="${wizardStep}"]`)!; const required = [...step.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[required]')]; if (!required.every((field) => field.reportValidity())) return; wizardStep = Math.min(4, wizardStep + 1); updateWizard(); });
+  wizardBack.addEventListener('click', () => { wizardStep = Math.max(1, wizardStep - 1); updateWizard(); });
+  function updateWizard() { document.querySelectorAll<HTMLElement>('.wizard-step').forEach((el) => el.classList.toggle('is-active', Number(el.dataset.step) === wizardStep)); document.querySelectorAll<HTMLElement>('.wizard-progress span').forEach((el, i) => el.classList.toggle('is-active', i < wizardStep)); wizardBack.hidden = wizardStep === 1; wizardNext.hidden = wizardStep === 4; document.querySelector<HTMLButtonElement>('#wizard-submit')!.hidden = wizardStep !== 4; }
+  document.querySelector<HTMLFormElement>('#listing-form')!.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const categoryId = Number(formData.get('categoryId') || 1);
+    const [codeRef, legacyType] = categoryRefs[categoryId] || categoryRefs[1];
+    const createLease = {
+      titleLease: String(formData.get('title') || ''), description: String(formData.get('description') || ''),
+      priceByPeriod: Number(formData.get('priceByPeriod') || 0), caution: Number(formData.get('caution') || 0),
+      idCategorie: categoryId, coderefCategorie: codeRef, typeCategorie: legacyType,
+      region: 'Hauts-de-France', street: String(formData.get('street') || ''), postalCode: String(formData.get('postalCode') || ''), city: String(formData.get('city') || ''),
+      quantity: Number(formData.get('quantity') || 1), condition: 'Bon état', codeRefStatus: 'ACTIVE', status: 'Disponible',
+      handoutOption: String(formData.get('handoutOption') || 'Retrait sur place'), advice: 'Manipulation soigneuse recommandée',
+    };
+    localStorage.setItem('goodlease:listing-draft', JSON.stringify({ ...createLease, savedAt: new Date().toISOString() }));
+    if (token()) {
+      try {
+        const upload = new FormData();
+        for (const photo of formData.getAll('photos')) if (photo instanceof File && photo.size) upload.append('photos', photo, photo.name);
+        await api(`leases/newcommands?createLease=${encodeURIComponent(JSON.stringify(createLease))}`, { method: 'POST', body: upload });
+        toast('Annonce envoyée pour vérification');
+      } catch { toast('Brouillon enregistré. La publication sera retentée.', 'error'); }
+    } else toast('Brouillon enregistré sur cet appareil');
+    document.querySelector<HTMLDialogElement>('#listing-dialog')!.close(); form.reset(); navigate('annonces');
+  });
+
+  function updateBookingSummary() { const form = document.querySelector<HTMLFormElement>('#booking-form')!; const from = new Date((form.elements.namedItem('from') as HTMLInputElement).value); const to = new Date((form.elements.namedItem('to') as HTMLInputElement).value); const days = Number.isFinite(from.getTime()) && Number.isFinite(to.getTime()) ? Math.max(1, Math.ceil((to.getTime() - from.getTime()) / 86400000) + 1) : 1; const rent = days * (selectedListing?.priceByPeriod || 0); document.querySelector<HTMLElement>('#booking-summary')!.innerHTML = `<div><span>${days} jour${days > 1 ? 's' : ''} × ${money(selectedListing?.priceByPeriod || 0)}</span><strong>${money(rent)}</strong></div><div><span>Frais de service (5 %)</span><strong>${money(rent * .05)}</strong></div><hr><div class="total"><span>Total</span><strong>${money(rent * 1.05)}</strong></div><small>Dépôt de garantie autorisé séparément : ${money(depositOf(selectedListing))}</small>`; }
+  document.querySelectorAll<HTMLInputElement>('#booking-form input[type=date]').forEach((input) => input.addEventListener('change', updateBookingSummary));
+  document.querySelector<HTMLFormElement>('#booking-form')!.addEventListener('submit', (event) => { event.preventDefault(); document.querySelector<HTMLDialogElement>('#booking-dialog')!.close(); generic('Réservation préparée', 'Les dates sont bloquées temporairement. Le paiement web Stripe sera disponible après configuration de la clé publique et des domaines autorisés.', 'Voir mes locations'); });
+
+  async function loadListings() {
+    renderListings(); renderFavorites();
+    try { const live = await api('leases?page=0&size=24'); if (Array.isArray(live) && live.length) { listings = live; filteredListings = live; renderListings(); renderFavorites(); dataMode.textContent = 'Catalogue GoodLease en direct'; } else dataMode.textContent = 'Catalogue de démonstration'; }
+    catch { dataMode.textContent = 'Mode aperçu · reconnexion automatique'; }
+    await openSharedLink();
+  }
+
+  async function openSharedLink() {
+    const pathMatch = location.pathname.match(/^\/(annonce|profil)\/(\d+)\/?$/);
+    const query = new URLSearchParams(location.search);
+    const kind = pathMatch?.[1] || query.get('open');
+    const id = pathMatch?.[2] || query.get('id');
+    if (!id || (kind !== 'annonce' && kind !== 'profil')) return;
+    if (kind === 'profil') { await showProfile(id); return; }
+    let listing = listings.find((item) => String(item.id) === id);
+    if (!listing) {
+      try { listing = await api(`leases/${encodeURIComponent(id)}`); if (listing) listings.unshift(listing); }
+      catch { toast('Cette annonce n’est plus disponible.', 'error'); return; }
+    }
+    showDetail(id);
+  }
+
+  const initialRoute = location.hash.slice(1);
+  if (initialRoute && document.querySelector(`[data-view="${CSS.escape(initialRoute)}"]`)) navigate(initialRoute);
+  updateAuth(); updateWizard(); loadListings();
+  }
+</script>
+
+<script>
+  import { mountGoodLeaseWebApp } from '../../scripts/goodlease-webapp';
+  mountGoodLeaseWebApp();
+</script>

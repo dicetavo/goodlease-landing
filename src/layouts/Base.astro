@@ -2,7 +2,8 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { site, analytics, stores } from '../config';
+import { site, analytics, stores, emails, company } from '../config';
+import MarketingConsent from '../components/MarketingConsent.astro';
 
 interface Props {
   title: string;
@@ -10,6 +11,8 @@ interface Props {
   /** Schéma org+app uniquement sur la home */
   homeSchema?: boolean;
   ogImage?: string;
+  robots?: string;
+  canonical?: string | false;
 }
 
 const {
@@ -17,9 +20,10 @@ const {
   description = site.description,
   homeSchema = false,
   ogImage = '/og-default.png',
+  robots = 'index,follow,max-image-preview:large',
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, site.url).href;
+const canonical = Astro.props.canonical === false ? undefined : new URL(Astro.props.canonical || Astro.url.pathname, site.url).href;
 const fullTitle = title === site.name ? `${site.name} — ${site.tagline}` : `${title} · ${site.name}`;
 const ogUrl = new URL(ogImage, site.url).href;
 ---
@@ -32,7 +36,8 @@ const ogUrl = new URL(ogImage, site.url).href;
     <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={robots} />
+    {canonical && <link rel="canonical" href={canonical} />}
     <!-- Google Search Console — propriété https://goodlease.fr/ ; ne pas supprimer (le statut de propriétaire est re-vérifié périodiquement) -->
     <meta name="google-site-verification" content="SFG0dMk6KQygWFWcJe6APSicPiNG14HTlSV9pr2DJ_Q" />
 
@@ -49,7 +54,7 @@ const ogUrl = new URL(ogImage, site.url).href;
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogUrl} />
     <meta property="og:locale" content="fr_FR" />
 
@@ -68,17 +73,24 @@ const ogUrl = new URL(ogImage, site.url).href;
             '@graph': [
               {
                 '@type': 'Organization',
+                '@id': `${site.url}/#organization`,
                 name: 'GoodLease',
                 url: site.url,
                 logo: `${site.url}/icon-1024.png`,
-                email: 'contact@goodlease.fr',
+                email: emails.contact,
+                legalName: company.legalName,
+                sameAs: [stores.appStore, stores.playStore].filter(Boolean),
+                contactPoint: { '@type': 'ContactPoint', email: emails.support, contactType: 'customer support', availableLanguage: 'fr' },
+                areaServed: { '@type': 'Country', name: 'France' },
                 address: {
                   '@type': 'PostalAddress',
-                  streetAddress: '10 Rue de Jemmapes',
-                  postalCode: '59155',
-                  addressLocality: 'Faches-Thumesnil',
-                  addressCountry: 'FR',
+                  ...company.postalAddress,
                 },
+              },
+              {
+                '@type': 'WebSite', '@id': `${site.url}/#website`, name: site.name,
+                url: site.url, inLanguage: 'fr-FR', description: site.description,
+                publisher: { '@id': `${site.url}/#organization` },
               },
               {
                 '@type': 'MobileApplication',
@@ -115,6 +127,7 @@ const ogUrl = new URL(ogImage, site.url).href;
       <slot />
     </main>
     <Footer />
+    <MarketingConsent />
 
     <script>
       const revealEls = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));

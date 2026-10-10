@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { routes } from '../config';
+import { routes, pageHref } from '../config';
 
 const links = [
   { label: 'Accueil', href: routes.home },
@@ -13,6 +13,8 @@ const links = [
 <Base
   title="Page introuvable"
   description="Cette page n’existe pas ou a été déplacée. Retrouvez l’essentiel de GoodLease depuis l’accueil ou notre aide."
+  robots="noindex,follow"
+  canonical={false}
 >
   <section class="relative overflow-hidden">
     <div class="pointer-events-none absolute inset-0 -z-10">
@@ -29,7 +31,7 @@ const links = [
 
       <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
         <a href={routes.home} class="btn-primary">Retour à l’accueil</a>
-        <a href={routes.faq} class="btn-secondary">Consulter la FAQ</a>
+        <a href={pageHref(routes.faq)} class="btn-secondary">Consulter la FAQ</a>
       </div>
 
       <ul class="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
