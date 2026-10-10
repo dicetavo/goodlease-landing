@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 6,
   "received_on": "2026-10-10",
   "source": "Retour écrit d’Achour et classeur de référence transmis par Grégory",
   "source_counts": {
@@ -62,7 +62,7 @@
       "destinations_prepared": [
         "GA4"
       ],
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels.",
       "priority_source": {
         "kind": "xlsx",
         "sheet": "Événements",
@@ -118,7 +118,7 @@
       "destinations_prepared": [
         "GA4"
       ],
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels.",
       "priority_source": {
         "kind": "xlsx",
         "sheet": "Événements",
@@ -197,7 +197,7 @@
       ],
       "production_runtime_deployed": false,
       "public_mobile_release_done": false,
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels.",
       "live_evidence": "GA4 DebugView iOS, 10 octobre 2026 ; account_type=test ; simulateur dev."
     },
     {
@@ -228,7 +228,7 @@
       "destinations_prepared": [
         "GA4"
       ],
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels.",
       "priority_source": {
         "kind": "xlsx",
         "sheet": "Événements",
@@ -312,7 +312,7 @@
       ],
       "production_runtime_deployed": false,
       "public_mobile_release_done": false,
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels."
     },
     {
       "name": "photo_swiped",
@@ -363,7 +363,7 @@
         "photo_index",
         "total_photos"
       ],
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels.",
       "production_runtime_deployed": false,
       "public_mobile_release_done": false
     },
@@ -419,7 +419,7 @@
       ],
       "production_runtime_deployed": false,
       "public_mobile_release_done": false,
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels."
     },
     {
       "name": "availability_checked",
@@ -480,7 +480,7 @@
       ],
       "production_runtime_deployed": false,
       "public_mobile_release_done": false,
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels."
     },
     {
       "name": "rental_price_calculated",
@@ -534,7 +534,7 @@
       ],
       "production_runtime_deployed": false,
       "public_mobile_release_done": false,
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels."
     },
     {
       "name": "add_to_wishlist",
@@ -565,7 +565,7 @@
       "destinations_prepared": [
         "GA4"
       ],
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels.",
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels.",
       "priority_source": {
         "kind": "xlsx",
         "sheet": "Événements",
@@ -640,7 +640,7 @@
       ],
       "production_runtime_deployed": false,
       "public_mobile_release_done": false,
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels."
     },
     {
       "name": "rental_request_sent",
@@ -1594,7 +1594,7 @@
       "previous_name": null,
       "priority_as_supplied": "P1",
       "mobile_or_backend_instrumentation_verified": true,
-      "live_reception_verified": false,
+      "live_reception_verified": true,
       "local_code_prepared": true,
       "local_preparation_date": "2026-10-10",
       "priority_source": {
@@ -1627,11 +1627,11 @@
       "destinations_prepared": [
         "GA4"
       ],
-      "implementation_status": "backend_deployed_live_reception_pending",
+      "implementation_status": "backend_deployed_ga4_event_name_observed",
       "code_evidence": [
         "../../eclipse-workspace/goodlease-backend/src/main/java/com/goodlease/analytics/AnalyticsTracking.java"
       ],
-      "implementation_note": "Code serveur déployé ; preuve métier autoritaire et consentement. Réception réelle de cet événement encore à valider."
+      "implementation_note": "Ajout panier réel en dev avec consentement, restauration du panier par l’API normale, validateur strict Google sans problème ; add_to_cart vu dans GA4 temps réel. La dernière ligne SQL exacte n’est pas corrélée individuellement."
     },
     {
       "name": "handover_confirmed",
@@ -1739,7 +1739,7 @@
       "code_evidence": [
         "../good-lease/lib/api_sdk/bloc/assistant/assistant_cubit.dart"
       ],
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels."
     },
     {
       "name": "agent_proposal_shown",
@@ -1791,7 +1791,7 @@
       "code_evidence": [
         "../good-lease/lib/api_sdk/bloc/assistant/assistant_cubit.dart"
       ],
-      "implementation_note": "Code SDK et tests préparés ; mise à jour publique à publier. Campagnes/installations à valider sur appareils réels."
+      "implementation_note": "Code SDK et tests réussis ; iOS et Android 1.0.9 (200) soumis aux stores, disponibilité publique non confirmée. Parcours Android et campagnes/installations à valider sur appareils réels."
     }
   ],
   "key_events_proposed_by_achour": [
@@ -1868,8 +1868,8 @@
     }
   },
   "web_preparation": {
-    "production_deployed": false,
-    "live_reception_verified": false,
+    "production_deployed": true,
+    "live_reception_verified": true,
     "event_names": [
       "view_item",
       "search",
@@ -1889,12 +1889,18 @@
     },
     "source": "web",
     "notes": [
-      "listing_published observe le succès création + disponibilité ; consolidation et déduplication avec le backend restent à faire.",
-      "sign_up observe l’activation effective par code e-mail, pas la demande de code.",
+      "Les jalons sign_up et listing_published sont émis uniquement par le backend vers GA4. Le navigateur confirme les actions pour Meta après consentement publicitaire ; aucun double envoi GA4 client/serveur.",
+      "sign_up observe une inscription réellement terminée côté backend ; le code e-mail web ne déclenche que Meta CompleteRegistration après consentement publicitaire.",
       "booking_app_handoff est un transfert vers l’app, jamais une demande acceptée ni un paiement.",
       "search_term reste exclu sur le web pour préserver les données personnelles ; le rapport natif de termes de recherche n’est pas alimenté.",
       "app_store_click est un clic, pas une installation ; destination_platform indique iOS/Android."
-    ]
+    ],
+    "live_reception_scope": [
+      "page_view",
+      "user_engagement"
+    ],
+    "meta_live_reception_verified": false,
+    "meta_validation_blocker": "SDK bloqué dans le navigateur de test : ERR_BLOCKED_BY_CLIENT."
   },
   "implementation_findings": [
     "29 noms métier préparés (13 SDK + 16 backend).",
@@ -1926,7 +1932,7 @@
     "Configurer rapports/dimensions/événements clés et objectifs Ads sans additionner les jalons d’une réservation comme plusieurs ventes.",
     "Publier la version mobile après mise à jour des déclarations stores ; déploiement web distinct. Meta natif nécessite son propre App ID et consentement ; pas de pixel web dans Flutter."
   ],
-  "validation_status": "331 tests Flutter ; 30 ciblés interface ; 17 analytics après dernière modification. Backend : 739 réussis / 8 ignorés ; PostgreSQL isolé vérifié. Web : 40 tests / build 16 pages. Backend dev/prod déployé ; iOS DebugView 3 événements métier vus. Mobile public et web non déployés ; funnel complet non testé.",
+  "validation_status": "331 tests Flutter puis 30 ciblés interface et 17 analytics. Backend : suite complète 739 réussis / 8 ignorés avant les dernières régressions ; package analytics réussi après celles-ci. Web : 40 tests / build 16 pages / 21 routes prod. Backend et web déployés. iOS DebugView 3 événements métier ; GA4 temps réel web + add_to_cart backend. iOS 1.0.9 build 200 soumis, WAITING_FOR_REVIEW ; Android 1.0.9 versionCode 200 accepté par la piste production et en examen ; CI production réussie. Funnel financier complet non testé.",
   "official_references": [
     "https://firebase.google.com/docs/analytics/flutter/get-started",
     "https://developers.google.com/analytics/devguides/collection/ga4/ecommerce",
@@ -2146,7 +2152,7 @@
     ],
     "core_safe_enrichments": [
       "photo_swiped.total_photos depuis les deux galeries",
-      "item_category depuis le Categorie.id backend, dans les paramètres et items[] ; jamais le libellé libre"
+      "item_category en chaîne stable contrôlée depuis Categorie.codeRef, avec repli category_ID ; jamais le libellé libre"
     ],
     "additional_p0_still_not_prepared_in_mobile_backend": [],
     "proposals_do_not_change_core_financial_decisions": true,
@@ -2215,7 +2221,6 @@
     "verification": {
       "mobile_targeted_tracking_tests_passed": 17,
       "mobile_configuration": "ENV=prod, faux SDK sans appel fournisseur",
-      "backend_targeted_tests_passed": 739,
       "backend_targeted_classes": [
         "AnalyticsTrackingTest",
         "AnalyticsOriginTest",
@@ -2232,15 +2237,17 @@
       "native_build_repeated_this_turn": true,
       "deployment_done": true,
       "live_reception_verified": true,
-      "live_verification_scope": "iOS DebugView, app_open/home_viewed/view_item_list ; pas tout le funnel"
+      "live_verification_scope": "iOS DebugView (app_open/home_viewed/view_item_list), GA4 web temps réel et add_to_cart backend ; pas tout le funnel financier",
+      "backend_full_suite_baseline_passed": 739,
+      "backend_full_suite_baseline_skipped": 8,
+      "backend_latest_targeted_package_passed": true
     }
   },
   "deployment_evidence": {
     "date": "2026-10-10",
-    "dev_revision": "goodlease-back-00223-xiw",
-    "prod_revision": "goodlease-back-prod-00030-ses",
+    "dev_revision": "goodlease-back-00226-fom",
+    "prod_revision": "goodlease-back-prod-00032-yug",
     "traffic_percent": 100,
-    "image_digest": "sha256:28f87d2ded343334e32782b67e8da9c0278cd95e9bccef011825d25a9062d1d9",
     "migrations": [
       "20261010.01",
       "20261010.02",
@@ -2262,6 +2269,78 @@
       "rental_completed"
     ],
     "native_public_release_done": false,
-    "web_deployed": false
+    "web_deployed": true,
+    "web_deployment_id": "2d85f826-f43a-4d11-849d-d24a65970aa4",
+    "web_source_commit": "3b1ed0c",
+    "backend_source_commit": "c1fb798",
+    "mobile_source_commit": "e97da66",
+    "mobile_dev_run_id": 38082614298,
+    "mobile_dev_run_conclusion": "success",
+    "mobile_prod_run_id": 38083312688,
+    "mobile_prod_build": 200,
+    "ios_app_review_state": "WAITING_FOR_REVIEW",
+    "ios_submitted_at": "2026-10-10T20:29:00Z",
+    "android_prod_state": "in_review",
+    "web_production_route_checks": 21,
+    "web_production_withdrawal_provider_requests": 0,
+    "previous_image_digest": "sha256:28f87d2ded343334e32782b67e8da9c0278cd95e9bccef011825d25a9062d1d9",
+    "image_tags": [
+      "goodlease-repo/goodlease-back:tracking-20261010-category-v2",
+      "goodlease-repo/goodlease-back-prod:tracking-20261010-category-v2"
+    ],
+    "backend_live_events_observed": [
+      "add_to_cart"
+    ],
+    "backend_latest_outbox_row_individually_correlated": false,
+    "mobile_prod_run_conclusion": "success",
+    "android_version_code": 200,
+    "android_edit_committed_at": "2026-10-10T20:40:59Z",
+    "mobile_release_proof": "output/tracking/mobile-production-release-proof.json"
+  },
+  "account_data_processing_agreement": {
+    "date": "2026-10-10",
+    "account_id": "411472589",
+    "accepted_saved_reloaded": true,
+    "google_products_and_services_sharing": false,
+    "business_recommendations_sharing": false,
+    "proof": "output/ga4-preuves/dpa-enregistre-20261010.jpg"
+  },
+  "store_privacy": {
+    "apple": "15 types publiés",
+    "google_play": "Data safety sauvegardée et soumise : Changes in review",
+    "proofs": [
+      "output/tracking/apple-confidentialite-publiee.jpg",
+      "output/tracking/play-confidentialite-en-examen.jpg"
+    ]
+  },
+  "commercial_comparison_status": "Exploration commerciale enregistrée, rechargée et partagée en lecture seule aux utilisateurs existants de la propriété. environment=production ; account_type ne correspond pas à ^(internal|test)$. Comparaisons par défaut conservées, aucun filtre de collecte activé.",
+  "store_sdk_notice": {
+    "provider": "Stripe Android PaymentSheet",
+    "version": "20.44.2",
+    "notice_condition": "FlowController avec Google Pay et paiement invité ; écran blanc possible",
+    "current_code_uses_affected_flow": false,
+    "verification": "Aucun initPaymentSheet, presentPaymentSheet, customFlow, FlowController ou GooglePay actif dans lib ; carte createPaymentMethod et Apple Pay createPlatformPayPaymentMethod.",
+    "release_blocked_by_notice": false,
+    "follow_up": "Mettre à jour le SDK Stripe dans une évolution dédiée, avec validation des paiements."
+  },
+  "commercial_reporting": {
+    "name": "GoodLease — Événements commerciaux",
+    "url": "https://analytics.google.com/analytics/web/#/analysis/a411472589p558279528/edit/nhQsLzUpQ-C6wY2co4T77A",
+    "row": "Nom de l’événement",
+    "metrics": [
+      "Utilisateurs actifs",
+      "Nombre d’événements"
+    ],
+    "filters": {
+      "environment": "production",
+      "account_type_not_regex": "^(internal|test)$"
+    },
+    "shared_read_only_to_existing_property_users": true,
+    "saved_reloaded_verified": true,
+    "processed_report_has_business_data": false,
+    "collection_filter_changed": false,
+    "proof": "output/ga4-preuves/rapport-commercial-enregistre.png",
+    "note": "Nouveau tracking ; les premiers événements temps réel ne prouvent pas encore des chiffres commerciaux dans ce tableau.",
+    "date_range": "Ce mois-ci (début du mois jusqu’à aujourd’hui)"
   }
 }
