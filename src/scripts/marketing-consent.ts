@@ -1,4 +1,5 @@
 import { updateWebAnalyticsConsent, webCampaign, webAnalyticsEnvironment } from './web-analytics-context.ts';
+import { updateWebMarketingConsent } from './web-marketing-context.ts';
 export type ConsentPreferences = { analytics: boolean; marketing: boolean; savedAt: number; version: string };
 export type MarketingOptions = { gtmId: string; ga4Id: string; metaPixelId: string; consentVersion: string };
 export const CONSENT_KEY = 'goodlease:consent:v1';
@@ -197,7 +198,7 @@ export function initMarketingConsent() {
       const advertising = metaLoaded && preferences.marketing;
       // Durable backend hooks own these milestones, including retries after login.
       if (audience && !['sign_up', 'listing_published'].includes(event)) win.gtag!('event', event, { ...parameters, page_location: cleanUrl(location.href), page_referrer: cleanUrl(document.referrer) });
-      if (advertising) {
+      if (advertising && !['sign_up', 'listing_published'].includes(event)) {
         const mapped = metaEvent(event, parameters);
         win.fbq?.(mapped.command, mapped.name, mapped.parameters);
       }
@@ -221,6 +222,7 @@ export function initMarketingConsent() {
     preferences = { analytics, marketing, savedAt: Date.now(), version };
     try { localStorage.setItem(CONSENT_KEY, JSON.stringify(preferences)); } catch { /* Choice applies to this page only. */ }
     updateWebAnalyticsConsent(analytics && !options.gtmId, options.ga4Id, win);
+    updateWebMarketingConsent(marketing && !options.gtmId, options.metaPixelId, win);
     banner.hidden = true; dialog.close();
     if (revoking && mustReload) {
       win.gtag!('consent', 'update', googleConsent(preferences));
@@ -250,6 +252,16 @@ export function initMarketingConsent() {
   banner.hidden = Boolean(preferences);
   loadTags();
   updateWebAnalyticsConsent(Boolean(preferences?.analytics && !options.gtmId), options.ga4Id, win);
+  updateWebMarketingConsent(Boolean(preferences?.marketing && !options.gtmId), options.metaPixelId, win);
+  win.addEventListener?.('storage', (event: StorageEvent) => {
+    if (event.key !== CONSENT_KEY) return;
+    preferences = readConsent(event.newValue, version);
+    updateWebAnalyticsConsent(Boolean(preferences?.analytics && !options.gtmId), options.ga4Id, win);
+    updateWebMarketingConsent(Boolean(preferences?.marketing && !options.gtmId), options.metaPixelId, win);
+    win.gtag?.('consent', 'update', googleConsent(preferences || { analytics: false, marketing: false }));
+    if (!preferences?.marketing) win.fbq?.('consent', 'revoke');
+    location.reload();
+  });
   const item = document.querySelector<HTMLElement>('[data-track-item]');
   if (item) {
     const value = Number(item.dataset.trackPrice);

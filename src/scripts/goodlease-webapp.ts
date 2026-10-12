@@ -1,5 +1,6 @@
 import { trackEvent } from './marketing-consent.ts';
 import { webAnalyticsHeaders, identifyWebAnalytics } from './web-analytics-context.ts';
+import { webMarketingHeaders } from './web-marketing-context.ts';
 import { catalogueImageUrl } from '../server/catalogue-image.ts';
 
 type JsonRecord = Record<string, unknown>;
@@ -225,7 +226,7 @@ export function mountGoodLeaseWebApp() {
     const headers = new Headers(options.headers);
     if (options.method && options.method !== 'GET') {
       const analytics = await webAnalyticsHeaders();
-      for (const [name, value] of Object.entries(analytics)) headers.set(name, value);
+      for (const [name, value] of Object.entries({ ...analytics, ...webMarketingHeaders() })) headers.set(name, value);
     }
     if (!(options.body instanceof FormData) && options.body !== undefined) headers.set('Content-Type', 'application/json');
     const anonymousAuthRoute = /^auth\/(?:login|refresh|forgot-password|register\/|google\/login)/.test(path);
@@ -667,6 +668,7 @@ export function mountGoodLeaseWebApp() {
         if (!isRecord(rawClient) || !Number(rawClient.id)) throw new Error('Compte introuvable.');
         currentClient = rawClient as unknown as Client;
         void synchronizeAnalytics();
+        void synchronizeMarketing();
         renderClient(currentClient);
         const id = currentClient.id;
         const [bookings, ownListings, chatResult, balance, history, notifications] = await Promise.allSettled([
@@ -741,6 +743,13 @@ export function mountGoodLeaseWebApp() {
     } catch { /* Analytics cannot block account screens. */ }
   }
   window.addEventListener('goodlease:analytics-consent', () => { void synchronizeAnalytics(); });
+  async function synchronizeMarketing() {
+    if (!token()) return;
+    const headers = webMarketingHeaders();
+    if (!headers['X-GoodLease-Marketing']) return;
+    try { await rawApi('marketing/context', { method: 'POST', headers }); } catch { /* Advertising cannot block account screens. */ }
+  }
+  window.addEventListener('goodlease:marketing-consent', () => { void synchronizeMarketing(); });
 
   async function logout() {
     try {

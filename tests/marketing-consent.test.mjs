@@ -31,7 +31,9 @@ function browser(config = options, stored) {
   };
   const storage = { getItem(key) { reads++; return key === 'goodlease:consent:v1' ? stored || null : null; },
     setItem(key, value) { writes.push({ key, value }); }, removeItem() {} };
-  const win = { localStorage: storage, crypto: webcrypto, location, dispatchEvent() {}, fetch() { return Promise.resolve({ ok: true }); } };
+  const win = { localStorage: storage, crypto: webcrypto, location, dispatchEvent() {},
+    addEventListener(name, handler) { listeners.set(`window:${name}`, handler); },
+    fetch() { return Promise.resolve({ status: 204 }); } };
   const module = { exports: {} };
   runInNewContext(compiled, { module, exports: module.exports, window: win, document, location, URL, Date, Event, Uint8Array, btoa, localStorage: storage });
   module.exports.initMarketingConsent();
@@ -83,7 +85,7 @@ test('acceptation puis retrait : consent mode mis à jour et nouvelle page sans 
   assert.equal(app.api.trackEvent('sign_up', { method: 'email' }), false);
   assert.equal(app.win['ga-disable-G-TEST123'], true);
   assert.ok(app.win.fbq.queue.some((entry) => entry[0] === 'consent' && entry[1] === 'revoke'));
-  const returning = browser(options, app.writes.at(-1).value);
+  const returning = browser(options, app.writes.findLast(write => write.key === 'goodlease:consent:v1').value);
   assert.equal(returning.scripts.length, 0); assert.equal(returning.banner.hidden, true);
 });
 
@@ -91,6 +93,16 @@ test('les identifiants absents désactivent même la lecture du consentement', (
   const app = browser({ ...options, ga4Id: '', metaPixelId: '' });
   assert.equal(app.scripts.length, 0); assert.equal(app.reads, 0); assert.equal(app.win.dataLayer, undefined);
   assert.equal(validMarketingOptions({ ...options, gtmId: 'GTM-TEST<script>', ga4Id: 'https://evil.invalid', metaPixelId: 'not-an-id' }).ga4Id, '');
+});
+test('un retrait dans un autre onglet bloque immédiatement les événements puis recharge les préférences', () => {
+  const app = browser(); app.click('accept');
+  app.listeners.get('window:storage')({ key: 'unrelated', newValue: null });
+  assert.equal(app.reloads, 0);
+  app.listeners.get('window:storage')({ key: 'goodlease:consent:v1',
+    newValue: JSON.stringify({ analytics: false, marketing: false, savedAt: Date.now(), version: consentVersion(options) }) });
+  assert.equal(app.reloads, 1);
+  assert.equal(app.api.trackEvent('view_item', { item_id: '42' }), false);
+  assert.ok(app.win.fbq.queue.some(entry => entry[0] === 'consent' && entry[1] === 'revoke'));
 });
 
 test('les événements autorisent uniquement les informations publiques prévues', () => {
@@ -120,7 +132,7 @@ test('Meta reçoit les événements reconnus sans doublon ni conversion sur un t
   assert.equal(meta.filter((entry) => entry[0] === 'track' && entry[1] === 'PageView').length, 1);
   assert.deepEqual(meta.find((entry) => entry[1] === 'ViewContent'), ['track', 'ViewContent',
     { content_type: 'product', content_ids: ['42'], content_category: 'Sonorisation', currency: 'EUR', value: 12.5 }]);
-  assert.equal(meta.filter((entry) => entry[1] === 'CompleteRegistration').length, 1);
+  assert.equal(meta.filter((entry) => entry[1] === 'CompleteRegistration' || entry[1] === 'listing_published' || entry[1] === 'ListingPublished').length, 0, 'Business conversions have one server source');
   assert.equal(meta.filter((entry) => entry[1] === 'view_item' || entry[1] === 'sign_up').length, 0);
   assert.equal(meta.filter((entry) => entry[1] === 'InitiateCheckout' || entry[1] === 'Purchase').length, 0);
   assert.ok(!JSON.stringify(meta).includes('private@example.invalid'));

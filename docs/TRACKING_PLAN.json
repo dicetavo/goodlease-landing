@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "received_on": "2026-10-10",
   "source": "Retour écrit d’Achour et classeur de référence transmis par Grégory",
   "source_counts": {
@@ -1801,8 +1801,8 @@
     "rental_request_sent",
     "purchase"
   ],
-  "key_events_configuration_status": "Console vérifiée le 10 octobre : sign_up, host_onboarded, listing_published, rental_request_sent, booking_confirmed, purchase, rental_completed marqués clés. Préexistants conservés. Aucune conversion Ads importée.",
-  "resources_verified_on": "2026-10-09",
+  "key_events_configuration_status": "Sept événements métier clés GA4 conservés et vérifiés ; leurs 21 actions Web/Android/iOS sont importées dans Google Ads depuis le 11 octobre. Attribution publicitaire encore à valider.",
+  "resources_verified_on": "2026-10-11",
   "resources": {
     "ga4": {
       "account_id": "411472589",
@@ -1836,12 +1836,102 @@
       "status": "Pas de conteneur configuré localement ; intégrations directes préparées, aucun doublon à créer."
     },
     "google_ads": {
-      "account_id": null,
-      "status": "Compte et liaison GA4 non inventoriés."
+      "account_id": "640-805-0939",
+      "status": "Compte accessible sous l’identité GoodLease ; liaison GA4 et 21 actions Web/Android/iOS créées. Valeurs des 21 actions et objectif par défaut Achat seul vérifiés après enregistrement. Premières conversions publicitaires attribuées encore à valider.",
+      "primary_admin": "gregorypounah@goodlease.fr",
+      "historical_admin_preserved": "disssoundbeat@gmail.com",
+      "achour_invitation": {
+        "email": "achour.hellal.ah@gmail.com",
+        "role": "Standard",
+        "expiration": null,
+        "status": "pending_acceptance"
+      },
+      "ga4_property_id": "558279528",
+      "web_app_metrics": true,
+      "audiences_import": false,
+      "personalized_advertising": false,
+      "auto_tagging": true,
+      "conversions": {
+        "created_count": 21,
+        "platforms": [
+          "web",
+          "android",
+          "ios"
+        ],
+        "events": [
+          "purchase",
+          "sign_up",
+          "host_onboarded",
+          "listing_published",
+          "rental_request_sent",
+          "booking_confirmed",
+          "rental_completed"
+        ],
+        "primary_event": "purchase",
+        "secondary_events": [
+          "sign_up",
+          "host_onboarded",
+          "listing_published",
+          "rental_request_sent",
+          "booking_confirmed",
+          "rental_completed"
+        ],
+        "values_and_account_default_goals_final_verification": {
+          "purchase_values_verified": true,
+          "account_default_goal": [
+            "purchase"
+          ],
+          "account_default_goal_reload_verified": true,
+          "remaining_secondary_value_checks": [],
+          "all_action_values_verified": true,
+          "primary_purchase_count": 3
+        },
+        "ads_attribution_verified": false,
+        "observed_status": "En attente de conversions",
+        "ios_status": "imported_and_saved_settings_verified",
+        "ios_blocker": null,
+        "known_public_app_store_id": "6758953661",
+        "web_android_configuration_verified": true,
+        "ios_source_selector_rechecked": true,
+        "manual_firebase_app_store_id_check": "user_confirmed_id_and_save; ID independently displayed in saved Google Ads details",
+        "ios_saved_details_verified": 7,
+        "ios_attribution": "Dernier clic / Canaux payants Google",
+        "all_three_platforms_configuration_verified": true,
+        "observed_action_ids": {
+          "web": {
+            "sign_up": "7837361428",
+            "host_onboarded": "7837361431",
+            "listing_published": "7837361434",
+            "rental_request_sent": "7837361437",
+            "booking_confirmed": "7837361440",
+            "purchase": "7837361419",
+            "rental_completed": "7837361443"
+          },
+          "android": {
+            "sign_up": "7837332453",
+            "host_onboarded": "7837332456",
+            "listing_published": "7837332459",
+            "rental_request_sent": "7837332462",
+            "booking_confirmed": "7837332465",
+            "purchase": "7837332444",
+            "rental_completed": "7837332468"
+          },
+          "ios": {
+            "purchase": "7837625640",
+            "sign_up": "7837625649",
+            "host_onboarded": "7837625652",
+            "rental_request_sent": "7837625658",
+            "listing_published": "7837625655",
+            "booking_confirmed": "7837625661",
+            "rental_completed": "7837625664"
+          }
+        }
+      },
+      "campaigns_launched": false
     },
     "search_console": {
       "property": "https://goodlease.fr/",
-      "status": "Vérifiée ; droits Achour enregistrés, liaison GA4 non vérifiée."
+      "status": "Vérifiée ; Achour Accès total ; liaison GA4 Web 16095873500 enregistrée. Sitemap soumis, rapport encore Impossible de récupérer malgré test en ligne réussi."
     },
     "meta": {
       "business_id": "2094707458105435",
@@ -1852,11 +1942,98 @@
       "pixel_id": "1132228155919207",
       "domain": "goodlease.fr",
       "domain_verified": true,
-      "collection_verified": false
+      "collection_verified": true,
+      "collection_verified_scope": [
+        "PageView",
+        "ViewContent",
+        "search",
+        "app_store_click"
+      ],
+      "collection_observed_date": "2026-10-11",
+      "last_receipt_displayed": "11 octobre 2026 à 22:08:33, Europe/Paris",
+      "event_source_url_verified": true,
+      "current_controlled_test_received": true,
+      "consent_refusal_verified": true,
+      "duplicate_check_verified": "One PageView and ViewContent per observed SEO/web-app product load; one search and store click per action; repeated same consent save sends nothing",
+      "diagnostics": "Aucun problème pour le moment",
+      "quality_score_verified": false,
+      "evidence": "output/tracking/meta-live-20261011/proof.json",
+      "historical_blocked_test_evidence": "output/tracking/meta-20261011/proof.json",
+      "server_capi": {
+        "verified_on": "2026-10-12",
+        "implemented": true,
+        "production_enabled": true,
+        "scope": "web_only",
+        "native_advertising_enabled": false,
+        "events": {
+          "sign_up": "CompleteRegistration",
+          "host_onboarded": "HostOnboarded",
+          "listing_published": "ListingPublished",
+          "add_to_cart": "AddToCart",
+          "rental_request_sent": "InitiateCheckout",
+          "booking_confirmed": "BookingConfirmed",
+          "purchase": "Purchase",
+          "rental_completed": "RentalCompleted"
+        },
+        "marketing_consent_independent_of_analytics": true,
+        "business_event_owner": "backend_only",
+        "secret_storage": "Google Cloud Secret Manager, meta-capi-access-token-dev/prod version 1; runtime service account only; no token in clients, Git or this document",
+        "api_version": "v23.0",
+        "backend_source": "f262822",
+        "dev_revision": "goodlease-back-00228-rj6",
+        "dev_enabled": false,
+        "prod_revision": "goodlease-back-prod-00034-mnj",
+        "existing_runtime_entries_preserved": 49,
+        "new_runtime_entries": 6,
+        "migration": "V20261012_01__meta_conversions_outbox.sql",
+        "delivery": "SQL outbox, stable business event_id and original event_time, at most 8 retries, no uncertain replay after 47 hours; SUBMITTED is API acknowledgement, not verified business receipt",
+        "matching": "SHA-256 external_id from trusted User.id; optional consented fbp/fbc and browser User-Agent; no email, phone, IP, raw search, address or GPS",
+        "purchase_value": "Actual captured Stripe amount including renter fees, excluding deposit; authorization-only payments excluded",
+        "withdrawal": "Anonymous denial capability; purges context identifiers, booking origin and queued payloads; browser retains only denial capabilities until HTTP 204 and retries on reload/online; Google OIDC-authenticated scheduled worker drains queues even when no visitor request is active; old headers cannot regrant a withdrawn installation; preferences refresh across tabs",
+        "retention": "Context and denial-only installation tombstones 180 days; payload 72 hours; minimal event idempotency tombstones remain",
+        "technical_receipt_verified": true,
+        "technical_test_event": "GoodLeaseConnectionTest",
+        "events_manager_status": "Serveur / Traitement terminé",
+        "technical_test_scope": "Synthetic direct CAPI endpoint test; not a business conversion or deployed dispatcher end-to-end proof",
+        "business_receipt_verified": false,
+        "business_test_pending": "User deferred real signup; publication and rental/payment lifecycle to verify separately",
+        "browser_withdrawal_backend_http_status": 204,
+        "offline_retry_unit_tested": true,
+        "offline_device_tested": false,
+        "evidence": "output/tracking/meta-backend-20261012/connection-proof.json",
+        "withdrawal_evidence": "output/tracking/meta-backend-20261012/consent-revocation-proof.json",
+        "web_tests_passed": 48,
+        "backend_tests_failed": 0,
+        "postgres_isolated_tests_passed": true,
+        "web_deployment": "https://2133560b.goodlease-landing.pages.dev",
+        "implementation_commit": "8d06f4e",
+        "scheduler_commit": "bfb9da8",
+        "dev_new_runtime_entries": 4,
+        "withdrawal_tombstones_migration": "V20261012_02__marketing_withdrawal_tombstones.sql",
+        "revoked_installation_regrant_allowed": false,
+        "scheduler": {
+          "job_id": "goodlease-tracking-prod",
+          "region": "europe-west1",
+          "cadence": "every minute",
+          "state": "ENABLED",
+          "service_account": "goodlease-tracking-scheduler@goodlease-473821.iam.gserviceaccount.com",
+          "granted_role": "roles/run.invoker, target service only",
+          "persistent_private_key_created": false,
+          "authentication": "Google-signed RS256 OIDC; exact issuer, audience, verified email, expiration and issue time enforced",
+          "production_http_status": 204,
+          "anonymous_http_status": 401,
+          "backend_billing_mode_changed": false,
+          "purpose": "Bounded SQL queue processing during an authenticated HTTP request, avoiding dependence on idle Cloud Run CPU",
+          "evidence": "output/tracking/meta-backend-20261012/runtime-proof.json",
+          "pricing_reference": "https://cloud.google.com/scheduler/pricing"
+        }
+      }
     },
     "linkedin": {
       "account_id": null,
-      "status": "Non inventorié ; phase ultérieure à confirmer, aucun tag ajouté."
+      "status": "Page existante ; profil connecté sans commandes administrateur. Propriétaire et Campaign Manager à identifier, aucun tag ajouté.",
+      "page_id": "128573949",
+      "page_url": "https://www.linkedin.com/company/goodleasefr/"
     },
     "tiktok": {
       "business_center_id": "7694728904967569460",
@@ -1885,12 +2062,12 @@
     "meta_mappings": {
       "view_item": "ViewContent",
       "sign_up": "CompleteRegistration",
-      "listing_published": "custom"
+      "listing_published": "ListingPublished (backend only)"
     },
     "source": "web",
     "notes": [
-      "Les jalons sign_up et listing_published sont émis uniquement par le backend vers GA4. Le navigateur confirme les actions pour Meta après consentement publicitaire ; aucun double envoi GA4 client/serveur.",
-      "sign_up observe une inscription réellement terminée côté backend ; le code e-mail web ne déclenche que Meta CompleteRegistration après consentement publicitaire.",
+      "sign_up et listing_published sont émis uniquement par le backend vers GA4 et Meta, selon leurs consentements distincts. Le navigateur ne double aucune de ces conversions.",
+      "sign_up observe une inscription réellement terminée côté backend ; le code e-mail web ne déclenche plus CompleteRegistration côté navigateur.",
       "booking_app_handoff est un transfert vers l’app, jamais une demande acceptée ni un paiement.",
       "search_term reste exclu sur le web pour préserver les données personnelles ; le rapport natif de termes de recherche n’est pas alimenté.",
       "app_store_click est un clic, pas une installation ; destination_platform indique iOS/Android."
@@ -1899,13 +2076,27 @@
       "page_view",
       "user_engagement"
     ],
-    "meta_live_reception_verified": false,
-    "meta_validation_blocker": "SDK bloqué dans le navigateur de test : ERR_BLOCKED_BY_CLIENT."
+    "meta_live_reception_verified": true,
+    "meta_live_reception_scope": [
+      "PageView",
+      "ViewContent",
+      "search",
+      "app_store_click"
+    ],
+    "meta_controlled_session_reception_verified": true,
+    "meta_remaining_events": [
+      "CompleteRegistration real signup reception",
+      "ListingPublished real publication reception",
+      "booking_app_handoff real UI test",
+      "business rental/payment lifecycle reception"
+    ],
+    "meta_browser_blocker_resolved": true,
+    "meta_validation_blocker": "Web CAPI deployed and synthetic server connection received in Events Manager. Real signup deliberately deferred; business conversions and deployed dispatcher await end-to-end receipt tests. Native Meta advertising remains off."
   },
   "implementation_findings": [
     "29 noms métier préparés (13 SDK + 16 backend).",
     "purchase_request_sent non applicable, session_ended_without_action dérivé.",
-    "Le backend est la seule source des inscriptions/publications/conversions financières ; le web ne les double pas dans GA4.",
+    "Le backend est la seule source des inscriptions/publications/conversions financières GA4 et Meta ; chaque destination exige son consentement propre, Meta étant limité au web.",
     "Les paramètres libres sensibles sont volontairement exclus.",
     "Déclarations des stores à publier avant la prochaine version publique."
   ],
@@ -1932,7 +2123,7 @@
     "Configurer rapports/dimensions/événements clés et objectifs Ads sans additionner les jalons d’une réservation comme plusieurs ventes.",
     "Publier la version mobile après mise à jour des déclarations stores ; déploiement web distinct. Meta natif nécessite son propre App ID et consentement ; pas de pixel web dans Flutter."
   ],
-  "validation_status": "331 tests Flutter puis 30 ciblés interface et 17 analytics. Backend : suite complète 739 réussis / 8 ignorés avant les dernières régressions ; package analytics réussi après celles-ci. Web : 40 tests / build 16 pages / 21 routes prod. Backend et web déployés. iOS DebugView 3 événements métier ; GA4 temps réel web + add_to_cart backend. iOS 1.0.9 build 200 soumis, WAITING_FOR_REVIEW ; Android 1.0.9 versionCode 200 accepté par la piste production et en examen ; CI production réussie. Funnel financier complet non testé.",
+  "validation_status": "Backend/web déployés. Suite backend sans échec et PostgreSQL isolé réussis ; web 48 tests / build 16 pages. Meta web : réception navigateur vérifiée le 11 octobre ; CAPI déployée, réveil OIDC chaque minute vérifié (204), prévention des anciennes pages testée, et test technique Serveur / Traitement terminé le 12 octobre, retrait réel backend 204. Réception métier Meta et dispatcher complet non validés : inscription reportée. GA4/Stripe API test et SDK natifs vérifiés le 11 octobre ; paiement dans interface mobile, appareils physiques et attribution Ads restent à tester. Disponibilité publique mobile 1.0.9 non revérifiée.",
   "official_references": [
     "https://firebase.google.com/docs/analytics/flutter/get-started",
     "https://developers.google.com/analytics/devguides/collection/ga4/ecommerce",
@@ -2214,7 +2405,7 @@
     ],
     "channel_notes": [
       "Les IDs GA4/Meta/TikTok à confirmer dans le classeur sont déjà inventoriés dans resources ; conserver les ressources et les droits vérifiés.",
-      "Google Ads/GTM/LinkedIn restent non inventoriés. LinkedIn après Google Ads et TikTok Ads restent des choix de stratégie, pas des déploiements implicites.",
+      "Google Ads 640-805-0939 est inventorié, lié à GA4 et doté de 21 conversions Web/Android/iOS ; valeurs, comptage et objectif Achat seul vérifiés ; attribution publicitaire à valider. GTM non déployé ; Page LinkedIn identifiée, accès administrateur absent. LinkedIn après Google Ads et TikTok Ads restent des choix de stratégie, pas des déploiements implicites.",
       "Le seuil proposé 60–80 annonces actives avant acquisition ne permet pas de lancer une campagne ni un budget.",
       "Les statistiques 0 inscrits/0 hôtes/15 annonces sont un constat d’Achour, sans preuve de la qualité de la source dashboard."
     ],

@@ -180,10 +180,10 @@ export function matchWebAppApiRule(rawPath: string, rawMethod: string): WebAppAp
   if (method === 'POST' && path === 'auth/login') {
     return { path, method: 'POST', requestBody: 'json' };
   }
-  if (method === 'POST' && path === 'analytics/context') {
+  if (method === 'POST' && ['analytics/context', 'marketing/context'].includes(path)) {
     return { path, method: 'POST', requiresBearer: true, requestBody: 'empty' };
   }
-  if (method === 'POST' && path === 'analytics/revoke') {
+  if (method === 'POST' && ['analytics/revoke', 'marketing/revoke'].includes(path)) {
     return { path, method: 'POST', requestBody: 'empty' };
   }
   if (method === 'POST' && path === 'auth/google/login') {

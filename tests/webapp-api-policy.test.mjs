@@ -37,6 +37,10 @@ test('the proxy accepts every implemented web-client route with its exact method
   });
   assert.equal(matchWebAppApiRule('client/7', 'GET')?.publicPayload, 'profile');
   assert.equal(matchWebAppApiRule('auth/login', 'POST')?.requestBody, 'json');
+  assert.equal(matchWebAppApiRule('marketing/context', 'POST')?.requiresBearer, true);
+  assert.equal(matchWebAppApiRule('marketing/revoke', 'POST')?.requiresBearer, undefined);
+  assert.equal(matchWebAppApiRule('marketing/context', 'GET'), undefined);
+  assert.equal(matchWebAppApiRule('marketing/revoke', 'GET'), undefined);
   assert.equal(matchWebAppApiRule('auth/google/login', 'POST')?.requestBody, 'json');
   assert.equal(matchWebAppApiRule('auth/google/login', 'POST')?.requiresBearer, undefined);
   assert.equal(matchWebAppApiRule('auth/complete-profile', 'POST')?.requestBody, 'json');

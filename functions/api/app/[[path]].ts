@@ -35,7 +35,19 @@ export const onRequest: PagesFunction<Env> = async ({ request, params, env, wait
     return jsonError('Type de contenu invalide.', 415);
   }
   if (rule.requestBody === 'empty' && request.body !== null) {
-    return jsonError('Cette route n’accepte pas de corps de requête.', 400);
+    // Cloudflare can expose a stream even for a zero-byte POST. Validate bytes,
+    // not stream presence, and reject a nonempty body without buffering it.
+    const reader = request.body.getReader();
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        if (value?.byteLength) {
+          await reader.cancel();
+          return jsonError('Cette route n’accepte pas de corps de requête.', 400);
+        }
+      }
+    } finally { reader.releaseLock(); }
   }
 
   const authorization = request.headers.get('authorization') || '';
@@ -69,6 +81,12 @@ export const onRequest: PagesFunction<Env> = async ({ request, params, env, wait
     headers.set('x-goodlease-analytics', analytics);
   }
   headers.set('x-goodlease-client', 'web');
+  const marketing = request.headers.get('x-goodlease-marketing') || '';
+  if (!cacheable && marketing.length <= 1500 && /^[A-Za-z0-9_-]+={0,2}$/.test(marketing)) {
+    headers.set('x-goodlease-marketing', marketing);
+    const userAgent = request.headers.get('user-agent');
+    if (userAgent && userAgent.length <= 500) headers.set('user-agent', userAgent);
+  }
 
   try {
     const response = await fetch(upstream, {
