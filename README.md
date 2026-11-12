@@ -50,21 +50,40 @@ envoyer (mode démo — l'UI fonctionne). Variables à définir dans Cloudflare 
 - `BREVO_NEWSLETTER_LIST_ID` *(optionnel)* — id de la liste newsletter
 - `CONTACT_TO` *(défaut `support@goodlease.fr`)*, `CONTACT_FROM` *(défaut `contact@goodlease.fr`)*
 
-## Déploiement — Cloudflare Pages
+## Contribuer
 
-### Voie A — Git natif (recommandée)
+`main` contient le code en ligne sur goodlease.fr. Toute modification passe par une pull request :
 
-1. Pousser ce repo sur GitHub (`dicetavo/goodlease-landing`).
-2. Cloudflare Dashboard → **Workers & Pages → Create → Pages → Connect to Git**.
-3. Build command : `npm run build` · Output directory : `dist`.
-4. Chaque push sur `main` déploie ; chaque PR génère une preview.
+1. Partir de `main` à jour et créer une branche, par exemple `git switch -c blog/section-blog`.
+2. Travailler en local avec `npm run dev`, puis lancer `npm test` avant de pousser
+   (Node 22 ou plus récent).
+3. Ouvrir une pull request vers `main`. Le mainteneur du dépôt la relit, puis la fusionne.
+4. La fusion ne met rien en ligne : le mainteneur déploie ensuite (section suivante). Sur demande,
+   il publie avant la fusion une préversion de la branche pour relecture.
 
-### Voie B — CLI / GitHub Actions
+Git ignore les fichiers Markdown du dépôt (notes locales), sauf ce `README.md` et tout ce qui se
+trouve sous `src/`. Les contenus rédigés en Markdown, comme des articles, se placent donc dans `src/`.
+
+## Déploiement — Cloudflare Pages (Direct Upload)
+
+Le projet Pages `goodlease-landing` est alimenté en **Direct Upload** : il n'est pas relié à
+GitHub. Un push ou une fusion sur `main` ne déclenche aucune mise en ligne, et aucune préversion
+n'est créée automatiquement pour les pull requests. Le déploiement se lance à la main, depuis un
+poste qui possède le jeton Cloudflare (`.cloudflare.env`) et les identifiants publics de mesure
+(`.env.local`). Ces deux fichiers ne sont pas versionnés.
 
 ```bash
-npm run build
-npx wrangler pages deploy dist        # nécessite `wrangler login`
+git switch main && git pull
+npm test                                  # build + tests
+set -a; . ./.cloudflare.env; set +a
+npx wrangler pages deploy dist --project-name=goodlease-landing --branch=main --commit-dirty=true
 ```
+
+- `--branch=main` met à jour goodlease.fr. Un autre nom de branche publie une préversion sur
+  `https://<branche>.goodlease-landing.pages.dev`, sans toucher à la production.
+- `astro build` échoue parfois sur une assertion native sans rapport avec le code : relancer la commande.
+- Les variables du projet Pages (Brevo, liens Android) sont enregistrées en `secret_text` :
+  un déploiement Direct Upload efface les variables `plain_text`.
 
 ### Domaine & DNS
 

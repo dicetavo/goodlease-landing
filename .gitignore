@@ -30,6 +30,8 @@ pnpm-debug.log*
 # fichiers d'agents / notes markdown — gardés en local uniquement (README.md reste suivi)
 *.md
 !README.md
+# les contenus du site rédigés en Markdown (articles, pages) restent suivis
+!src/**/*.md
 
 # Tracking secrets, private account inventory and generated proofs
 .env.*
