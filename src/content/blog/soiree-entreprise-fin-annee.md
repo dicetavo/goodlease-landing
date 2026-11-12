@@ -56,7 +56,7 @@ Une soirée par an ne justifie pas d'acheter une sono, des projecteurs et des ma
 
 ## Vous avez une sono ou des lumières qui dorment ?
 
-Décembre est le mois où les CSE et les entreprises cherchent du matériel. Si votre sono, vos projecteurs ou votre photobooth restent au garage, [mettez-les en location sur GoodLease](/louer-son-materiel/) : c'est gratuit et vous acceptez chaque demande.
+Décembre est le mois où les CSE et les entreprises cherchent du matériel. Si votre sono, vos projecteurs ou votre photobooth restent au garage, [mettez-les en location sur GoodLease](/louer-son-materiel/) : c'est gratuit, et c'est vous qui fixez le prix, la caution et les dates où votre matériel est disponible.
 
 ## Questions fréquentes
 
