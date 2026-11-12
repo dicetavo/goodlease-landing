@@ -64,6 +64,20 @@ envoyer (mode démo — l'UI fonctionne). Variables à définir dans Cloudflare 
 Git ignore les fichiers Markdown du dépôt (notes locales), sauf ce `README.md` et tout ce qui se
 trouve sous `src/`. Les contenus rédigés en Markdown, comme des articles, se placent donc dans `src/`.
 
+## Blog
+
+Les articles sont des fichiers Markdown dans `src/content/blog/` (un fichier = un article, le nom du
+fichier donne l'URL `/blog/<nom>/`). En-tête obligatoire : `title`, `description`, `date`, `category` ;
+facultatif : `keyword`, `cta` (`label` + `href`), `draft`.
+
+- Un article n'est publié qu'à partir de sa `date`, **au moment du build**. Comme le déploiement est
+  manuel, un article programmé n'apparaît qu'au premier déploiement qui suit sa date (le calendrier
+  éditorial prévoit des parutions le mardi et le vendredi).
+- `draft: true` le masque quelle que soit la date.
+- Préversion avec les articles programmés : `BLOG_SHOW_SCHEDULED=1 npm run build`, puis déploiement
+  sur une branche de préversion (jamais `--branch=main` avec cette variable).
+- `/blog/` et les articles sont ajoutés automatiquement à `sitemap-index.xml`.
+
 ## Déploiement — Cloudflare Pages (Direct Upload)
 
 Le projet Pages `goodlease-landing` est alimenté en **Direct Upload** : il n'est pas relié à
