@@ -52,14 +52,17 @@ envoyer (mode démo — l'UI fonctionne). Variables à définir dans Cloudflare 
 
 ## Contribuer
 
-`main` contient le code en ligne sur goodlease.fr. Toute modification passe par une pull request :
+`main` contient le code en ligne sur goodlease.fr, et toute fusion sur `main` est mise en ligne
+automatiquement. La branche est donc protégée : une modification passe par une pull request,
+approuvée par le mainteneur du dépôt, avec les tests au vert.
 
-1. Partir de `main` à jour et créer une branche, par exemple `git switch -c blog/section-blog`.
+1. Partir de `main` à jour et créer une branche, par exemple `git switch -c blog/mon-article`.
 2. Travailler en local avec `npm run dev`, puis lancer `npm test` avant de pousser
    (Node 22 ou plus récent).
-3. Ouvrir une pull request vers `main`. Le mainteneur du dépôt la relit, puis la fusionne.
-4. La fusion ne met rien en ligne : le mainteneur déploie ensuite (section suivante). Sur demande,
-   il publie avant la fusion une préversion de la branche pour relecture.
+3. Ouvrir une pull request vers `main`. Les tests se lancent tout seuls ; le mainteneur relit et
+   approuve. Un commit ajouté après l'approbation demande une nouvelle relecture.
+4. Une fois la pull request fusionnée, le site est déployé dans les minutes qui suivent
+   (section « Déploiement »).
 
 Git ignore les fichiers Markdown du dépôt (notes locales), sauf ce `README.md` et tout ce qui se
 trouve sous `src/`. Les contenus rédigés en Markdown, comme des articles, se placent donc dans `src/`.
@@ -70,34 +73,51 @@ Les articles sont des fichiers Markdown dans `src/content/blog/` (un fichier = u
 fichier donne l'URL `/blog/<nom>/`). En-tête obligatoire : `title`, `description`, `date`, `category` ;
 facultatif : `keyword`, `cta` (`label` + `href`), `draft`.
 
-- Un article n'est publié qu'à partir de sa `date`, **au moment du build**. Comme le déploiement est
-  manuel, un article programmé n'apparaît qu'au premier déploiement qui suit sa date (le calendrier
-  éditorial prévoit des parutions le mardi et le vendredi).
+- Un article n'est publié qu'à partir de sa `date`, **au moment du build**. Le site est reconstruit
+  chaque matin à 5 h 17 UTC (6 h 17 à Paris en hiver, 7 h 17 en été), puis une seconde fois deux
+  heures plus tard, et mis en ligne dès qu'un article a atteint sa date. Pour paraître le jour
+  prévu, l'article doit être fusionné sur `main` avant ce matin-là et porter une heure antérieure
+  à 6 h, heure de Paris.
 - `draft: true` le masque quelle que soit la date.
 - Préversion avec les articles programmés : `BLOG_SHOW_SCHEDULED=1 npm run build`, puis déploiement
   sur une branche de préversion (jamais `--branch=main` avec cette variable).
 - `/blog/` et les articles sont ajoutés automatiquement à `sitemap-index.xml`.
 
-## Déploiement — Cloudflare Pages (Direct Upload)
+## Déploiement — Cloudflare Pages
 
-Le projet Pages `goodlease-landing` est alimenté en **Direct Upload** : il n'est pas relié à
-GitHub. Un push ou une fusion sur `main` ne déclenche aucune mise en ligne, et aucune préversion
-n'est créée automatiquement pour les pull requests. Le déploiement se lance à la main, depuis un
-poste qui possède le jeton Cloudflare (`.cloudflare.env`) et les identifiants publics de mesure
-(`.env.local`). Ces deux fichiers ne sont pas versionnés.
+Le projet Pages `goodlease-landing` est alimenté en **Direct Upload** par GitHub Actions
+(`.github/workflows/deploiement.yml`). Le workflow construit le site, lance les tests, envoie
+`dist/` et les Functions avec wrangler, puis vérifie que goodlease.fr sert bien le nouveau build.
+Il se déclenche :
+
+- à chaque push sur `main`, donc à chaque fusion de pull request ;
+- chaque matin, pour le blog : ce passage ne déploie que si un article arrivé à sa date manque
+  encore sur le site ;
+- à la main, depuis l'onglet Actions (« Run workflow » sur `main`).
+
+Le jeton Cloudflare et l'identifiant de compte sont des secrets de l'environnement GitHub
+`production`, utilisable depuis `main` uniquement. Les identifiants publics de mesure
+(`PUBLIC_GTM_ID`, `PUBLIC_GA4_ID`, `PUBLIC_META_PIXEL_ID`) sont des variables du dépôt : le workflow
+s'arrête s'il en manque un, pour ne pas mettre en ligne un site sans mesure d'audience.
+
+Une préversion se publie à la main, depuis un poste qui possède le jeton Cloudflare
+(`.cloudflare.env`, non versionné) :
 
 ```bash
-git switch main && git pull
-npm test                                  # build + tests
+npm run build
 set -a; . ./.cloudflare.env; set +a
-npx wrangler pages deploy dist --project-name=goodlease-landing --branch=main --commit-dirty=true
+npx wrangler pages deploy dist --project-name=goodlease-landing --branch=ma-preversion --commit-dirty=true
 ```
 
-- `--branch=main` met à jour goodlease.fr. Un autre nom de branche publie une préversion sur
-  `https://<branche>.goodlease-landing.pages.dev`, sans toucher à la production.
-- `astro build` échoue parfois sur une assertion native sans rapport avec le code : relancer la commande.
+- Un nom de branche autre que `main` publie sur `https://<branche>.goodlease-landing.pages.dev`,
+  sans toucher à la production. Un déploiement manuel avec `--branch=main` serait remplacé par le
+  contenu de `main` au passage suivant du workflow.
+- `astro build` échoue parfois sur une assertion native sans rapport avec le code : relancer la
+  commande. Le workflow réessaie tout seul.
 - Les variables du projet Pages (Brevo, liens Android) sont enregistrées en `secret_text` :
   un déploiement Direct Upload efface les variables `plain_text`.
+- GitHub suspend les passages programmés d'un dépôt public resté 60 jours sans activité ; ils se
+  réactivent dans l'onglet Actions.
 
 ### Domaine & DNS
 
@@ -111,8 +131,9 @@ npx wrangler pages deploy dist --project-name=goodlease-landing --branch=main --
 
 Les fournisseurs marketing sont désactivés tant que leurs identifiants sont vides. Copier
 `.env.example` dans `.env`, renseigner les identifiants publics nécessaires, puis reconstruire.
-Pour Direct Upload, ces valeurs doivent être présentes **pendant le build local** ; les définir
-uniquement dans le dashboard Pages ne modifie pas les fichiers JavaScript déjà construits.
+Ces valeurs doivent être présentes **pendant le build** : les variables du dépôt GitHub pour la
+production, le fichier `.env` en local. Les définir dans le dashboard Pages ne modifie pas les
+fichiers JavaScript déjà construits.
 
 - `PUBLIC_GTM_ID` : conteneur Google Tag Manager. Il prend la priorité sur les intégrations directes.
 - `PUBLIC_GA4_ID` et `PUBLIC_META_PIXEL_ID` : intégrations directes en l'absence de GTM.
