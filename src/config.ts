@@ -100,6 +100,7 @@ export const footerNav = [
       { label: 'Ouvrir l’application web', href: pageHref(routes.app) },
       { label: 'Catalogue par catégorie et ville', href: '/catalogue' },
       { label: 'Louer son matériel', href: pageHref(routes.lenders) },
+      { label: 'Blog', href: '/blog/' },
       { label: 'À propos de GoodLease', href: pageHref(routes.about) },
       { label: 'Comment ça marche', href: '/#comment-ca-marche' },
       { label: 'Parcours complet', href: '/#parcours' },
