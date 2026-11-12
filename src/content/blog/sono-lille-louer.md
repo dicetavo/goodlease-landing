@@ -50,7 +50,7 @@ Tous les loyers à jour, par type de matériel, sont sur notre page [Prix locati
 Votre sono sort quelques week-ends par an ? Entre deux dates, elle peut servir à d'autres.
 
 - **Vous fixez le prix et la caution.** Regardez les annonces comparables autour de chez vous pour vous situer.
-- **Vous choisissez vos dates** et vous acceptez chaque demande, après avoir échangé avec le locataire.
+- **Vous choisissez vos dates de disponibilité.** Sur une date que vous avez ouverte, la réservation est confirmée dès le paiement du locataire, sans validation de votre part : gardez votre calendrier à jour.
 - **Le paiement passe par Stripe Connect** et arrive sur votre compte.
 - **À la remise et au retour**, vous vérifiez ensemble l'état et les accessoires, photos à l'appui.
 
