@@ -4,6 +4,7 @@ import {
   matchWebAppApiRule,
   sanitizePublicPayload,
 } from '../../../src/server/webapp-api-policy';
+import { normalizeListingCity } from '../../../src/listing-location';
 
 interface Env {
   GOODLEASE_API_BASE_URL?: string;
@@ -67,6 +68,19 @@ export const onRequest: PagesFunction<Env> = async ({ request, params, env, wait
 
   const base = (env.GOODLEASE_API_BASE_URL || DEFAULT_API).replace(/\/$/, '');
   const incoming = new URL(request.url);
+  if (rule.path === 'leases/newcommands') {
+    let listing: Record<string, unknown>;
+    try {
+      const raw = incoming.searchParams.get('createLease');
+      if (!raw || raw.length > 30_000) throw new Error('invalid');
+      const value: unknown = JSON.parse(raw);
+      if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new Error('invalid');
+      listing = value as Record<string, unknown>;
+    } catch { return jsonError('Les informations de l’annonce sont invalides.', 400); }
+    const city = normalizeListingCity(listing.city);
+    if (!city) return jsonError('Renseignez la ville de retrait du matériel.', 400);
+    incoming.searchParams.set('createLease', JSON.stringify({ ...listing, city }));
+  }
   const upstream = new URL(`${base}/api/${rule.upstreamPath || rule.path}`);
   upstream.search = incoming.search;
 

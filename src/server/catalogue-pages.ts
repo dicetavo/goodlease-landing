@@ -1,11 +1,13 @@
 import { site } from '../config';
 import {
-  apiBaseUrl, areasFor, catalogueGroups, categories, categoryBySlug, categoryMatches,
-  fetchCatalogue, formatMoney, inArea, leaseLastmod, leasePath, leasePrice, type PublicLease,
+  apiBaseUrl, areasFor, catalogueGroups, canonicalCategoryCity, categories, categoryBySlug, categoryMatches,
+  fetchCatalogue, inArea, leaseLastmod, leasePath, type PublicLease,
 } from './public-catalogue';
 import { MIN_INDEXABLE_LISTINGS, type RentalCategory } from './catalogue-content';
 import { listingCards, locationLinks, unavailableCatalogue } from './catalogue-html';
 import { DEFAULT_IMAGE, escapeHtml as esc, renderPublicPage, type PublicPageContext, type PageMeta } from './public-html';
+import { categoryEditorial } from './catalogue-editorial';
+import { editorialPaths } from './editorial-pages';
 
 export const methodNotAllowed = () => new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
 type Selection = { path: string; category?: RentalCategory; city?: string; wedding?: boolean };
@@ -33,34 +35,20 @@ export const breadcrumbSchema = (items: { name: string; path: string }[]) => ({
   })),
 });
 
-function categoryEditorial(category: RentalCategory, leases: PublicLease[]) {
-  const prices = leases.filter((lease) => lease.periodType === 'DAILY').map(leasePrice).filter((price): price is number => price !== undefined);
-  const range = prices.length ? `Les tarifs à la journée des annonces de cette sélection vont de ${formatMoney(Math.min(...prices))} à ${formatMoney(Math.max(...prices))}. Le prix total dépend de la durée et des conditions de l’annonce.` : 'Les tarifs et leur période de facturation sont indiqués sur chaque annonce. Comparez le prix pour la durée dont vous avez besoin.';
-  const questions = [
-    { question: `Comment choisir votre location ${category.subject} ?`, answer: category.checks },
-    { question: `Quel est le prix d’une location ${category.subject} ?`, answer: range },
-    { question: 'Comment vérifier la disponibilité et réserver ?', answer: 'Ouvrez la fiche de l’annonce et choisissez vos dates dans GoodLease. Confirmez les accessoires, le retrait et la restitution avec le loueur. La réservation et le paiement se finalisent dans l’application mobile.' },
-  ];
-  return {
-    html: `<section class="mt-14 max-w-3xl"><h2 class="text-2xl">Bien préparer votre location ${esc(category.subject)}</h2>
-      <p class="mt-4 leading-relaxed text-muted">${esc(category.intro)} La location entre particuliers et professionnels vous permet de choisir ${esc(category.examples)} selon votre besoin et la durée de votre événement.</p>
-      <p class="mt-4 leading-relaxed text-muted">${esc(category.checks)} Prévoyez suffisamment de temps pour le retrait, le montage et la restitution. Le contenu de chaque annonce fait foi pour les accessoires inclus ; vérifiez les quantités nécessaires avant de confirmer.</p>
-      <p class="mt-4 leading-relaxed text-muted">${esc(range)} Les annonces présentes ici sont publiées dans le catalogue, mais les disponibilités exactes pour vos dates restent à vérifier. Consultez le dépôt de garantie et les conditions du bail avant de vous engager.</p>
-      <h2 class="mt-10 text-2xl">Questions sur la location ${esc(category.subject)}</h2>
-      ${questions.map((item) => `<details class="mt-4 rounded-card border border-line bg-surface p-5"><summary class="cursor-pointer font-semibold">${esc(item.question)}</summary><p class="mt-3 leading-relaxed text-muted">${esc(item.answer)}</p></details>`).join('')}</section>`,
-    schema: { '@type': 'FAQPage', mainEntity: questions.map((item) => ({ '@type': 'Question', name: item.question, acceptedAnswer: { '@type': 'Answer', text: item.answer } })) },
-  };
-}
-
 function hubLinks(leases: PublicLease[]) {
-  const categoryLinks = categories.filter((category) => leases.some((lease) => categoryMatches(lease, category))).map((category) =>
+  const presentCategories = categories.filter((category) => leases.some((lease) => categoryMatches(lease, category)));
+  const categoryLinks = presentCategories.filter((category) => !category.keywords && category.id !== 9).map((category) =>
     `<a class="btn-secondary" href="/location-${category.slug}">${esc(category.name)}</a>`).join('');
+  const selectionLinks = presentCategories.filter((category) => category.keywords || category.id === 9).map((category) =>
+    `<a class="btn-secondary" href="/location-${category.slug}">${category.id === 9 ? 'Réception › ' : ''}${esc(category.name)}</a>`).join('');
   const areas = new Map(leases.flatMap(areasFor).map((area) => [area.slug, area]));
   const cityLinks = [...areas.values()].sort((a, b) => a.name.localeCompare(b.name, 'fr')).map((area) =>
     `<a class="rounded-full border border-line bg-surface px-4 py-2 text-sm text-primary hover:underline" href="/location-materiel/${area.slug}">${esc(area.label)}</a>`).join('');
   return `<h2 class="mt-10 text-2xl">Louer par catégorie</h2><div class="mt-5 flex flex-wrap gap-3">${categoryLinks}</div>
+    ${selectionLinks ? `<h3 class="mt-6 text-lg">Sous-catégories et sélections</h3><div class="mt-4 flex flex-wrap gap-3">${selectionLinks}</div>` : ''}
     <h2 class="mt-10 text-2xl">Louer par ville et zone</h2><div class="mt-5 flex flex-wrap gap-3">${cityLinks}</div>
-    <p class="mt-6"><a class="text-primary underline" href="/location-materiel-mariage">Matériel à louer pour un mariage</a></p>`;
+    <p class="mt-6"><a class="text-primary underline" href="/location-materiel-mariage">Matériel à louer pour un mariage</a></p>
+    <p class="mt-4"><a class="text-primary underline" href="/prix-location-sono">Prix d’une location de sono</a> · <a class="text-primary underline" href="/organiser-une-soiree-d-entreprise">Préparer une soirée d’entreprise</a></p>`;
 }
 
 export async function renderCataloguePage(context: PublicPageContext, rawPath = '/catalogue') {
@@ -80,6 +68,7 @@ export async function renderCataloguePage(context: PublicPageContext, rawPath = 
   let matching: PublicLease[] = [];
   let faqSchema: Record<string, unknown> | undefined;
   let indexable = false;
+  let canonicalPath = path;
   const crumbs = [{ name: 'Accueil', path: '/' }, { name: 'Catalogue', path: '/catalogue' }];
   try {
     const leases = await fetchCatalogue(apiBase);
@@ -92,11 +81,14 @@ export async function renderCataloguePage(context: PublicPageContext, rawPath = 
       indexable = path === '/catalogue' || matching.length >= MIN_INDEXABLE_LISTINGS;
       const area = selection.city ? leases.flatMap(areasFor).find((item) => item.slug === selection.city) : undefined;
       if (selection.category) {
-        heading = `Location ${selection.category.subject}${area ? ` à ${area.name} et alentours` : ' entre particuliers et pros'}`;
-        title = `${heading.replace(' et alentours', '')} : ${matching.length} annonce${matching.length > 1 ? 's' : ''}`;
-        description = `${matching.length} annonce${matching.length > 1 ? 's' : ''} ${selection.category.subject} à louer${area ? ` à ${area.name} et alentours` : ' près de chez vous'}. Comparez les tarifs et réservez dans GoodLease.`;
-        const editorial = categoryEditorial(selection.category, matching); faqSchema = editorial.schema;
-        content = `<p class="mt-5 max-w-3xl leading-relaxed text-muted">${esc(selection.category.intro)}</p>`;
+        const editorial = categoryEditorial(selection.category, matching, area?.name); faqSchema = editorial.schema;
+        heading = editorial.heading; title = editorial.title; description = editorial.description;
+        content = `<p class="mt-5 max-w-3xl leading-relaxed text-muted">${esc(editorial.intro)}</p>`;
+        if (selection.city) {
+          const preferred = canonicalCategoryCity(leases, selection.category, selection.city);
+          canonicalPath = `/location-${selection.category.slug}/${preferred}`;
+          if (preferred !== selection.city) content += `<p class="mt-4 max-w-3xl text-sm text-muted">Cette sélection locale fait partie de l’offre de la métropole lilloise. <a class="text-primary underline" href="${canonicalPath}">Voir la sélection principale de Lille et de sa métropole.</a></p>`;
+        }
         if (selection.city) crumbs.push({ name: selection.category.name, path: `/location-${selection.category.slug}` });
         content += `<h2 class="mt-10 text-2xl">${matching.length} annonce${matching.length > 1 ? 's' : ''} ${area ? `à ${esc(area.name)} et alentours` : 'disponible' + (matching.length > 1 ? 's' : '')}</h2>
           <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">${listingCards(matching, apiBase)}</div>${editorial.html}`;
@@ -120,7 +112,7 @@ export async function renderCataloguePage(context: PublicPageContext, rawPath = 
     description = 'Le catalogue GoodLease ne répond pas pour le moment. Réessayez dans quelques instants.';
     content = `<div class="mt-8">${unavailableCatalogue()}</div>`;
   }
-  const canonical = `${site.url}${path}`;
+  const canonical = `${site.url}${canonicalPath}`;
   const collection = { '@type': 'CollectionPage', name: heading, description, url: canonical,
     ...(status === 200 ? { mainEntity: { '@type': 'ItemList', numberOfItems: matching.length,
       itemListElement: matching.map((lease, index) => ({ '@type': 'ListItem', position: index + 1, url: `${site.url}${leasePath(lease)}` })),
@@ -133,7 +125,7 @@ export async function renderCataloguePage(context: PublicPageContext, rawPath = 
     schema: { '@context': 'https://schema.org', '@graph': [collection, breadcrumbSchema(crumbs), ...(faqSchema ? [faqSchema] : [])] },
   };
   const body = `<section class="container-gl py-12 sm:py-16"><nav aria-label="Fil d’Ariane" class="flex flex-wrap gap-2 text-sm text-primary">${crumbs.map((crumb, index) => `${index ? '<span aria-hidden="true">/</span>' : ''}<a href="${crumb.path}">${esc(crumb.name)}</a>`).join('')}</nav>
-    <h1 class="mt-6 text-3xl sm:text-4xl break-words">${esc(heading)}</h1><p class="mt-4 max-w-3xl text-muted">${esc(description)}</p>${content}</section>`;
+    <h1 class="mt-6 max-w-4xl text-3xl sm:text-4xl break-words">${esc(heading)}</h1>${selection?.category && status === 200 ? '' : `<p class="mt-4 max-w-3xl text-muted">${esc(description)}</p>`}${content}</section>`;
   return renderPublicPage(context, meta, status, body);
 }
 
@@ -149,9 +141,14 @@ export async function renderCatalogueSitemap(context: PublicPageContext) {
       ...leases.flatMap(areasFor).map((area) => `/location-materiel/${area.slug}`), '/location-materiel-mariage',
     ]);
     for (const path of selections) {
-      const matching = matchingLeases(leases, catalogueSelection(path)!);
+      const selection = catalogueSelection(path)!;
+      if (selection.category && selection.city && canonicalCategoryCity(leases, selection.category, selection.city) !== selection.city) continue;
+      const matching = matchingLeases(leases, selection);
       if (matching.length >= MIN_INDEXABLE_LISTINGS) paths.set(path, matching);
     }
+    const metro = leases.filter((lease) => inArea(lease, 'lille'));
+    if (metro.filter((lease) => Number(lease.categoryId) === 1).length >= MIN_INDEXABLE_LISTINGS) paths.set(editorialPaths[0], metro.filter((lease) => Number(lease.categoryId) === 1));
+    if (metro.length >= MIN_INDEXABLE_LISTINGS) paths.set(editorialPaths[1], metro);
     const xml = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...paths].map(([path, items]) => {
       const dates = items.map(leaseLastmod).filter((date): date is string => Boolean(date)).sort();
       const lastmod = dates.length === items.length && dates.length ? dates.at(-1) : undefined;

@@ -85,6 +85,10 @@
   .category-chip .app-icon { @apply h-7 w-7; }
   .category-chip.is-active { @apply text-ink; }
   .category-chip.is-active::after { content: ''; @apply absolute -bottom-1 left-1/2 h-[3px] w-10 -translate-x-1/2 rounded-full bg-primary; }
+  .subcategory-row { @apply -mt-3 mb-6 flex flex-wrap gap-2; }
+  .subcategory-row[hidden] { display: none; }
+  .subcategory-chip { @apply rounded-full border border-[#e3e5e8] bg-white px-4 py-2 text-sm text-[#51575d]; }
+  .subcategory-chip[aria-pressed="true"] { @apply border-primary bg-[#e9f2fe] text-primary; }
   .section-heading { @apply mb-5 flex items-end justify-between gap-4; }
   .section-heading h2 { @apply text-xl font-bold sm:text-2xl; }
   .section-heading p { @apply mt-1 text-sm text-muted; }

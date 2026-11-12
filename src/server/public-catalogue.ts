@@ -32,11 +32,13 @@ export function citySlug(city: string): string {
 }
 
 export function categoryFor(lease: PublicLease) {
-  return categories.find((category) => !category.keywords && categoryMatches(lease, category));
+  return categories.find((category) => !category.keywords && category.id === numeric(lease.categoryId));
 }
 
 export function categoryMatches(lease: PublicLease, category: RentalCategory) {
-  return category.id === numeric(lease.categoryId) && (!category.keywords || category.keywords.test(`${lease.title || ''} ${lease.description || ''}`));
+  const id = numeric(lease.categoryId);
+  const inCategory = category.id === id || (!category.keywords && category.id === 5 && id === 9);
+  return inCategory && (!category.keywords || category.keywords.test(`${lease.title || ''} ${lease.description || ''}`));
 }
 
 export const categoryBySlug = (slug: string) => categories.find((category) => category.slug === slug || category.aliases?.includes(slug));
@@ -90,6 +92,20 @@ export function catalogueGroups(leases: PublicLease[]) {
     }
   }
   return [...groups.values()].sort((a, b) => a.path.localeCompare(b.path));
+}
+
+/** Keep the existing Lille URL as the metropolitan reception page. */
+export function canonicalCategoryCity(leases: PublicLease[], category: RentalCategory, city: string) {
+  if (category.slug !== 'decoration' || city === 'lille') return city;
+  const metro = searchAreas.find((area) => area.slug === 'lille');
+  if (!metro || !(metro.cities as readonly string[]).includes(city)) return city;
+  const primary = leases.filter((lease) => categoryMatches(lease, category) && inArea(lease, 'lille'));
+  const local = leases.filter((lease) => categoryMatches(lease, category) && inArea(lease, city));
+  if (primary.length < 3 || !local.length) return city;
+  const primaryIds = new Set(primary.map(leaseId));
+  const shared = local.filter((lease) => primaryIds.has(leaseId(lease))).length;
+  const union = primary.length + local.length - shared;
+  return shared / union >= 0.85 ? 'lille' : city;
 }
 
 export function photos(lease: PublicLease, apiBase: string): string[] {

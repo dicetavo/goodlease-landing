@@ -67,6 +67,14 @@ test('SEO public : HTML serveur, catalogue, sitemap et confidentialité', async 
       calls.push(url.pathname + url.search);
       if (mode === 'slow') await new Promise((resolve) => setTimeout(resolve, 5_000));
       if (mode === 'outage') return new Response('Unavailable', { status: 503 });
+      if (url.pathname === '/api/leases/newcommands') {
+        const listing = JSON.parse(url.searchParams.get('createLease'));
+        assert.equal(listing.city, 'Saint André lez Lille');
+        assert.equal(listing.titleLease, 'Annonce de test locale');
+        assert.equal(request.headers.get('authorization'), 'Bearer fixture-token');
+        assert.match(request.headers.get('content-type'), /^multipart\/form-data;/);
+        return Response.json({ success: true, leaseId: 999 }, { status: 201 });
+      }
       if (url.pathname === '/api/leases/42') {
         if (mode === 'missing') return new Response('{}', { status: 404 });
         if (mode === 'bad-id') return Response.json({ ...lease, id: 99 });
@@ -79,6 +87,16 @@ test('SEO public : HTML serveur, catalogue, sitemap et confidentialité', async 
       if (mode === 'empty') return Response.json([]);
       if (mode === 'no-dates') { const { updatedAt, ...record } = lease; return Response.json([{ ...record, createdAt: '2026-10-01' }]); }
       if (mode === 'metro') return Response.json([42, 43, 44].map((id) => ({ ...lease, id, address: { ...lease.address, city: 'Marquette-lez-Lille' } })));
+      if (mode === 'editorial') return Response.json([
+        ...[5, 30, 60, 80, 100, 110, 120, 130, 150, 160, 180, 190, 200, 210, 250, 2500].map((price, index) => ({
+          ...lease, id: 100 + index, title: index === 15 ? 'Salle L’impérial' : `Décoration ${index}`,
+          categoryId: 5, priceByPeriod: price, periodType: 'DAILY', address: { city: index < 14 ? 'Roubaix' : 'Lille' },
+        })),
+        ...[{ id: 200, title: 'Micro filaire', priceByPeriod: 10 }, { id: 201, title: 'Enceinte portable', priceByPeriod: 50 }, { id: 202, title: 'Contrôleur DJ', priceByPeriod: 20 }].map((item) => ({
+          ...lease, ...item, periodType: 'DAILY', address: { city: 'Marquette-lez-Lille' },
+        })),
+        { ...lease, id: 203, title: 'Location hebdomadaire', priceByPeriod: 1, address: { city: 'Lille' } },
+      ]);
       if (mode === 'repeat' || mode === 'repeat-final') return Response.json(
         Array.from({ length: 100 }, (_, index) => ({ ...lease, id: index + 1 })),
         mode === 'repeat-final' ? { headers: { 'X-Total-Count': '200' } } : undefined,
@@ -103,6 +121,26 @@ test('SEO public : HTML serveur, catalogue, sitemap et confidentialité', async 
     return { response, html: await response.text() };
   };
   try {
+    await t.test('publication : ville obligatoire au proxy avant tout appel serveur', async () => {
+      const publish = (raw, authorized = true) => mf.dispatchFetch(`https://goodlease.fr/api/app/leases/newcommands?createLease=${encodeURIComponent(raw)}`, {
+        method: 'POST', headers: { 'Content-Type': 'multipart/form-data; boundary=fixture', ...(authorized ? { Authorization: 'Bearer fixture-token' } : {}) },
+        body: '--fixture--\r\n',
+      });
+      const before = calls.length;
+      for (const city of [undefined, '', '   ', '\n\t', '1', 59000, 'A', 'Paris\u0000']) {
+        const response = await publish(JSON.stringify({ city }));
+        assert.equal(response.status, 400);
+        assert.match(await response.text(), /ville de retrait/);
+      }
+      assert.equal((await publish('null')).status, 400);
+      assert.equal((await publish('{')).status, 400);
+      assert.equal((await publish(JSON.stringify({ city: 'Lille' }), false)).status, 401);
+      assert.equal(calls.length, before, 'Un formulaire invalide ne doit pas être relayé au backend');
+      const response = await publish(JSON.stringify({ titleLease: 'Annonce de test locale', city: '  Saint   André lez Lille  ' }));
+      assert.equal(response.status, 201);
+      assert.deepEqual(await response.json(), { success: true, leaseId: 999 });
+      assert.equal(calls.length, before + 1);
+    });
     await t.test('la fiche contient toutes les données publiques sans JavaScript applicatif', async () => {
       const { response, html } = await get('/annonce/42');
       assert.equal(response.status, 200);
@@ -167,7 +205,7 @@ test('SEO public : HTML serveur, catalogue, sitemap et confidentialité', async 
     await t.test('catégorie × ville et annuaire sont accessibles et canoniques', async () => {
       const { response, html } = await get('/location-sonorisation/lille');
       assert.equal(response.status, 200);
-      assert.match(h1(html), /Location de sonorisation à Lille/);
+      assert.match(h1(html), /Location de sono à Lille/);
       assert.match(response.headers.get('x-robots-tag'), /noindex/);
       assert.ok(html.includes(`href="${leaseSeoPath}"`));
       assert.match(html, /rel="canonical" href="https:\/\/goodlease.fr\/location-sonorisation\/lille"/);
@@ -206,7 +244,7 @@ test('SEO public : HTML serveur, catalogue, sitemap et confidentialité', async 
         for (const path of ['/location-sonorisation', '/location-sonorisation/lille', '/location-materiel/lille']) assert.ok(sitemap.includes(`${path}</loc>`));
         const category = (await get('/location-sonorisation')).html;
         const faq = graph(category).find((item) => item['@type'] === 'FAQPage');
-        assert.equal(faq.mainEntity.length, 3);
+        assert.equal(faq.mainEntity.length, 9);
         // WEEKLY fixture: editorial pricing must never claim a daily range.
         assert.doesNotMatch(category, /tarifs à la journée des annonces de cette sélection/);
         const about = await get('/a-propos/');
@@ -215,6 +253,58 @@ test('SEO public : HTML serveur, catalogue, sitemap et confidentialité', async 
       for (const path of ['/location-sonorisation', '/location-sonorisation/lille', '/location-materiel/lille']) {
         assert.match((await get(path)).response.headers.get('x-robots-tag'), /noindex/);
       }
+    });
+    await t.test('textes et tarifs : médiane journalière sans masquer les annonces atypiques', async () => {
+      mode = 'editorial';
+      try {
+        const { response, html } = await get('/location-decoration/lille');
+        assert.equal(response.status, 200);
+        assert.match(h1(html), /métropole lilloise/);
+        assert.match(html, /Composer votre décoration/);
+        assert.match(html, /médiane de 130,00[^<]*€/);
+        assert.match(html, /supérieurs à cinq fois la médiane/);
+        assert.match(html, /Salle L’impérial/);
+        const description = elements(parse(html)).find((node) => node.tagName === 'meta' && attr(node, 'name') === 'description');
+        assert.match(attr(description, 'content'), /5,00.*250,00/);
+        assert.doesNotMatch(attr(description, 'content'), /2.?500/);
+        const sono = (await get('/location-sonorisation/lille')).html;
+        assert.match(sono, /médiane de 20,00[^<]*€/);
+        assert.doesNotMatch(sono, /loyers journaliers usuels vont de 1,00/);
+        for (const value of privateValues) assert.ok(!html.includes(value), value);
+      } finally { mode = 'published'; }
+    });
+    await t.test('les sélections décoration quasi identiques ont la canonique métropolitaine', async () => {
+      mode = 'editorial';
+      try {
+        const { response, html } = await get('/location-decoration/roubaix');
+        assert.equal(response.status, 200);
+        assert.match(html, /rel="canonical" href="https:\/\/goodlease.fr\/location-decoration\/lille"/);
+        assert.match(html, /sélection principale de Lille/);
+        const sitemap = (await get('/sitemap-catalogue.xml')).html;
+        assert.match(sitemap, /location-decoration\/lille<\/loc>/);
+        assert.doesNotMatch(sitemap, /location-decoration\/roubaix<\/loc>/);
+      } finally { mode = 'published'; }
+    });
+    await t.test('les deux guides utilisent les annonces actuelles et restent découvrables', async () => {
+      mode = 'editorial';
+      try {
+        const sono = await get('/prix-location-sono');
+        assert.equal(sono.response.status, 200);
+        assert.match(sono.html, /Loyers journaliers affichés/);
+        assert.match(sono.html, /Micros/);
+        assert.match(sono.html, /Enceinte et micro : 60,00/);
+        assert.match(sono.html, /href="\/materiel\/micro-filaire-marquette-lez-lille-200"/);
+        assert.doesNotMatch(sono.html, /relevés le 15 octobre|À CONFIRMER|annulation sans frais/);
+        const company = await get('/organiser-une-soiree-d-entreprise');
+        assert.equal(company.response.status, 200);
+        assert.match(h1(company.html), /soirée d’entreprise/);
+        assert.ok(graph(company.html).some((item) => item['@type'] === 'FAQPage'));
+        const sitemap = (await get('/sitemap-catalogue.xml')).html;
+        for (const path of ['/prix-location-sono', '/organiser-une-soiree-d-entreprise']) {
+          assert.ok(sitemap.includes(`${path}</loc>`));
+          assert.equal((await get(path, 'HEAD')).html, '');
+        }
+      } finally { mode = 'published'; }
     });
     await t.test('les anciens slugs et slashs redirigent sans perdre les paramètres', async () => {
       const old = await get('/location-reception/leers/?utm_source=test');
@@ -347,10 +437,30 @@ test('SEO public : HTML serveur, catalogue, sitemap et confidentialité', async 
       }
       assert.match((await get('/app?open=annonce&id=42&web=1')).html, /name="robots" content="noindex,follow"/);
     });
+    await t.test('le barème publié distingue loyer, frais et droits légaux', async () => {
+      const faq = schemas(await readFile('dist/faq/index.html', 'utf8'))
+        .find((item) => item['@type'] === 'FAQPage');
+      const renter = faq.mainEntity.find((item) => item.name === 'Puis-je annuler ma réservation et être remboursé ?').acceptedAnswer.text;
+      assert.match(renter, /plus de 48 h.*loyer et les frais de service.*intégralement/);
+      assert.match(renter, /à 48 h ou moins, 50 % du loyer hors frais/);
+      assert.match(renter, /frais de service ne sont pas remboursés/);
+      assert.match(renter, /remboursement.*15 €/);
+      assert.match(renter, /ne limite pas vos droits légaux/);
+      const auto = faq.mainEntity.find((item) => item.name === 'Et si la remise du matériel n’est pas confirmée ?').acceptedAnswer.text;
+      assert.match(auto, /24 h après le début prévu/);
+      assert.match(auto, /contrôle est périodique/);
+      const cgs = (await readFile('dist/cgs/index.html', 'utf8')).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+      assert.match(cgs, /Annulation par le Locataire à 48 h ou moins, avant le début prévu.*50 % du loyer hors frais/);
+      assert.match(cgs, /Annulation par le Prêteur avant le début prévu.*loyer et des frais de service/);
+      assert.match(cgs, /remboursement de 15 €/);
+      assert.match(cgs, /24 h après le début prévu/);
+      assert.match(cgs, /10\. Rétractation/);
+      assert.match(cgs, /Le dépôt de garantie ne constitue ni un loyer ni des frais de service/);
+    });
     await t.test('FAQPage utilise exactement les questions et réponses visibles', async () => {
       const faq = await readFile('dist/faq/index.html', 'utf8');
       const schema = schemas(faq).find((item) => item['@type'] === 'FAQPage');
-      assert.equal(schema.mainEntity.length, 12);
+      assert.ok(schema.mainEntity.length >= 12);
       assert.equal((faq.match(/<details\b/g) || []).length, schema.mainEntity.length);
       for (const question of schema.mainEntity) {
         const escaped = (value) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

@@ -1,5 +1,7 @@
-import { updateWebAnalyticsConsent, webCampaign, webAnalyticsEnvironment } from './web-analytics-context.ts';
+import { updateWebAnalyticsConsent, webAnalyticsEnvironment } from './web-analytics-context.ts';
 import { updateWebMarketingConsent } from './web-marketing-context.ts';
+import { createMarketingAttribution, measurementUrl, type AttributionPage } from './marketing-attribution.ts';
+export { measurementUrl };
 export type ConsentPreferences = { analytics: boolean; marketing: boolean; savedAt: number; version: string };
 export type MarketingOptions = { gtmId: string; ga4Id: string; metaPixelId: string; consentVersion: string };
 export const CONSENT_KEY = 'goodlease:consent:v1';
@@ -37,22 +39,6 @@ export function googleConsent(preferences: Pick<ConsentPreferences, 'analytics' 
 
 const events = new Set(['view_item', 'search', 'sign_up', 'listing_published', 'app_store_click', 'booking_app_handoff']);
 const publicText = (value: unknown, max = 100) => typeof value === 'string' && !/@|https?:|\b\d{5,}\b/i.test(value) ? value.trim().slice(0, max) : undefined;
-
-/** Keep campaign attribution without collecting arbitrary query strings or fragments. */
-export function measurementUrl(raw: string, advertising = false) {
-  try {
-    const original = new URL(raw);
-    const url = new URL(original.origin + original.pathname);
-    const keys: Record<string, string> = { source: 'utm_source', medium: 'utm_medium', name: 'utm_campaign', id: 'utm_id' };
-    for (const [field, value] of Object.entries(webCampaign(raw))) {
-      url.searchParams.set(keys[field], value);
-    }
-    if (advertising) for (const key of ['gclid', 'dclid', 'gbraid', 'wbraid', 'fbclid']) {
-      const value = original.searchParams.get(key); if (value && /^[a-zA-Z0-9_-]{1,256}$/.test(value)) url.searchParams.set(key, value);
-    }
-    return url.href;
-  } catch { return ''; }
-}
 
 /** Explicit event allowlist: no e-mail, account DTO, street, GPS or raw search input. */
 export function eventParameters(input: Record<string, unknown>) {
@@ -92,20 +78,27 @@ export function metaEvent(event: string, parameters: Record<string, unknown>) {
 }
 
 type MarketingWindow = Window & {
+  goodleaseGtm?: { loadAnalytics: () => void; loadMarketing: () => void; flush: () => void };
   dataLayer?: unknown[];
   gtag?: (...args: unknown[]) => void;
   fbq?: ((...args: unknown[]) => void) & { queue?: unknown[]; loaded?: boolean; version?: string; push?: unknown; callMethod?: (...args: unknown[]) => void };
   _fbq?: MarketingWindow['fbq'];
   [key: `ga-disable-${string}`]: boolean;
 };
-let send: ((event: string, parameters: Record<string, unknown>) => boolean) | undefined;
-let currentItem: Record<string, unknown> | undefined;
+let send: ((event: string, parameters: Record<string, unknown>, page: AttributionPage) => boolean) | undefined;
+let currentItem: { parameters: Record<string, unknown>; page: AttributionPage } | undefined;
+let capturePage: (() => AttributionPage) | undefined;
 
 export function trackEvent(event: string, parameters: Record<string, unknown> = {}) {
   if (!events.has(event)) return false;
   const safe = { ...eventParameters(parameters), platform: 'web' };
-  if (event === 'view_item') currentItem = safe;
-  return send?.(event, safe) || false;
+  const page = capturePage?.() || {
+    page_location: typeof location === 'undefined' ? '' : measurementUrl(location.href),
+    page_referrer: typeof document === 'undefined' ? '' : measurementUrl(document.referrer),
+    campaignExpiresAt: 0, marketingExpiresAt: 0,
+  };
+  if (event === 'view_item') currentItem = { parameters: safe, page };
+  return send?.(event, safe, page) || false;
 }
 
 export function initMarketingConsent() {
@@ -122,8 +115,16 @@ export function initMarketingConsent() {
   const form = document.querySelector<HTMLFormElement>('#marketing-consent-form')!;
   let preferences: ConsentPreferences | undefined;
   try { preferences = readConsent(localStorage.getItem(CONSENT_KEY), version); } catch { /* Storage may be unavailable. */ }
+  const attribution = createMarketingAttribution(() => win.sessionStorage, version);
+  attribution.updateConsent(preferences || { analytics: false, marketing: false }, location.href);
+  capturePage = () => attribution.snapshot(location.href, document.referrer);
+  let attributionTimer: number | undefined;
   let googleLoaded = false;
   let metaLoaded = false;
+  let containerLoaded = false;
+  let analyticsRequested = false;
+  let marketingRequested = false;
+  const pending: Array<{ event: string; parameters: Record<string, unknown>; page: AttributionPage; analytics: boolean; marketing: boolean }> = [];
   win.dataLayer = win.dataLayer || [];
   win.gtag = win.gtag || function (..._args: unknown[]) { win.dataLayer!.push(arguments); };
   win.gtag('consent', 'default', googleConsent({ analytics: false, marketing: false }));
@@ -133,11 +134,14 @@ export function initMarketingConsent() {
     const element = document.createElement('script'); element.src = src; element.async = true; element.dataset.marketing = 'true';
     document.head.append(element);
   }
-  const cleanUrl = (raw: string) => measurementUrl(raw, preferences?.marketing);
+  const pageParameters = (page: AttributionPage) => {
+    const { page_location, page_referrer } = attribution.redact(page);
+    return { page_location, page_referrer };
+  };
 
   function cleanBrowserUrl() {
     const original = new URL(location.href);
-    const safeLocation = new URL(cleanUrl(location.href));
+    const safeLocation = new URL(attribution.snapshot(location.href, '').page_location);
     for (const key of ['open', 'id', 'web', 'confirm']) {
       const value = original.searchParams.get(key);
       if (value && /^(?:annonce|profil|[1-9]\d{0,18})$/.test(value)) safeLocation.searchParams.set(key, value);
@@ -146,63 +150,117 @@ export function initMarketingConsent() {
     win.history?.replaceState(win.history.state, '', safeLocation.href);
   }
 
+  function redactPending() {
+    for (const item of pending) {
+      if (!preferences?.analytics) item.analytics = false;
+      if (!preferences?.marketing) item.marketing = false;
+      item.page = attribution.redact(item.page);
+    }
+    if (currentItem) currentItem.page = attribution.redact(currentItem.page);
+  }
+
+  function scheduleAttributionExpiry() {
+    if (attributionTimer !== undefined) win.clearTimeout?.(attributionTimer);
+    const expiresAt = attribution.nextExpiry();
+    attributionTimer = expiresAt === undefined ? undefined : win.setTimeout?.(() => {
+      attribution.prune(); redactPending(); cleanBrowserUrl(); scheduleAttributionExpiry();
+    }, Math.max(0, expiresAt - Date.now()));
+  }
+
+  function flush() {
+    redactPending();
+    for (const item of pending) {
+      if (item.analytics && googleLoaded) {
+        item.analytics = false;
+        win.gtag!('event', item.event, { ...item.parameters, ...pageParameters(item.page) });
+      }
+      if (item.marketing && metaLoaded) {
+        item.marketing = false;
+        const mapped = metaEvent(item.event, item.parameters);
+        win.fbq?.(mapped.command, mapped.name, mapped.parameters);
+      }
+    }
+    for (let i = pending.length - 1; i >= 0; i--) if (!pending[i].analytics && !pending[i].marketing) pending.splice(i, 1);
+  }
+
+  // GTM controls when these reviewed adapters run. Each checks the current choice
+  // again, so a delayed tag cannot restart tracking after withdrawal.
+  function loadAnalytics() {
+    if (googleLoaded || !options.ga4Id || !preferences?.analytics) return;
+    googleLoaded = true;
+    cleanBrowserUrl();
+    const environment = webAnalyticsEnvironment(location.href);
+    const accountType = environment === 'preview' ? 'test' : 'unknown';
+    win.gtag!('set', { environment, account_type: accountType, user_type: 'guest',
+      user_properties: { account_type: accountType, user_type: 'guest' }, ...(environment === 'preview' ? { debug_mode: true } : {}) });
+    win.gtag!('js', new Date());
+    const page = pageParameters(capturePage!());
+    win.gtag!('config', options.ga4Id, { send_page_view: false, ...page, cookie_expires: 390 * 24 * 60 * 60, cookie_update: false, allow_google_signals: preferences.marketing, allow_ad_personalization_signals: preferences.marketing });
+    win.gtag!('event', 'page_view', { ...page, page_title: document.title });
+    // GTM loads the Google tag when it processes the consented config command.
+    // Loading it again here would add a second script beside GTM's own loader.
+    if (!options.gtmId) script(`https://www.googletagmanager.com/gtag/js?id=${options.ga4Id}`);
+    flush();
+  }
+
+  function loadMarketing() {
+    if (metaLoaded || !options.metaPixelId || !preferences?.marketing) return;
+    metaLoaded = true;
+    cleanBrowserUrl();
+    const fbq: NonNullable<MarketingWindow['fbq']> = function (...args) {
+      if (fbq.callMethod) fbq.callMethod(...args); else fbq.queue!.push(args);
+    };
+    fbq.queue = []; fbq.loaded = true; fbq.version = '2.0'; fbq.push = fbq;
+    win.fbq = fbq; win._fbq = fbq;
+    fbq('consent', 'grant'); fbq('set', 'autoConfig', false, options.metaPixelId); fbq('init', options.metaPixelId);
+    fbq('track', 'PageView');
+    script('https://connect.facebook.net/en_US/fbevents.js');
+    flush();
+  }
+  if (options.gtmId) win.goodleaseGtm = { loadAnalytics, loadMarketing, flush };
+
   function loadTags() {
     if (!preferences) return;
     win.gtag!('consent', 'update', googleConsent(preferences));
     if (options.ga4Id) win[`ga-disable-${options.ga4Id}`] = !preferences.analytics;
-    // A GTM container may contain arbitrary tags. Until it is reviewed, require both purposes.
     if (options.gtmId) {
-      if (!googleLoaded && preferences.analytics && preferences.marketing) {
-        googleLoaded = true;
+      if (!preferences.analytics && !preferences.marketing) return;
+      if (!containerLoaded) {
+        containerLoaded = true;
         cleanBrowserUrl();
-        const environment = webAnalyticsEnvironment(location.href);
-        const accountType = environment === 'preview' ? 'test' : 'unknown';
-        win.gtag!('set', { environment, account_type: accountType, user_type: 'guest',
-          user_properties: { account_type: accountType, user_type: 'guest' }, ...(environment === 'preview' ? { debug_mode: true } : {}) });
-        win.dataLayer!.push({ 'gtm.start': Date.now(), event: 'gtm.js', page_location: cleanUrl(location.href), page_referrer: cleanUrl(document.referrer) });
+        win.dataLayer!.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
         script(`https://www.googletagmanager.com/gtm.js?id=${options.gtmId}`);
       }
+      const consent = { gl_analytics_consent: preferences.analytics, gl_marketing_consent: preferences.marketing };
+      if (preferences.analytics && !analyticsRequested) {
+        analyticsRequested = true;
+        win.dataLayer!.push({ event: 'gl_analytics_ready', ...consent });
+      }
+      if (preferences.marketing && !marketingRequested) {
+        marketingRequested = true;
+        win.dataLayer!.push({ event: 'gl_marketing_ready', ...consent });
+      }
     } else {
-      if (!googleLoaded && options.ga4Id && preferences.analytics) {
-        googleLoaded = true;
-        cleanBrowserUrl();
-        win.gtag!('js', new Date());
-        win.gtag!('config', options.ga4Id, { send_page_view: false, page_location: cleanUrl(location.href), page_referrer: cleanUrl(document.referrer), cookie_expires: 390 * 24 * 60 * 60, cookie_update: false, allow_google_signals: preferences.marketing, allow_ad_personalization_signals: preferences.marketing });
-        win.gtag!('event', 'page_view', { page_location: cleanUrl(location.href), page_referrer: cleanUrl(document.referrer), page_title: document.title });
-        script(`https://www.googletagmanager.com/gtag/js?id=${options.ga4Id}`);
-      }
-      if (!metaLoaded && options.metaPixelId && preferences.marketing) {
-        metaLoaded = true;
-        cleanBrowserUrl();
-        const fbq: NonNullable<MarketingWindow['fbq']> = function (...args) {
-          if (fbq.callMethod) fbq.callMethod(...args); else fbq.queue!.push(args);
-        };
-        fbq.queue = []; fbq.loaded = true; fbq.version = '2.0'; fbq.push = fbq;
-        win.fbq = fbq; win._fbq = fbq;
-        fbq('consent', 'grant'); fbq('set', 'autoConfig', false, options.metaPixelId); fbq('init', options.metaPixelId);
-        fbq('track', 'PageView');
-        script('https://connect.facebook.net/en_US/fbevents.js');
-      }
+      loadAnalytics();
+      loadMarketing();
     }
   }
 
-  send = (event, parameters) => {
+  send = (event, parameters, page) => {
     if (!preferences?.analytics && !preferences?.marketing) return false;
+    // Never queue a browser copy of a durable server conversion, including in GTM.
+    if (['sign_up', 'listing_published'].includes(event)) return true;
+    pending.push({ event, parameters, page, analytics: Boolean(preferences.analytics && options.ga4Id), marketing: Boolean(preferences.marketing && options.metaPixelId) });
+    if (pending.length > 100) pending.shift();
     if (options.gtmId) {
-      if (!googleLoaded || !preferences.analytics || !preferences.marketing) return false;
+      if (!containerLoaded) return false;
       win.dataLayer!.push({ ecommerce: null });
       const { items, currency, value, ...rest } = parameters;
-      win.dataLayer!.push({ event, ...rest, ...(items ? { ecommerce: { items, currency, value } } : {}) });
+      win.dataLayer!.push({ event: 'gl_event', gl_event_name: event, gl_parameters: parameters,
+        gl_analytics_consent: preferences.analytics, gl_marketing_consent: preferences.marketing,
+        ...rest, ...(items ? { ecommerce: { items, currency, value } } : {}) });
     } else {
-      const audience = googleLoaded && preferences.analytics;
-      const advertising = metaLoaded && preferences.marketing;
-      // Durable backend hooks own these milestones, including retries after login.
-      if (audience && !['sign_up', 'listing_published'].includes(event)) win.gtag!('event', event, { ...parameters, page_location: cleanUrl(location.href), page_referrer: cleanUrl(document.referrer) });
-      if (advertising && !['sign_up', 'listing_published'].includes(event)) {
-        const mapped = metaEvent(event, parameters);
-        win.fbq?.(mapped.command, mapped.name, mapped.parameters);
-      }
-      return Boolean(audience || advertising);
+      flush();
     }
     return true;
   };
@@ -215,22 +273,33 @@ export function initMarketingConsent() {
   }
 
   function save(analytics: boolean, marketing: boolean) {
-    const wasMeasuring = options.gtmId ? googleLoaded && preferences?.analytics && preferences.marketing
-      : (googleLoaded && preferences?.analytics) || (metaLoaded && preferences?.marketing);
-    const mustReload = googleLoaded || metaLoaded;
+    const previous = preferences;
+    const mustReload = containerLoaded || googleLoaded || metaLoaded;
     const revoking = preferences && ((preferences.analytics && !analytics) || (preferences.marketing && !marketing));
     preferences = { analytics, marketing, savedAt: Date.now(), version };
     try { localStorage.setItem(CONSENT_KEY, JSON.stringify(preferences)); } catch { /* Choice applies to this page only. */ }
-    updateWebAnalyticsConsent(analytics && !options.gtmId, options.ga4Id, win);
-    updateWebMarketingConsent(marketing && !options.gtmId, options.metaPixelId, win);
+    const newlyGranted = (!previous?.analytics && analytics) || (!previous?.marketing && marketing);
+    attribution.updateConsent(preferences, newlyGranted ? location.href : undefined);
+    redactPending();
+    if (revoking || (!analytics && !marketing)) cleanBrowserUrl();
+    scheduleAttributionExpiry();
+    updateWebAnalyticsConsent(analytics, options.ga4Id, win);
+    updateWebMarketingConsent(marketing, options.metaPixelId, win);
     banner.hidden = true; dialog.close();
     if (revoking && mustReload) {
-      win.gtag!('consent', 'update', googleConsent(preferences));
+      // Block collection before the consent update can flush an engagement event.
       if (options.ga4Id) win[`ga-disable-${options.ga4Id}`] = !analytics;
+      win.gtag!('consent', 'update', googleConsent(preferences));
       win.fbq?.('consent', 'revoke'); clearTrackingCookies(); location.reload(); return;
     }
+    // Catch up the visible product only for newly accepted purposes.
+    if (currentItem && newlyGranted) {
+      pending.push({ event: 'view_item', parameters: currentItem.parameters,
+        page: attribution.snapshot(currentItem.page.page_location, currentItem.page.page_referrer),
+        analytics: Boolean(!previous?.analytics && analytics && options.ga4Id),
+        marketing: Boolean(!previous?.marketing && marketing && options.metaPixelId) });
+    }
     loadTags();
-    if (!wasMeasuring && currentItem) send?.('view_item', currentItem);
   }
 
   document.querySelectorAll<HTMLElement>('[data-consent-choice]').forEach((button) => button.addEventListener('click', () => {
@@ -250,14 +319,19 @@ export function initMarketingConsent() {
   });
   dialog.querySelector('[data-consent-close]')?.addEventListener('click', () => dialog.close());
   banner.hidden = Boolean(preferences);
+  if (preferences || attribution.initiallyStored) cleanBrowserUrl();
+  scheduleAttributionExpiry();
   loadTags();
-  updateWebAnalyticsConsent(Boolean(preferences?.analytics && !options.gtmId), options.ga4Id, win);
-  updateWebMarketingConsent(Boolean(preferences?.marketing && !options.gtmId), options.metaPixelId, win);
+  updateWebAnalyticsConsent(Boolean(preferences?.analytics), options.ga4Id, win);
+  updateWebMarketingConsent(Boolean(preferences?.marketing), options.metaPixelId, win);
   win.addEventListener?.('storage', (event: StorageEvent) => {
     if (event.key !== CONSENT_KEY) return;
     preferences = readConsent(event.newValue, version);
-    updateWebAnalyticsConsent(Boolean(preferences?.analytics && !options.gtmId), options.ga4Id, win);
-    updateWebMarketingConsent(Boolean(preferences?.marketing && !options.gtmId), options.metaPixelId, win);
+    attribution.updateConsent(preferences || { analytics: false, marketing: false });
+    redactPending(); cleanBrowserUrl(); scheduleAttributionExpiry();
+    updateWebAnalyticsConsent(Boolean(preferences?.analytics), options.ga4Id, win);
+    updateWebMarketingConsent(Boolean(preferences?.marketing), options.metaPixelId, win);
+    if (options.ga4Id) win[`ga-disable-${options.ga4Id}`] = !preferences?.analytics;
     win.gtag?.('consent', 'update', googleConsent(preferences || { analytics: false, marketing: false }));
     if (!preferences?.marketing) win.fbq?.('consent', 'revoke');
     location.reload();

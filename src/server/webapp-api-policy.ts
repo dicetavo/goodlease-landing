@@ -28,6 +28,9 @@ const patterns = {
   readNotification: new RegExp(`^notifications/${POSITIVE_ID}/read$`),
   stripeAccountLink: new RegExp(`^stripe/account-link/${POSITIVE_ID}$`),
   bookingContract: new RegExp(`^bookings/${POSITIVE_ID}/contract\\.pdf$`),
+  assistantConversation: new RegExp(`^assistant/conversations/${POSITIVE_ID}$`),
+  assistantMessages: new RegExp(`^assistant/conversations/${POSITIVE_ID}/messages$`),
+  assistantAction: new RegExp(`^assistant/conversations/${POSITIVE_ID}/actions/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`, 'i'),
 };
 
 const isRecord = (value: unknown): value is JsonRecord =>
@@ -154,6 +157,13 @@ export function authorizationMatchesRule(rule: WebAppApiRule, authorization: str
 export function matchWebAppApiRule(rawPath: string, rawMethod: string): WebAppApiRule | undefined {
   const path = rawPath.replace(/^\/+|\/+$/g, '');
   const method = rawMethod.toUpperCase();
+
+  if (method === 'GET' && (path === 'assistant/conversations' || patterns.assistantConversation.test(path))) {
+    return { path, method: 'GET', requiresBearer: true };
+  }
+  if (method === 'POST' && (path === 'assistant/conversations' || patterns.assistantMessages.test(path) || patterns.assistantAction.test(path))) {
+    return { path, method: 'POST', requiresBearer: true, requestBody: 'json' };
+  }
 
   if (method === 'GET' && path === 'leases') {
     return { path, method: 'GET', publicPayload: 'lease-list' };

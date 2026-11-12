@@ -1,0 +1,153 @@
+---
+import { pageHref, routes } from '../config';
+---
+
+<button
+  id="site-assistant-open"
+  class="site-assistant-launcher"
+  type="button"
+  aria-controls="site-assistant-panel"
+  aria-haspopup="dialog"
+  hidden
+>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-2 2V11.5a9.5 9.5 0 0 1 19 0Z" />
+    <path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4M12 16h.01" />
+  </svg>
+  Assistant GoodLease
+</button>
+<noscript><a class="site-assistant-launcher" href={pageHref(routes.faq)}>Besoin d’aide ?</a></noscript>
+
+<dialog id="site-assistant-panel" class="site-assistant-panel" aria-labelledby="site-assistant-title" aria-describedby="site-assistant-intro">
+  <div class="site-assistant-heading">
+    <div>
+      <p class="site-assistant-kicker">L’assistant IA de GoodLease</p>
+      <h2 id="site-assistant-title">Organiser mon événement</h2>
+    </div>
+    <button id="site-assistant-close" class="site-assistant-close" type="button" aria-label="Fermer l’aide" autofocus>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg>
+    </button>
+  </div>
+  <div class="site-assistant-body">
+    <p id="site-assistant-intro">Décrivez votre événement : l’assistant peut chercher le matériel proposé et tenir compte de votre budget.</p>
+    <div id="site-assistant-login">
+      <p>Connectez-vous à votre compte GoodLease pour discuter avec l’assistant et retrouver vos conversations de l’app.</p>
+      <button id="site-assistant-connect" class="btn-primary" type="button">Se connecter pour discuter</button>
+    </div>
+    <div id="site-assistant-workspace" hidden>
+      <div class="site-assistant-toolbar">
+        <select id="site-assistant-history" aria-label="Vos conversations"><option value="">Nouvelle conversation</option></select>
+        <button id="site-assistant-new" type="button">Nouvelle</button>
+        <button id="site-assistant-refresh" type="button">Actualiser</button>
+      </div>
+      <div id="site-assistant-messages" class="site-assistant-messages" role="log" aria-label="Conversation avec l’assistant" aria-live="polite" tabindex="0"></div>
+      <div id="site-assistant-action" class="site-assistant-action" hidden></div>
+      <form id="site-assistant-form" class="site-assistant-form">
+        <label for="site-assistant-message">Votre message</label>
+        <textarea id="site-assistant-message" name="message" rows="2" minlength="1" maxlength="1000" required placeholder="Matériel recherché, ville, dates, budget…"></textarea>
+        <button class="btn-primary" type="submit">Envoyer</button>
+      </form>
+    </div>
+    <p id="site-assistant-status" role="status" aria-live="polite"></p>
+    <p class="site-assistant-privacy">Vos échanges sont associés à votre compte. <a href={pageHref(routes.privacy)}>Confidentialité</a></p>
+    <nav class="site-assistant-help-links" aria-label="Autres moyens d’aide">
+      <a href={pageHref(routes.faq)}>FAQ</a>
+      <a href={pageHref(routes.contact)}>Contacter l’équipe</a>
+      <a href="/catalogue/">Catalogue</a>
+    </nav>
+  </div>
+</dialog>
+
+<script>
+  import { mountSiteAssistant } from '../scripts/site-assistant';
+  mountSiteAssistant();
+</script>
+
+<style is:global>
+  .site-assistant-launcher {
+    position: fixed;
+    right: max(1.25rem, env(safe-area-inset-right));
+    bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 3.25rem;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid rgb(255 255 255 / 25%);
+    border-radius: 13px;
+    background: #1675f3;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: 0 8px 28px rgb(22 117 243 / 25%);
+    text-decoration: none;
+  }
+  .site-assistant-launcher[hidden] { display: none; }
+  .site-assistant-launcher:hover { background: #1262cc; }
+  .site-assistant-launcher:focus-visible,
+  .site-assistant-panel :focus-visible { outline: 3px solid #1675f3; outline-offset: 4px; }
+  .site-assistant-launcher:focus-visible { outline-offset: 4px; outline-color: #1a1c1e; }
+  .site-assistant-panel {
+    position: fixed;
+    inset: auto 1.25rem calc(5.5rem + env(safe-area-inset-bottom)) auto;
+    width: min(32rem, calc(100vw - 2.5rem));
+    max-width: calc(100vw - 1.5rem);
+    max-height: calc(100dvh - 7rem - env(safe-area-inset-bottom));
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid #e3e5e8;
+    border-radius: 20px;
+    background: white;
+    color: #1a1c1e;
+    box-shadow: 0 20px 70px rgb(26 28 30 / 22%);
+  }
+  .site-assistant-panel::backdrop { background: rgb(26 28 30 / 30%); }
+  .site-assistant-panel[open][data-signed-in="true"] { display: flex; flex-direction: column; height: min(46rem, calc(100dvh - 7rem - env(safe-area-inset-bottom))); }
+  .site-assistant-heading { position: sticky; top: 0; z-index: 1; display: flex; flex-shrink: 0; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem; border-bottom: 1px solid #e3e5e8; background: white; }
+  .site-assistant-kicker { margin: 0 0 0.35rem; color: #1262cc; font-size: 0.75rem; font-weight: 600; }
+  .site-assistant-heading h2 { margin: 0; font-size: 1.25rem; font-weight: 700; }
+  .site-assistant-close { display: grid; flex: 0 0 auto; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 13px; background: #f5f7fa; }
+  .site-assistant-close:hover { background: #e8f1ff; }
+  .site-assistant-body { display: flex; flex: 1; flex-direction: column; min-height: 0; padding: 1.25rem; overflow-y: auto; }
+  .site-assistant-body p { font-size: 0.875rem; line-height: 1.6; color: #51575d; }
+  .site-assistant-panel [hidden] { display: none !important; }
+  #site-assistant-workspace { display: flex; flex: 1; flex-direction: column; min-height: 0; }
+  #site-assistant-login { margin-top: 1rem; padding: 1rem; border-radius: 13px; background: #f0f6ff; }
+  #site-assistant-login p { margin-bottom: 1rem; }
+  .site-assistant-toolbar { display: flex; flex-shrink: 0; flex-wrap: wrap; gap: 0.5rem; }
+  .site-assistant-toolbar select { flex: 1 1 100%; min-width: 0; padding: 0.65rem; border: 1px solid #e3e5e8; border-radius: 10px; background: white; font-size: 0.8rem; }
+  .site-assistant-toolbar button, .site-assistant-choice { min-height: 2.75rem; padding: 0.5rem 0.75rem; border: 1px solid #cee0fb; border-radius: 13px; background: #f0f6ff; color: #1262cc; font-size: 0.8rem; font-weight: 600; }
+  .site-assistant-messages { display: flex; flex: 1; flex-direction: column; gap: 0.8rem; min-height: 5rem; margin-top: 0.75rem; overflow-y: auto; overscroll-behavior: contain; }
+  .site-assistant-message { flex-shrink: 0; min-width: 0; padding: 0.85rem; border-radius: 13px; background: #f5f7fa; overflow-wrap: anywhere; }
+  .site-assistant-message.is-user { margin-left: 1.5rem; background: #e9f2fe; }
+  .site-assistant-message > strong { display: block; margin-bottom: 0.4rem; color: #1262cc; font-size: 0.75rem; }
+  .site-assistant-message p { margin: 0; white-space: pre-wrap; color: #1a1c1e; }
+  .site-assistant-result { display: grid; gap: 0.3rem; margin-top: 0.75rem; padding: 0.8rem; border: 1px solid #cee0fb; border-radius: 10px; background: white; font-size: 0.8rem; }
+  .site-assistant-result a, .site-assistant-privacy a, .site-assistant-help-links a { color: #1262cc; text-decoration: underline; text-underline-offset: 3px; }
+  .site-assistant-result small { color: #51575d; line-height: 1.5; }
+  .site-assistant-choices { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.6rem; }
+  .site-assistant-action { display: grid; flex: 0 1 12rem; gap: 0.65rem; min-height: 6rem; margin: 0.75rem 0; padding: 1rem; overflow-y: auto; border: 1px solid #1675f3; border-radius: 13px; background: #f0f6ff; }
+  .site-assistant-action p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .site-assistant-action-buttons { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .site-assistant-form { display: grid; flex-shrink: 0; gap: 0.5rem; margin-top: 0.75rem; }
+  .site-assistant-form label { font-size: 0.8rem; font-weight: 600; }
+  .site-assistant-form textarea { width: 100%; min-height: 3rem; max-height: 6rem; resize: vertical; padding: 0.6rem; border: 1px solid #e3e5e8; border-radius: 13px; background: white; font-size: 1rem; }
+  .site-assistant-form button { justify-self: end; }
+  .site-assistant-panel button:disabled, .site-assistant-panel textarea:disabled, .site-assistant-panel select:disabled { opacity: 0.6; cursor: not-allowed; }
+  #site-assistant-status { margin-top: 0.8rem; }
+  #site-assistant-status:empty { display: none; }
+  #site-assistant-status[data-error="true"] { color: #b42318; }
+  .site-assistant-body .site-assistant-privacy { margin-top: 1rem; font-size: 0.7rem; }
+  .site-assistant-help-links { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.7rem; font-size: 0.75rem; }
+  body.app-body .site-assistant-launcher { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+  body.app-body .site-assistant-panel { bottom: calc(9.75rem + env(safe-area-inset-bottom)); max-height: calc(100dvh - 11rem - env(safe-area-inset-bottom)); }
+  body.app-body .site-assistant-panel[open][data-signed-in="true"] { height: min(46rem, calc(100dvh - 11rem - env(safe-area-inset-bottom))); }
+  @media (max-width: 480px) {
+    .site-assistant-launcher { right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom)); }
+    .site-assistant-panel { inset: auto 0.75rem calc(5rem + env(safe-area-inset-bottom)); width: calc(100vw - 1.5rem); max-height: calc(100dvh - 6rem - env(safe-area-inset-bottom)); }
+    .site-assistant-heading, .site-assistant-body { padding: 1rem; }
+  }
+</style>

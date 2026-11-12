@@ -2,6 +2,8 @@ import { trackEvent } from './marketing-consent.ts';
 import { webAnalyticsHeaders, identifyWebAnalytics } from './web-analytics-context.ts';
 import { webMarketingHeaders } from './web-marketing-context.ts';
 import { catalogueImageUrl } from '../server/catalogue-image.ts';
+import { listingCategoryNames, listingCategoryIncludes, rootListingCategoryId } from '../category-labels.ts';
+import { normalizeListingCity } from '../listing-location.ts';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -145,6 +147,7 @@ export function mountGoodLeaseWebApp() {
   let catalogBase: Listing[] = [];
   let hasLiveCatalogBase = false;
   let wizardStep = 1;
+  let activeCategoryId = 0;
   let selectedListing: Listing | null = null;
   let currentClient: Client | null = null;
   let chats: Chat[] = [];
@@ -162,9 +165,11 @@ export function mountGoodLeaseWebApp() {
   const CATALOG_STORAGE_MAX_AGE = 10 * 60 * 1000;
 
   const money = (value = 0) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
-  const categoryNames: Record<number, string> = { 1: 'Sonorisation', 2: 'Éclairage', 3: 'Tentes et barnums', 4: 'Photo & vidéo', 5: 'Décoration et réception', 6: 'Nappes et linge de table', 7: 'Transport', 8: 'Divers', 9: 'Mobilier' };
+  const categoryNames = listingCategoryNames;
   const categoryRefs: Record<number, [string, string]> = { 1: ['sound', 'Son'], 2: ['light', 'Lumieres'], 3: ['struc', 'Structures'], 4: ['video', 'Video'], 5: ['place', 'Reception'], 6: ['clothe', 'Textile'], 7: ['whip', 'Transport'], 8: ['divers', 'Divers'], 9: ['furnit', 'Mobilier'] };
-  const categoryOf = (listing: Listing) => listing.category || categoryNames[listing.categoryId || 0] || 'Matériel';
+  const categoryOf = (listing: Listing) => categoryNames[listing.categoryId || 0] || listing.category || 'Matériel';
+  const matchesCategory = (listing: Listing, selectedId: number) => listingCategoryIncludes(selectedId,
+    listing.categoryId || Number(Object.keys(categoryNames).find((id) => categoryNames[Number(id)] === listing.category)) || 0);
   const depositOf = (listing: Listing | null | undefined) => listing?.caution ?? listing?.bail ?? 0;
   const esc = (value: unknown) => String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]!);
   const token = () => session.accessToken || session.token;
@@ -274,9 +279,9 @@ export function mountGoodLeaseWebApp() {
   function cardMarkup(listing: Listing, showProfileLink = true) {
     const id = String(listing.id);
     const liked = favorites.has(id);
-    const rating = typeof listing.averageRating === 'number'
+    const rating = !listing.isDemo && typeof listing.averageRating === 'number' && (listing.reviewCount || 0) > 0
       ? `<span class="card-rating">${iconMarkup('star', 'inline')} ${esc(listing.averageRating.toFixed(1))}${typeof listing.reviewCount === 'number' ? ` (${esc(listing.reviewCount)})` : ''}</span>`
-      : '<span>Nouveau</span>';
+      : listing.isDemo ? '<span>Exemple</span>' : '<span>Nouveau</span>';
     const badge = listing.isDemo
       ? '<span class="verified-pill">Aperçu hors ligne</span>'
       : listing.identityVerified === true
@@ -1095,9 +1100,14 @@ export function mountGoodLeaseWebApp() {
 
   availabilityStart.addEventListener('change', () => validateListingAvailability());
   availabilityEnd.addEventListener('change', () => validateListingAvailability(true));
+  const listingCity = $<HTMLInputElement>('#listing-form input[name="city"]')!;
+  const validateListingCity = () => listingCity.setCustomValidity(
+    normalizeListingCity(listingCity.value) ? '' : 'Renseignez la ville de retrait du matériel.');
+  listingCity.addEventListener('input', validateListingCity);
   wizardNext.addEventListener('click', () => {
     const step = $<HTMLElement>(`.wizard-step[data-step="${wizardStep}"]`)!;
     if (wizardStep === 2 && !validateListingAvailability(true)) return;
+    if (wizardStep === 3) validateListingCity();
     const required = [...step.querySelectorAll<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>('[required]')];
     if (!required.every((field) => field.reportValidity())) return;
     wizardStep = Math.min(4, wizardStep + 1); updateWizard();
@@ -1130,11 +1140,13 @@ export function mountGoodLeaseWebApp() {
 
       const region = String(formData.get('region') || '');
       if (!region) throw new Error('Sélectionnez une région.');
+      const city = normalizeListingCity(formData.get('city'));
+      if (!city) throw new Error('Renseignez la ville de retrait du matériel.');
       const createLease = {
         titleLease: String(formData.get('title') || ''), description: String(formData.get('description') || ''),
         priceByPeriod, caution,
         idCategorie: categoryId, coderefCategorie: codeRef, typeCategorie: legacyType,
-        region, street: String(formData.get('street') || ''), postalCode: String(formData.get('postalCode') || ''), city: String(formData.get('city') || ''),
+        region, street: String(formData.get('street') || '').trim(), postalCode: String(formData.get('postalCode') || '').trim(), city,
         quantity, condition: 'Bon état', codeRefStatus: 'ACTIVE', status: 'Disponible',
         handoutOption: String(formData.get('handoutOption') || 'Retrait sur place'), advice: 'Manipulation soigneuse recommandée',
       };
@@ -1227,7 +1239,7 @@ export function mountGoodLeaseWebApp() {
       renderListings(); renderFavorites(); dataMode.textContent = mode;
     };
     if (categoryId && unfilteredRequest && hasLiveCatalogBase) {
-      const localResults = catalogBase.filter((listing) => listing.categoryId === categoryId || listing.category === categoryNames[categoryId]);
+      const localResults = catalogBase.filter((listing) => matchesCategory(listing, categoryId));
       catalogCache.set(cacheKey, localResults);
       applyCatalog(localResults, 'Catalogue GoodLease en direct');
       return;
@@ -1240,7 +1252,7 @@ export function mountGoodLeaseWebApp() {
     // Affiche immédiatement le catalogue déjà présent pendant que la requête réseau arrive.
     const previewSource = catalogBase.length ? catalogBase : listings;
     if (previewSource.length) {
-      const preview = categoryId ? previewSource.filter((listing) => listing.categoryId === categoryId || listing.category === categoryNames[categoryId]) : previewSource;
+      const preview = categoryId ? previewSource.filter((listing) => matchesCategory(listing, categoryId)) : previewSource;
       applyCatalog(preview, 'Mise à jour du catalogue…');
     }
     dataMode.textContent = 'Recherche en cours…';
@@ -1291,7 +1303,7 @@ export function mountGoodLeaseWebApp() {
 
   $<HTMLFormElement>('#search-form')!.addEventListener('submit', (event) => {
     event.preventDefault();
-    const selectedCategory = Number($<HTMLElement>('.category-chip.is-active')?.dataset.categoryId || 0);
+    const selectedCategory = activeCategoryId;
     const values = new FormData(event.currentTarget as HTMLFormElement);
     trackEvent('search', { category_id: selectedCategory, has_search_term: Boolean(String(values.get('search') || '').trim()), has_city_filter: Boolean(String(values.get('city') || '').trim()) });
     void searchCatalog(selectedCategory);
@@ -1302,9 +1314,18 @@ export function mountGoodLeaseWebApp() {
     filteredListings = listings.filter((listing) => !query || `${listing.title} ${listing.description || ''} ${categoryOf(listing)}`.toLocaleLowerCase('fr').includes(query));
     renderListings();
   });
-  document.querySelectorAll<HTMLButtonElement>('.category-chip').forEach((chip) => chip.addEventListener('click', () => {
-    document.querySelectorAll('.category-chip').forEach((element) => element.classList.remove('is-active'));
-    chip.classList.add('is-active'); void searchCatalog(Number(chip.dataset.categoryId || 0));
+  document.querySelectorAll<HTMLButtonElement>('[data-category-id], [data-all-categories]').forEach((chip) => chip.addEventListener('click', () => {
+    activeCategoryId = Number(chip.dataset.categoryId || 0);
+    document.querySelectorAll<HTMLButtonElement>('.category-chip').forEach((element) => {
+      const active = Number(element.dataset.categoryId || 0) === rootListingCategoryId(activeCategoryId);
+      element.classList.toggle('is-active', active);
+      element.setAttribute('aria-pressed', String(active));
+    });
+    $<HTMLElement>('#reception-subcategories')!.hidden = rootListingCategoryId(activeCategoryId) !== 5;
+    document.querySelectorAll<HTMLButtonElement>('.subcategory-chip').forEach((element) => {
+      element.setAttribute('aria-pressed', String(Number(element.dataset.categoryId) === activeCategoryId));
+    });
+    void searchCatalog(activeCategoryId);
   }));
 
   $<HTMLButtonElement>('#location-button')!.addEventListener('click', () => {
@@ -1313,7 +1334,7 @@ export function mountGoodLeaseWebApp() {
       geo = { latitude: position.coords.latitude, longitude: position.coords.longitude };
       $<HTMLButtonElement>('#location-button')!.querySelector('span:last-child')!.textContent = 'Autour de moi';
       ($<HTMLInputElement>('#search-form input[name=city]')!).value = '';
-      void searchCatalog(Number($<HTMLElement>('.category-chip.is-active')?.dataset.categoryId || 0));
+      void searchCatalog(activeCategoryId);
     }, () => toast('Position non partagée. Saisissez une ville.', 'error'), { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 });
   });
 

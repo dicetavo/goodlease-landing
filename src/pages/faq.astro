@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { routes, pageHref } from '../config';
+import { cancellationFaq } from '../rental-policy';
 
 const faq = [
   {
@@ -14,8 +15,13 @@ const faq = [
     cat: 'Location',
     items: [
       { q: 'Comment réserver du matériel ?', a: 'Recherchez le matériel, choisissez vos dates, puis validez la réservation et le paiement directement dans l’application.' },
+      { q: 'Sous quel délai le loueur doit-il répondre ?', a: 'Le parcours actuel ne comporte pas d’étape d’acceptation manuelle par le loueur. Aucun délai de réponse dans la messagerie n’est garanti. Vérifiez les disponibilités et les conditions pratiques avec le loueur avant de payer ; contactez le support si vous ne parvenez pas à organiser la remise.' },
       { q: 'Que se passe-t-il à la fin de la location ?', a: 'Vous restituez le matériel à la date convenue. Si un dépôt de garantie a été demandé, il est libéré automatiquement lorsque tout s’est bien passé.' },
     ],
+  },
+  {
+    cat: 'Annulation & remboursement',
+    items: cancellationFaq.map(({ question, answer }) => ({ q: question, a: answer })),
   },
   {
     cat: 'Paiement & dépôt de garantie',
@@ -27,8 +33,14 @@ const faq = [
   {
     cat: 'Mettre du matériel en location',
     items: [
-      { q: 'Comment publier une annonce ?', a: 'Depuis l’application, créez une annonce avec des photos réelles, une description fidèle, un prix et vos disponibilités au calendrier.' },
+      { q: 'Comment publier une annonce ?', a: 'Depuis l’application, créez une annonce avec des photos réelles, une description fidèle, une catégorie, un prix, la ville de retrait et vos disponibilités au calendrier.' },
       { q: 'Comment suis-je payé ?', a: 'Les loueurs reçoivent leurs paiements via Stripe Connect. Vous devez finaliser votre intégration Stripe (onboarding) pour pouvoir recevoir des réservations.' },
+    ],
+  },
+  {
+    cat: 'Location pour une entreprise',
+    items: [
+      { q: 'Une entreprise peut-elle louer sur GoodLease ?', a: 'Oui, les entreprises peuvent utiliser GoodLease. Si vous avez besoin d’une facture au nom de votre entreprise, vérifiez les informations nécessaires et les justificatifs que le loueur peut délivrer avec lui et avec le support avant de réserver. Le site ne propose pas actuellement de génération automatique de facture d’entreprise.' },
     ],
   },
   {

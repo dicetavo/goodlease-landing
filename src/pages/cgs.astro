@@ -6,7 +6,7 @@ import { company, emails } from '../config';
 <Legal
   title="Conditions générales de service"
   description="Conditions générales de service (CGS) de GoodLease : accès au service, commandes, conditions financières, rétractation, responsabilités et médiation."
-  updated="18 juin 2026"
+  updated="15 octobre 2026"
 >
   <p>
     L’accès et l’utilisation du service GOODLEASE (ci-après dénommé « le Service ») de la société
@@ -139,6 +139,42 @@ import { company, emails } from '../config';
     toute difficulté relative au paiement de la Commande ou aux conditions financières encadrant
     l’exécution du contrat conclu entre le Locataire et le Prêteur (réception ou restitution d’un dépôt
     de garantie).
+  </p>
+
+  <h3 id="annulation">9.1. Annulation et remboursement</h3>
+  <p>
+    Le barème contractuel ci-dessous s’applique aux annulations de réservation avant le début prévu
+    de la location. Il ne limite pas les droits légaux des Utilisateurs, notamment le droit de
+    rétractation lorsqu’il s’applique, décrit à l’article 10.
+  </p>
+  <ul>
+    <li><strong>Annulation par le Locataire à plus de 48 h du début prévu :</strong> remboursement intégral du loyer et des frais de service.</li>
+    <li><strong>Annulation par le Locataire à 48 h ou moins, avant le début prévu :</strong> remboursement de 50 % du loyer hors frais ; les frais de service ne sont pas remboursés.</li>
+    <li><strong>Annulation par le Prêteur avant le début prévu :</strong> remboursement intégral au Locataire du loyer et des frais de service.</li>
+  </ul>
+  <p>
+    Exemple : pour un loyer de 30 € et des frais de service de 1,50 €, soit 31,50 € payés,
+    une annulation par le Locataire à 48 h ou moins, avant le début prévu, donne lieu à un
+    remboursement de 15 €.
+  </p>
+  <p>
+    L’annulation se demande depuis la réservation lorsqu’elle est encore disponible dans le Service.
+    Dès le début prévu de la location, l’annulation par ce parcours n’est plus disponible :
+    l’Utilisateur contacte le support à <a href={`mailto:${emails.support}`}>{emails.support}</a>
+    pour toute difficulté, sans préjudice de ses droits légaux et des procédures de résolution des litiges.
+  </p>
+  <p>
+    Si le Prêteur n’a toujours pas confirmé la remise du matériel 24 h après le début prévu de la
+    location, le contrôle automatique engage l’annulation et le remboursement intégral du loyer
+    et des frais de service. Le point de départ est le début prévu, quelle que soit la date de
+    réservation. Le contrôle est périodique ; la réservation est clôturée et les parties sont
+    informées une fois l’annulation du paiement ou le remboursement confirmé par le prestataire.
+    L’Utilisateur est invité à contacter le support dès qu’un problème de remise survient.
+  </p>
+  <p>
+    Le dépôt de garantie ne constitue ni un loyer ni des frais de service. Il est traité séparément
+    selon son état ; son éventuelle empreinte bancaire doit être libérée lors de l’annulation.
+    L’affichage du remboursement ou de la libération de l’empreinte dépend des délais bancaires.
   </p>
 
   <h2>10. Rétractation</h2>

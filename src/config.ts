@@ -6,7 +6,7 @@ export const site = {
   url: 'https://goodlease.fr',
   tagline: 'Louez du matériel pour vos événements',
   description:
-    'Louez sono, éclairage, tentes, mobilier et décoration près de chez vous, entre particuliers et pros. Paiement sécurisé et dépôt de garantie protégé.',
+    'Louez sono, éclairage et décoration pour vos événements près de chez vous, entre particuliers et pros. Comparez les annonces et leurs conditions sur GoodLease.',
 };
 
 // Mesure d'audience. Vide = désactivée (aucun script chargé). Renseigner le domaine

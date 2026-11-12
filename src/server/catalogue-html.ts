@@ -1,7 +1,7 @@
 import { routes, stores, pageHref } from '../config';
 import { escapeHtml as esc } from './public-html';
 import {
-  catalogueGroups, categoryFor, cityName, cityPagePath, coverPhoto, formatMoney,
+  catalogueGroups, canonicalCategoryCity, categoryFor, cityName, cityPagePath, coverPhoto, formatMoney,
   leaseId, leasePath, leasePrice, leaseRating, photos, rentalPeriod, type PublicLease,
 } from './public-catalogue';
 
@@ -32,7 +32,8 @@ export function listingCards(leases: PublicLease[], apiBase: string) {
 }
 
 export function locationLinks(leases: PublicLease[], currentPath = '') {
-  return catalogueGroups(leases).filter((group) => group.path !== currentPath && group.count >= 3).map((group) =>
+  return catalogueGroups(leases).filter((group) => group.path !== currentPath && group.count >= 3 &&
+    canonicalCategoryCity(leases, group.category, group.path.split('/').at(-1)!) === group.path.split('/').at(-1)).map((group) =>
     `<a class="rounded-full border border-line bg-surface px-4 py-2 text-sm text-primary hover:underline" href="${group.path}">${esc(group.category.name)} à ${esc(group.city)} (${group.count})</a>`,
   ).join('');
 }

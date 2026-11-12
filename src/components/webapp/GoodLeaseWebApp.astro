@@ -1,16 +1,18 @@
 ---
 import Logo from '../Logo.astro';
+import SiteAssistant from '../SiteAssistant.astro';
 import { auth } from '../../config';
+import { listingCategories, rootListingCategories } from '../../category-labels';
 import enceinte from '../../assets/annonces/enceinte.png';
 import tente from '../../assets/annonces/tente.png';
 import led from '../../assets/annonces/par-led.png';
 import tables from '../../assets/annonces/tables-chaises.png';
 
 const demoListings = [
-  { id: 'demo-1', title: 'Enceinte active 15” + caisson', category: 'Sonorisation', city: 'Lille', distanceKm: 2.3, priceByPeriod: 25, caution: 300, averageRating: 4.9, reviewCount: 32, photoUrls: [enceinte.src], description: 'Un système puissant et simple à installer pour vos soirées, mariages et séminaires.', quantity: 2, handoutOption: 'Retrait ou livraison' },
-  { id: 'demo-2', title: 'Tente de réception 4 × 8 m', category: 'Réception', city: 'Lens', distanceKm: 12, priceByPeriod: 90, caution: 600, averageRating: 5, reviewCount: 8, photoUrls: [tente.src], description: 'Tente professionnelle imperméable, parois incluses. Montage disponible.', quantity: 1, handoutOption: 'Livraison' },
-  { id: 'demo-3', title: 'Pack 4 PAR LED RGBW', category: 'Éclairage', city: 'Roubaix', distanceKm: 5, priceByPeriod: 30, caution: 180, averageRating: 4.8, reviewCount: 17, photoUrls: [led.src], description: 'Éclairage sur batterie, pilotage DMX ou automatique.', quantity: 3, handoutOption: 'Retrait' },
-  { id: 'demo-4', title: '10 tables + 40 chaises', category: 'Mobilier', city: 'Douai', distanceKm: 9, priceByPeriod: 45, caution: 400, averageRating: 4.7, reviewCount: 21, photoUrls: [tables.src], description: 'Mobilier pliant propre et robuste pour réception.', quantity: 2, handoutOption: 'Retrait ou livraison' },
+  { id: 'demo-1', title: 'Enceinte active 15” + caisson', categoryId: 1, city: 'Lille', priceByPeriod: 25, caution: 300, photoUrls: [enceinte.src], description: 'Exemple de système audio pour une soirée ou une prise de parole.', quantity: 2, handoutOption: 'Retrait ou livraison' },
+  { id: 'demo-2', title: 'Tente de réception 4 × 8 m', categoryId: 3, city: 'Lens', priceByPeriod: 90, caution: 600, photoUrls: [tente.src], description: 'Exemple de tente de réception.', quantity: 1, handoutOption: 'Livraison' },
+  { id: 'demo-3', title: 'Pack 4 PAR LED RGBW', categoryId: 2, city: 'Roubaix', priceByPeriod: 30, caution: 180, photoUrls: [led.src], description: 'Exemple d’éclairage pour un événement.', quantity: 3, handoutOption: 'Retrait' },
+  { id: 'demo-4', title: '10 tables + 40 chaises', categoryId: 9, city: 'Douai', priceByPeriod: 45, caution: 400, photoUrls: [tables.src], description: 'Exemple de mobilier pliant pour réception.', quantity: 2, handoutOption: 'Retrait ou livraison' },
 ];
 ---
 
@@ -60,16 +62,12 @@ const demoListings = [
         </form>
 
         <div class="category-row" aria-label="Catégories">
-          <button class="category-chip is-active" data-category=""><span class="app-icon icon-all" aria-hidden="true"></span><span>Tout</span></button>
-          <button class="category-chip" data-category-id="1"><span class="app-icon icon-sound" aria-hidden="true"></span><span>Sonorisation</span></button>
-          <button class="category-chip" data-category-id="2"><span class="app-icon icon-lights" aria-hidden="true"></span><span>Éclairage</span></button>
-          <button class="category-chip" data-category-id="3"><span class="app-icon icon-structures" aria-hidden="true"></span><span>Tentes et barnums</span></button>
-          <button class="category-chip" data-category-id="4"><span class="app-icon icon-video" aria-hidden="true"></span><span>Photo & vidéo</span></button>
-          <button class="category-chip" data-category-id="5"><span class="app-icon icon-reception" aria-hidden="true"></span><span>Décoration et réception</span></button>
-          <button class="category-chip" data-category-id="6"><span class="app-icon icon-textile" aria-hidden="true"></span><span>Nappes et linge de table</span></button>
-          <button class="category-chip" data-category-id="7"><span class="app-icon icon-transport" aria-hidden="true"></span><span>Transport</span></button>
-          <button class="category-chip" data-category-id="9"><span class="app-icon icon-furniture" aria-hidden="true"></span><span>Mobilier</span></button>
-          <button class="category-chip" data-category-id="8"><span class="app-icon icon-divers" aria-hidden="true"></span><span>Divers</span></button>
+          <button class="category-chip is-active" data-all-categories aria-pressed="true"><span class="app-icon icon-all" aria-hidden="true"></span><span>Tout</span></button>
+          {rootListingCategories.map((category) => <button class="category-chip" data-category-id={category.id} aria-pressed="false"><span class={`app-icon icon-${category.icon}`} aria-hidden="true"></span><span>{category.label}</span></button>)}
+        </div>
+        <div id="reception-subcategories" class="subcategory-row" aria-label="Sous-catégories Réception" hidden>
+          <button class="subcategory-chip" data-category-id="5" aria-pressed="true">Toute la réception</button>
+          <button class="subcategory-chip" data-category-id="9" aria-pressed="false">Mobilier</button>
         </div>
 
         <div class="section-heading"><div><h2>À louer autour de vous</h2><p id="results-label">Chargement des annonces…</p></div><div class="view-controls" aria-label="Affichage"><span class="is-active" aria-label="Vue en grille">▦</span></div></div>
@@ -142,7 +140,7 @@ const demoListings = [
     <form id="listing-form">
       <div class="wizard-step is-active" data-step="1">
         <label>Titre de l’annonce<input name="title" required placeholder="Ex. Enceinte active 15 pouces" /></label>
-        <label>Catégorie<select name="categoryId"><option value="1">Sonorisation</option><option value="2">Éclairage</option><option value="3">Tentes et barnums</option><option value="4">Photo & vidéo</option><option value="5">Décoration et réception</option><option value="6">Nappes et linge de table</option><option value="7">Transport</option><option value="9">Mobilier</option><option value="8">Divers</option></select></label>
+        <label>Catégorie<select name="categoryId">{listingCategories.map((category) => <option value={category.id}>{category.id === 9 ? 'Réception › Mobilier' : category.label}</option>)}</select></label>
         <label>Description<textarea name="description" rows="5" required placeholder="Décrivez l’état, les accessoires et les conditions d’utilisation."></textarea></label>
       </div>
       <div class="wizard-step" data-step="2">
@@ -156,7 +154,7 @@ const demoListings = [
       </div>
       <div class="wizard-step" data-step="3">
         <label>Adresse de retrait<input name="street" placeholder="Numéro et voie" required /></label>
-        <div class="wizard-address-row"><label>Code postal<input name="postalCode" inputmode="numeric" required /></label><label>Ville<input name="city" required /></label></div>
+        <div class="wizard-address-row"><label>Code postal<input name="postalCode" inputmode="numeric" required /></label><label>Ville de retrait<input name="city" autocomplete="address-level2" minlength="2" required /></label></div>
         <label>Région
           <select name="region" required>
             <option value="" selected disabled>Sélectionnez une région</option>
@@ -187,6 +185,8 @@ const demoListings = [
   <dialog id="generic-dialog" class="app-dialog generic-dialog"><button class="dialog-close" data-close aria-label="Fermer">×</button><div id="generic-content"></div></dialog>
   <div id="toast" class="app-toast" role="status" aria-live="polite"></div>
 </div>
+
+<SiteAssistant />
 
 <script>
   if (false) {
