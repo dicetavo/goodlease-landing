@@ -1,0 +1,89 @@
+name: Déploiement
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # Tous les matins : met en ligne les articles du blog arrivés à leur date.
+    # 5 h 17 UTC = 6 h 17 à Paris en hiver, 7 h 17 en été.
+    - cron: '17 5 * * *'
+    # Second passage si le premier a échoué ou a été retardé par GitHub.
+    - cron: '17 7 * * *'
+  workflow_dispatch:
+    inputs:
+      seulement_si_article:
+        description: Ne déployer que si un article du blog attend sa mise en ligne
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploiement-production
+  cancel-in-progress: false
+
+jobs:
+  production:
+    name: Mise en ligne
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Les secrets Cloudflare appartiennent à cet environnement, réservé à la branche main.
+    environment:
+      name: production
+      url: https://goodlease.fr
+    env:
+      PUBLIC_GTM_ID: ${{ vars.PUBLIC_GTM_ID }}
+      PUBLIC_GA4_ID: ${{ vars.PUBLIC_GA4_ID }}
+      PUBLIC_META_PIXEL_ID: ${{ vars.PUBLIC_META_PIXEL_ID }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Installer les dépendances
+        run: npm ci
+      - name: Build
+        run: |
+          # astro build échoue parfois sur une assertion native sans rapport avec le code.
+          for essai in 1 2 3; do
+            npm run build && exit 0
+            echo "::warning::Build en échec (essai $essai sur 3)"
+          done
+          exit 1
+      - name: Vérifier les identifiants de mesure
+        run: |
+          # Sans ces identifiants publics, le build retirerait GTM, GA4 et Meta du site en ligne.
+          erreur=0
+          for nom in PUBLIC_GTM_ID PUBLIC_GA4_ID PUBLIC_META_PIXEL_ID; do
+            valeur="${!nom}"
+            if [ -z "$valeur" ]; then
+              echo "::error::$nom est absent des variables du dépôt"
+              erreur=1
+            elif ! grep -qF -- "$valeur" dist/index.html; then
+              echo "::error::$nom n'apparaît pas dans la page d'accueil construite"
+              erreur=1
+            fi
+          done
+          exit $erreur
+      - name: Tests
+        run: node --experimental-strip-types --test tests/*.test.mjs
+      - name: Articles du blog à publier
+        id: articles
+        if: github.event_name == 'schedule' || inputs.seulement_si_article
+        run: node scripts/production.mjs a-publier
+      - name: Déployer sur Cloudflare Pages
+        if: steps.articles.outputs.deployer != 'non'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx wrangler pages deploy dist --project-name=goodlease-landing --branch=main \
+            --commit-hash="$GITHUB_SHA" --commit-message="$(git log -1 --format=%s)"
+      - name: Vérifier le site en ligne
+        if: steps.articles.outputs.deployer != 'non'
+        run: node scripts/production.mjs verifier

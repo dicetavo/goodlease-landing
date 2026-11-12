@@ -1,0 +1,42 @@
+name: Tests
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Build et tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PUBLIC_GTM_ID: ${{ vars.PUBLIC_GTM_ID }}
+      PUBLIC_GA4_ID: ${{ vars.PUBLIC_GA4_ID }}
+      PUBLIC_META_PIXEL_ID: ${{ vars.PUBLIC_META_PIXEL_ID }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Installer les dépendances
+        run: npm ci
+      - name: Build
+        run: |
+          # astro build échoue parfois sur une assertion native sans rapport avec le code.
+          for essai in 1 2 3; do
+            npm run build && exit 0
+            echo "::warning::Build en échec (essai $essai sur 3)"
+          done
+          exit 1
+      - name: Tests
+        run: node --experimental-strip-types --test tests/*.test.mjs
