@@ -1,8 +1,12 @@
+import { listingCategories } from './src/category-labels.ts';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}'],
   // Ces classes sont assemblées par le rendu TypeScript des cartes et fiches.
   safelist: [
+    // Le nom complet est construit dans Astro depuis le catalogue partagé.
+    ...listingCategories.map(({ icon }) => `icon-${icon}`),
     'icon-favorite-border',
     'icon-favorite',
     'icon-star',
