@@ -2,7 +2,7 @@
 import Logo from '../Logo.astro';
 import SiteAssistant from '../SiteAssistant.astro';
 import { auth } from '../../config';
-import { listingCategories, rootListingCategories } from '../../category-labels';
+import { listingCategoryChildren, rootListingCategories } from '../../category-labels';
 import enceinte from '../../assets/annonces/enceinte.png';
 import tente from '../../assets/annonces/tente.png';
 import led from '../../assets/annonces/par-led.png';
@@ -14,6 +14,14 @@ const demoListings = [
   { id: 'demo-3', title: 'Pack 4 PAR LED RGBW', categoryId: 2, city: 'Roubaix', priceByPeriod: 30, caution: 180, photoUrls: [led.src], description: 'Exemple d’éclairage pour un événement.', quantity: 3, handoutOption: 'Retrait' },
   { id: 'demo-4', title: '10 tables + 40 chaises', categoryId: 9, city: 'Douai', priceByPeriod: 45, caution: 400, photoUrls: [tables.src], description: 'Exemple de mobilier pliant pour réception.', quantity: 2, handoutOption: 'Retrait ou livraison' },
 ];
+
+// Une rangée de sous-catégories par catégorie principale qui en a (aujourd'hui le Son).
+const subcategoryParents = rootListingCategories.filter((parent) => listingCategoryChildren(parent.id).length > 0);
+// Le formulaire propose les catégories principales, chacune suivie de ses sous-catégories.
+const listingFormCategories = rootListingCategories.flatMap((parent) => [
+  { id: parent.id, label: parent.label },
+  ...listingCategoryChildren(parent.id).map((child) => ({ id: child.id, label: `${parent.label} › ${child.label}` })),
+]);
 ---
 
 <div class="webapp" data-demo-listings={JSON.stringify(demoListings)} data-google-client-id={auth.googleClientId}>
@@ -65,10 +73,12 @@ const demoListings = [
           <button class="category-chip is-active" data-all-categories aria-pressed="true"><span class="app-icon icon-all" aria-hidden="true"></span><span>Tout</span></button>
           {rootListingCategories.map((category) => <button class="category-chip" data-category-id={category.id} aria-pressed="false"><span class={`app-icon icon-${category.icon}`} aria-hidden="true"></span><span>{category.label}</span></button>)}
         </div>
-        <div id="reception-subcategories" class="subcategory-row" aria-label="Sous-catégories Réception" hidden>
-          <button class="subcategory-chip" data-category-id="5" aria-pressed="true">Toute la réception</button>
-          <button class="subcategory-chip" data-category-id="9" aria-pressed="false">Mobilier</button>
-        </div>
+        {subcategoryParents.map((parent) => (
+          <div class="subcategory-row" role="group" data-subcategories-of={parent.id} aria-label={`Sous-catégories ${parent.label}`} hidden>
+            <button class="subcategory-chip" data-category-id={parent.id} aria-pressed="true">Tout {parent.label}</button>
+            {listingCategoryChildren(parent.id).map((child) => <button class="subcategory-chip" data-category-id={child.id} aria-pressed="false">{child.label}</button>)}
+          </div>
+        ))}
 
         <div class="section-heading"><div><h2>À louer autour de vous</h2><p id="results-label">Chargement des annonces…</p></div><div class="view-controls" aria-label="Affichage"><span class="is-active" aria-label="Vue en grille">▦</span></div></div>
         <div id="listing-grid" class="listing-grid" aria-live="polite"></div>
@@ -140,7 +150,7 @@ const demoListings = [
     <form id="listing-form">
       <div class="wizard-step is-active" data-step="1">
         <label>Titre de l’annonce<input name="title" required placeholder="Ex. Enceinte active 15 pouces" /></label>
-        <label>Catégorie<select name="categoryId">{listingCategories.map((category) => <option value={category.id}>{category.id === 9 ? 'Réception › Mobilier' : category.label}</option>)}</select></label>
+        <label>Catégorie<select name="categoryId">{listingFormCategories.map((category) => <option value={category.id}>{category.label}</option>)}</select></label>
         <label>Description<textarea name="description" rows="5" required placeholder="Décrivez l’état, les accessoires et les conditions d’utilisation."></textarea></label>
       </div>
       <div class="wizard-step" data-step="2">

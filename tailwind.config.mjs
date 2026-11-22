@@ -6,7 +6,8 @@ export default {
   // Ces classes sont assemblées par le rendu TypeScript des cartes et fiches.
   safelist: [
     // Le nom complet est construit dans Astro depuis le catalogue partagé.
-    ...listingCategories.map(({ icon }) => `icon-${icon}`),
+    // Les sous-catégories n'ont pas d'icône : elles s'affichent en texte seul.
+    ...listingCategories.filter(({ icon }) => icon).map(({ icon }) => `icon-${icon}`),
     'icon-favorite-border',
     'icon-favorite',
     'icon-star',

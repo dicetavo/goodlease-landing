@@ -1,6 +1,7 @@
 import { sanitizePublicPayload } from './webapp-api-policy';
 import { DEFAULT_API, DEFAULT_IMAGE } from './public-html';
 import { catalogueImageUrl } from './catalogue-image';
+import { listingCategoryIncludes } from '../category-labels';
 
 export type PublicLease = Record<string, unknown>;
 
@@ -32,12 +33,13 @@ export function citySlug(city: string): string {
 }
 
 export function categoryFor(lease: PublicLease) {
-  return categories.find((category) => !category.keywords && category.id === numeric(lease.categoryId));
+  return categories.find((category) => !category.keywords && categoryMatches(lease, category));
 }
 
 export function categoryMatches(lease: PublicLease, category: RentalCategory) {
-  const id = numeric(lease.categoryId);
-  const inCategory = category.id === id || (!category.keywords && category.id === 5 && id === 9);
+  const id = numeric(lease.categoryId) ?? 0;
+  // Comme la recherche de l'API, une catégorie principale inclut ses sous-catégories.
+  const inCategory = [category.id, ...(category.extraCategoryIds ?? [])].some((pageId) => listingCategoryIncludes(pageId, id));
   return inCategory && (!category.keywords || category.keywords.test(`${lease.title || ''} ${lease.description || ''}`));
 }
 

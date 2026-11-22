@@ -113,6 +113,12 @@ test('SEO public : HTML serveur, catalogue, sitemap et confidentialité', async 
           headers: { 'X-Total-Pages': '2', 'X-Total-Count': '3' },
         });
       }
+      if (mode === 'taxonomy') return Response.json([
+        { ...lease, id: 300, title: 'Enceinte sur pied', categoryId: 11 },
+        { ...lease, id: 301, title: 'Arche fleurie', categoryId: 10 },
+        { ...lease, id: 302, title: 'Chaise pliante', categoryId: 9 },
+        { ...lease, id: 303, title: 'Lot de 50 assiettes', categoryId: 8 },
+      ]);
       return Response.json([lease, { ...lease, id: 43, available: false }]);
     },
   });
@@ -283,6 +289,23 @@ test('SEO public : HTML serveur, catalogue, sitemap et confidentialité', async 
         const sitemap = (await get('/sitemap-catalogue.xml')).html;
         assert.match(sitemap, /location-decoration\/lille<\/loc>/);
         assert.doesNotMatch(sitemap, /location-decoration\/roubaix<\/loc>/);
+      } finally { mode = 'published'; }
+    });
+    await t.test('les pages catégorie suivent la liste de novembre 2026', async () => {
+      mode = 'taxonomy';
+      try {
+        const sono = (await get('/location-sonorisation/lille')).html;
+        assert.match(sono, /text-muted">Son<\/p>\s*<h3[^>]*>Enceinte sur pied/, 'Le Son inclut ses sous-catégories, comme la recherche de l’API');
+        const decoration = (await get('/location-decoration/lille')).html;
+        assert.match(decoration, /text-muted">Décoration et réception<\/p>\s*<h3[^>]*>Arche fleurie/);
+        assert.doesNotMatch(decoration, /Chaise pliante/, 'Le mobilier n’est plus rangé sous la réception');
+        const vaisselle = (await get('/location-vaisselle/lille')).html;
+        assert.match(vaisselle, /Lot de 50 assiettes/, 'La vaisselle publiée dans Divers reste sur sa page');
+        const wedding = (await get('/location-materiel-mariage')).html;
+        for (const title of ['Enceinte sur pied', 'Arche fleurie', 'Chaise pliante']) assert.match(wedding, new RegExp(title));
+        const catalogue = (await get('/catalogue')).html;
+        assert.match(catalogue, /href="\/location-mobilier">Mobilier</);
+        assert.doesNotMatch(catalogue, /Réception ›/);
       } finally { mode = 'published'; }
     });
     await t.test('les deux guides utilisent les annonces actuelles et restent découvrables', async () => {

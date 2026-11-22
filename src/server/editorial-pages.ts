@@ -1,7 +1,8 @@
 import { site } from '../config';
-import { apiBaseUrl, fetchCatalogue, inArea, leasePath, leasePrice, formatMoney, type PublicLease } from './public-catalogue';
+import { apiBaseUrl, categoryBySlug, categoryMatches, fetchCatalogue, inArea, leasePath, leasePrice, formatMoney, type PublicLease } from './public-catalogue';
 import { commonRentalFaq, dailyPriceSummary, editorialSection, faqHtml, faqSchema, pricesTable, sonoPriceRows, sonoEquipmentGroup, type Faq } from './catalogue-editorial';
 import { DEFAULT_IMAGE, escapeHtml as esc, renderPublicPage, type PublicPageContext } from './public-html';
+import { listingCategoryIncludes } from '../category-labels';
 
 export const editorialPaths = ['/prix-location-sono', '/organiser-une-soiree-d-entreprise'] as const;
 
@@ -18,7 +19,7 @@ function budgetExample(label: string, items: (PublicLease | undefined)[]) {
 }
 
 function sonoGuide(leases: PublicLease[]) {
-  const sono = leases.filter((lease) => Number(lease.categoryId) === 1);
+  const sono = leases.filter((lease) => listingCategoryIncludes(1, Number(lease.categoryId)));
   const speaker = cheapest(sono.filter((lease) => sonoEquipmentGroup(lease) === 'Enceintes et systèmes audio'), /./);
   const microphone = cheapest(sono.filter((lease) => sonoEquipmentGroup(lease) === 'Micros'), /./);
   const dj = cheapest(sono.filter((lease) => sonoEquipmentGroup(lease) === 'Matériel DJ'), /./);
@@ -44,15 +45,17 @@ function sonoGuide(leases: PublicLease[]) {
 
 function companyGuide(leases: PublicLease[]) {
   const needs = [
-    { label: 'Prises de parole', category: 1, match: /micro/i, path: 'sonorisation', advice: 'Précisez le nombre d’intervenants et les connexions nécessaires.' },
-    { label: 'Musique et ambiance', category: 1, match: /enceinte|contr[oô]leur|mixage/i, path: 'sonorisation', advice: 'Vérifiez la puissance adaptée à la salle et les accessoires inclus.' },
-    { label: 'Lumière', category: 2, match: /./, path: 'eclairage', advice: 'Demandez au lieu ce qui est autorisé, notamment pour la fumée, les lasers ou les étincelles.' },
-    { label: 'Présentations et vidéo', category: 4, match: /projection|projecteur|[ée]cran/i, path: 'photo-video', advice: 'Vérifiez le recul, la luminosité et la connectique.' },
-    { label: 'Décoration et coin photo', category: 5, match: /backdrop|arche|mur.*fleur/i, path: 'decoration', advice: 'Comparez les dimensions, le conditionnement et les conditions de montage.' },
+    { label: 'Prises de parole', match: /micro/i, path: 'sonorisation', advice: 'Précisez le nombre d’intervenants et les connexions nécessaires.' },
+    { label: 'Musique et ambiance', match: /enceinte|contr[oô]leur|mixage/i, path: 'sonorisation', advice: 'Vérifiez la puissance adaptée à la salle et les accessoires inclus.' },
+    { label: 'Lumière', match: /./, path: 'eclairage', advice: 'Demandez au lieu ce qui est autorisé, notamment pour la fumée, les lasers ou les étincelles.' },
+    { label: 'Présentations et vidéo', match: /projection|projecteur|[ée]cran/i, path: 'photo-video', advice: 'Vérifiez le recul, la luminosité et la connectique.' },
+    { label: 'Décoration et coin photo', match: /backdrop|arche|mur.*fleur/i, path: 'decoration', advice: 'Comparez les dimensions, le conditionnement et les conditions de montage.' },
   ];
   const equipment = needs.flatMap((need) => {
-    const price = dailyPriceSummary(leases.filter((lease) => Number(lease.categoryId) === need.category &&
-      !(need.category === 1 && ['Pieds et supports', 'Meubles et façades DJ'].includes(sonoEquipmentGroup(lease) || '')) &&
+    // Même sélection que la page liée : sous-catégories du Son et page décoration regroupée comprises.
+    const category = categoryBySlug(need.path)!;
+    const price = dailyPriceSummary(leases.filter((lease) => categoryMatches(lease, category) &&
+      !(need.path === 'sonorisation' && ['Pieds et supports', 'Meubles et façades DJ'].includes(sonoEquipmentGroup(lease) || '')) &&
       need.match.test(String(lease.title || ''))));
     return price ? [`<li class="mt-5"><a class="font-semibold text-primary underline" href="/location-${need.path}/lille">${esc(need.label)}</a> : loyers journaliers usuels de ${esc(formatMoney(price.min))} à ${esc(formatMoney(price.max))}. ${esc(need.advice)}</li>`] : [];
   }).join('');
@@ -85,7 +88,7 @@ export async function renderEditorialPage(context: PublicPageContext, path: type
     const leases = all.filter((lease) => inArea(lease, 'lille'));
     const guide = path === '/prix-location-sono' ? sonoGuide(leases) : companyGuide(leases);
     const canonical = `${site.url}${path}`;
-    const relevantCount = path === '/prix-location-sono' ? leases.filter((lease) => Number(lease.categoryId) === 1).length : leases.length;
+    const relevantCount = path === '/prix-location-sono' ? leases.filter((lease) => listingCategoryIncludes(1, Number(lease.categoryId))).length : leases.length;
     return renderPublicPage(context, {
       title: `${guide.title} · GoodLease`, description: guide.description, canonical,
       image: DEFAULT_IMAGE, imageAlt: 'GoodLease — location de matériel', ogType: 'website',
