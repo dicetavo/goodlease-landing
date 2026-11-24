@@ -36,7 +36,7 @@ Exemple d'un DJ qui loue son contrôleur Prime GO et ses deux enceintes **deux w
 - Deux enceintes : 2 × 50 € × 2 = 200 €
 - **Total : 360 € par mois**, soit environ 4 300 € sur une année, avant commission.
 
-La commission de GoodLease est de 5 % pour le loueur.
+La commission de GoodLease est de 5 % du loyer pour le loueur, avec un minimum de 2 € par location.
 
 ## Comment s'y prendre
 

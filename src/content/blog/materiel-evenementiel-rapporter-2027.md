@@ -16,7 +16,7 @@ Votre matériel sort quelques soirs par an. Le reste du temps, il prend de la pl
 
 **Prix par jour × nombre de locations par an = ce que votre matériel rapporte, avant commission.**
 
-La commission de GoodLease est de 5 % pour le loueur. Le reste arrive sur votre compte via Stripe.
+La commission de GoodLease est de 5 % du loyer pour le loueur, avec un minimum de 2 € par location. Le reste arrive sur votre compte via Stripe.
 
 ## Combien selon le matériel
 
@@ -56,7 +56,7 @@ Même logique dans l'autre sens : pour une grosse date, louez le caisson, le mic
 ## Questions fréquentes
 
 **Faut-il déclarer ces revenus ?**
-Louer occasionnellement un bien que vous possédez est autorisé. Si cela devient régulier, renseignez-vous sur la déclaration de ces revenus.
+Oui, dès le premier euro. Ces revenus se déclarent à l'impôt sur le revenu, dans la catégorie des bénéfices industriels et commerciaux (BIC), avec par défaut un abattement de 50 % (régime micro-BIC). Si vos locations se répètent dans l'année, l'activité est considérée comme professionnelle et doit être inscrite au registre national des entreprises, sur formalites.entreprises.gouv.fr. Le détail est sur [impots.gouv.fr](https://www.impots.gouv.fr/professionnel/questions/je-mets-en-location-ma-voiture-un-outil-ou-un-bien-divers-sur-un-site).
 
 **Et si mon matériel est abîmé ?**
 Constatez-le au retour, photos à l'appui, et signalez-le. Le dépôt de garantie sert à couvrir ce cas. Pour du matériel de valeur, vérifiez aussi ce que couvre votre assurance.
