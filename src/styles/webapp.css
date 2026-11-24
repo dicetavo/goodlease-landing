@@ -28,6 +28,7 @@
   .icon-textile { --app-icon: url('/webapp-icons/textileicon.svg'); }
   .icon-transport { --app-icon: url('/webapp-icons/transporticon.svg'); }
   .icon-divers { --app-icon: url('/webapp-icons/diversicon.svg'); }
+  .icon-decoration { --app-icon: url('/webapp-icons/decorationicon.svg'); }
   .icon-share { --app-icon: url('/webapp-icons/ios-share.svg'); }
   .icon-favorite-border { --app-icon: url('/webapp-icons/favorite-border.svg'); }
   .icon-favorite { --app-icon: url('/webapp-icons/favorite.svg'); }

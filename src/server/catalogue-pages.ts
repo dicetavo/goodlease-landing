@@ -8,6 +8,7 @@ import { listingCards, locationLinks, unavailableCatalogue } from './catalogue-h
 import { DEFAULT_IMAGE, escapeHtml as esc, renderPublicPage, type PublicPageContext, type PageMeta } from './public-html';
 import { categoryEditorial } from './catalogue-editorial';
 import { editorialPaths } from './editorial-pages';
+import { listingCategoryIncludes, rootListingCategoryId } from '../category-labels';
 
 export const methodNotAllowed = () => new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
 type Selection = { path: string; category?: RentalCategory; city?: string; wedding?: boolean };
@@ -26,7 +27,7 @@ export function catalogueSelection(rawPath: string): Selection | undefined {
 const matchingLeases = (leases: PublicLease[], selection: Selection) => leases.filter((lease) =>
   (!selection.category || categoryMatches(lease, selection.category)) &&
   (!selection.city || inArea(lease, selection.city)) &&
-  (!selection.wedding || [1, 2, 3, 4, 5, 6, 9].includes(Number(lease.categoryId))),
+  (!selection.wedding || [1, 2, 3, 4, 5, 6, 9, 10].includes(rootListingCategoryId(Number(lease.categoryId)))),
 );
 
 export const breadcrumbSchema = (items: { name: string; path: string }[]) => ({
@@ -37,10 +38,10 @@ export const breadcrumbSchema = (items: { name: string; path: string }[]) => ({
 
 function hubLinks(leases: PublicLease[]) {
   const presentCategories = categories.filter((category) => leases.some((lease) => categoryMatches(lease, category)));
-  const categoryLinks = presentCategories.filter((category) => !category.keywords && category.id !== 9).map((category) =>
+  const categoryLinks = presentCategories.filter((category) => !category.keywords).map((category) =>
     `<a class="btn-secondary" href="/location-${category.slug}">${esc(category.name)}</a>`).join('');
-  const selectionLinks = presentCategories.filter((category) => category.keywords || category.id === 9).map((category) =>
-    `<a class="btn-secondary" href="/location-${category.slug}">${category.id === 9 ? 'Réception › ' : ''}${esc(category.name)}</a>`).join('');
+  const selectionLinks = presentCategories.filter((category) => category.keywords).map((category) =>
+    `<a class="btn-secondary" href="/location-${category.slug}">${esc(category.name)}</a>`).join('');
   const areas = new Map(leases.flatMap(areasFor).map((area) => [area.slug, area]));
   const cityLinks = [...areas.values()].sort((a, b) => a.name.localeCompare(b.name, 'fr')).map((area) =>
     `<a class="rounded-full border border-line bg-surface px-4 py-2 text-sm text-primary hover:underline" href="/location-materiel/${area.slug}">${esc(area.label)}</a>`).join('');
@@ -147,7 +148,8 @@ export async function renderCatalogueSitemap(context: PublicPageContext) {
       if (matching.length >= MIN_INDEXABLE_LISTINGS) paths.set(path, matching);
     }
     const metro = leases.filter((lease) => inArea(lease, 'lille'));
-    if (metro.filter((lease) => Number(lease.categoryId) === 1).length >= MIN_INDEXABLE_LISTINGS) paths.set(editorialPaths[0], metro.filter((lease) => Number(lease.categoryId) === 1));
+    const metroSono = metro.filter((lease) => listingCategoryIncludes(1, Number(lease.categoryId)));
+    if (metroSono.length >= MIN_INDEXABLE_LISTINGS) paths.set(editorialPaths[0], metroSono);
     if (metro.length >= MIN_INDEXABLE_LISTINGS) paths.set(editorialPaths[1], metro);
     const xml = `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...paths].map(([path, items]) => {
       const dates = items.map(leaseLastmod).filter((date): date is string => Boolean(date)).sort();

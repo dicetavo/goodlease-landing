@@ -2,7 +2,7 @@ import { trackEvent } from './marketing-consent.ts';
 import { webAnalyticsHeaders, identifyWebAnalytics } from './web-analytics-context.ts';
 import { webMarketingHeaders } from './web-marketing-context.ts';
 import { catalogueImageUrl } from '../server/catalogue-image.ts';
-import { listingCategoryNames, listingCategoryIncludes, rootListingCategoryId } from '../category-labels.ts';
+import { listingCategoryById, listingCategoryNames, listingCategoryIncludes, rootListingCategoryId } from '../category-labels.ts';
 import { normalizeListingCity } from '../listing-location.ts';
 
 type JsonRecord = Record<string, unknown>;
@@ -166,7 +166,6 @@ export function mountGoodLeaseWebApp() {
 
   const money = (value = 0) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
   const categoryNames = listingCategoryNames;
-  const categoryRefs: Record<number, [string, string]> = { 1: ['sound', 'Son'], 2: ['light', 'Lumieres'], 3: ['struc', 'Structures'], 4: ['video', 'Video'], 5: ['place', 'Reception'], 6: ['clothe', 'Textile'], 7: ['whip', 'Transport'], 8: ['divers', 'Divers'], 9: ['furnit', 'Mobilier'] };
   const categoryOf = (listing: Listing) => categoryNames[listing.categoryId || 0] || listing.category || 'Matériel';
   const matchesCategory = (listing: Listing, selectedId: number) => listingCategoryIncludes(selectedId,
     listing.categoryId || Number(Object.keys(categoryNames).find((id) => categoryNames[Number(id)] === listing.category)) || 0);
@@ -1129,8 +1128,8 @@ export function mountGoodLeaseWebApp() {
     try {
       if (!validateListingAvailability(true)) return;
       const categoryId = parseListingInteger(String(formData.get('categoryId') || ''), 'La catégorie', 1);
-      const [codeRef, legacyType] = categoryRefs[categoryId] || [];
-      if (!codeRef || !legacyType) throw new Error('La catégorie sélectionnée est invalide.');
+      const category = listingCategoryById(categoryId);
+      if (!category) throw new Error('La catégorie sélectionnée est invalide.');
       const priceByPeriod = parseListingInteger(formData.get('priceByPeriod'), 'Le prix par jour', 1);
       const caution = parseListingInteger(String(formData.get('caution') || '0'), 'Le dépôt de garantie', 0);
       const quantity = parseListingInteger(formData.get('quantity'), 'La quantité', 1);
@@ -1145,7 +1144,7 @@ export function mountGoodLeaseWebApp() {
       const createLease = {
         titleLease: String(formData.get('title') || ''), description: String(formData.get('description') || ''),
         priceByPeriod, caution,
-        idCategorie: categoryId, coderefCategorie: codeRef, typeCategorie: legacyType,
+        idCategorie: categoryId, coderefCategorie: category.codeRef, typeCategorie: category.legacyType,
         region, street: String(formData.get('street') || '').trim(), postalCode: String(formData.get('postalCode') || '').trim(), city,
         quantity, condition: 'Bon état', codeRefStatus: 'ACTIVE', status: 'Disponible',
         handoutOption: String(formData.get('handoutOption') || 'Retrait sur place'), advice: 'Manipulation soigneuse recommandée',
@@ -1316,12 +1315,16 @@ export function mountGoodLeaseWebApp() {
   });
   document.querySelectorAll<HTMLButtonElement>('[data-category-id], [data-all-categories]').forEach((chip) => chip.addEventListener('click', () => {
     activeCategoryId = Number(chip.dataset.categoryId || 0);
+    const activeRootId = rootListingCategoryId(activeCategoryId);
     document.querySelectorAll<HTMLButtonElement>('.category-chip').forEach((element) => {
-      const active = Number(element.dataset.categoryId || 0) === rootListingCategoryId(activeCategoryId);
+      const active = Number(element.dataset.categoryId || 0) === activeRootId;
       element.classList.toggle('is-active', active);
       element.setAttribute('aria-pressed', String(active));
     });
-    $<HTMLElement>('#reception-subcategories')!.hidden = rootListingCategoryId(activeCategoryId) !== 5;
+    // Seule la rangée de la catégorie principale active s'affiche (aujourd'hui celle du Son).
+    document.querySelectorAll<HTMLElement>('[data-subcategories-of]').forEach((row) => {
+      row.hidden = Number(row.dataset.subcategoriesOf) !== activeRootId;
+    });
     document.querySelectorAll<HTMLButtonElement>('.subcategory-chip').forEach((element) => {
       element.setAttribute('aria-pressed', String(Number(element.dataset.categoryId) === activeCategoryId));
     });
