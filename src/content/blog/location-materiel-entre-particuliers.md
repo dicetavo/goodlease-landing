@@ -53,7 +53,7 @@ Vous choisissez les dates où votre matériel peut être loué. Sur une date ouv
 
 ### 4. Être payé
 
-Le paiement arrive sur votre compte via Stripe. La commission de GoodLease est de 5 % pour le loueur.
+Le paiement arrive sur votre compte via Stripe. La commission de GoodLease est de 5 % du loyer pour le loueur, avec un minimum de 2 € par location.
 
 **Combien ça peut rapporter ?** Une enceinte louée 50 € par jour, un samedi par mois, rapporte 600 € par an avant commission, sans changer votre façon de l'utiliser.
 
@@ -72,7 +72,7 @@ Les deux publient sur GoodLease. Les loueurs professionnels passent une vérific
 ## Questions fréquentes
 
 **Est-ce légal de louer son matériel quand on est particulier ?**
-Oui. Louer occasionnellement un bien que vous possédez est autorisé. Si cela devient une activité régulière, renseignez-vous sur la déclaration de ces revenus.
+Oui. Les revenus tirés de ces locations se déclarent dès le premier euro à l'impôt sur le revenu, dans la catégorie des bénéfices industriels et commerciaux (BIC), avec par défaut un abattement de 50 % (régime micro-BIC). Si vos locations se répètent dans l'année, l'activité est considérée comme professionnelle et doit être inscrite au registre national des entreprises, sur formalites.entreprises.gouv.fr. Le détail est sur [impots.gouv.fr](https://www.impots.gouv.fr/professionnel/questions/je-mets-en-location-ma-voiture-un-outil-ou-un-bien-divers-sur-un-site).
 
 **Peut-on louer pour une seule soirée ?**
 Oui, la location se fait à la journée.
